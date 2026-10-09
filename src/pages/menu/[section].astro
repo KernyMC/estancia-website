@@ -1,0 +1,135 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import MenuNav from '../../components/MenuNav.astro';
+import Marquee from '../../components/Marquee.astro';
+import Cta from '../../components/Cta.astro';
+import { meats, saladBar, sides, brunch, desserts, cocktails } from '../../data/content';
+
+export function getStaticPaths() {
+  const meta = {
+    churrasco: { title: 'Churrasco', h1: 'Prime meats, <em>carved</em> tableside', lead: 'Fire-roasted Brazilian steakhouse selections carved directly from the skewer onto your plate, a tradition kept alive for generations.', image: '/img/w/ish_0061-1.jpg' },
+    'salad-bar': { title: 'Gourmet Salad Bar', h1: 'The <em>gourmet</em> salad bar', lead: 'Over forty items, from smoked salmon and imported cheeses to charcuterie. Keto and gluten-free options too.', image: '/img/w/l1010398-scaled.jpg' },
+    sides: { title: 'Traditional Sides', h1: 'Authentic Brazilian <em>sides</em>', lead: 'Escape the ordinary and accompany your prime meats with sides that complete the cultural experience.', image: '/img/w/img_4046-1-scaled.jpg' },
+    brunch: { title: 'Brazilian Brunch', h1: 'Weekend <em>brunch</em>', lead: 'Savor all your churrasco favorites, plus the brunch additions Estância has to offer. Every Saturday and Sunday, 11:00 am – 3:30 pm.', image: '/img/w/brunch-10-small.jpg' },
+    bar: { title: 'Bar & Happy Hour', h1: 'The <em>bar</em>', lead: 'Impeccably crafted cocktails, thoughtfully selected wines and a diverse beer selection.', image: '/img/w/barestancia-webres-220923-ish-15.jpg' },
+    dessert: { title: 'Dessert', h1: 'The sweet <em>finale</em>', lead: 'No dinner is complete without dessert. Brazilian classics and internationally loved favorites.', image: '/img/w/21.jpg' },
+  };
+  return Object.entries(meta).map(([section, m]) => ({ params: { section }, props: { section, ...m } }));
+}
+const { section, title, h1, lead, image } = Astro.props;
+---
+
+<Base title={title} description={lead}>
+  <PageHero kicker="Menu" title={h1} lead={lead} image={image} crumbs={[{ label: 'Menu', href: '/menu/' }, { label: title }]} />
+  <MenuNav />
+
+  {section === 'churrasco' && (
+    <section class="sec sec--dark">
+      <div class="wrap">
+        <ul class="menu-list" data-stagger>
+          {meats.map((m) => (<li><b>{m.name}</b><span>{m.text}</span></li>))}
+        </ul>
+        <div class="btn-row"><a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve your table <i class="ico ico-arrow arr" aria-hidden="true"></i></a></div>
+        <p class="note" style="margin-top:2.5rem">*These items may be served raw or undercooked, or contain raw undercooked ingredients. Consuming raw or undercooked meats, poultry, seafood, or eggs may increase your risk of food-borne illness. Meat offerings may change due to seasonality and availability.</p>
+      </div>
+    </section>
+    <section class="sec sec--deep">
+      <div class="wrap">
+        <div class="dishes" data-stagger>
+          {meats.slice(0, 8).map((m) => (<div class="dish"><img src={m.img} alt={m.name} loading="lazy" /><span>{m.name}</span></div>))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {section === 'salad-bar' && (
+    <section class="sec sec--dark">
+      <div class="wrap split">
+        <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.07"><img src="/img/w/dsc04985-scaled.jpg" alt="Salad bar" loading="lazy" /></div></div>
+        <div>
+          <span class="kicker">A taste of the bar</span>
+          <h2 class="h2" data-split>Fresh, seasonal, <em>endless</em></h2>
+          <ul class="chips" style="margin-top:2rem" data-stagger>{saladBar.map((s) => <li>{s}</li>)}</ul>
+          <p class="note" style="margin-top:2rem">Selection rotates by season and location. Keto and gluten-free options available.</p>
+        </div>
+      </div>
+    </section>
+    <Marquee items={['Smoked Salmon', 'Imported Cheeses', 'Charcuterie', 'Seasonal Salads', 'Fresh Vegetables']} variant="dark" />
+    <section class="sec sec--deep">
+      <div class="wrap gallery">
+        <div class="mask" data-mask><div class="px" data-parallax="0.05"><img src="/img/w/l1010399-scaled.jpg" alt="" loading="lazy" /></div></div>
+        <div class="mask" data-mask><div class="px"><img src="/img/w/caprese-salad.jpg" alt="" loading="lazy" /></div></div>
+        <div class="mask" data-mask><div class="px"><img src="/img/w/cheese-.jpg" alt="" loading="lazy" /></div></div>
+        <div class="mask" data-mask><div class="px" data-parallax="0.05"><img src="/img/w/l1010400-scaled.jpg" alt="" loading="lazy" /></div></div>
+      </div>
+    </section>
+  )}
+
+  {section === 'sides' && (
+    <section class="sec sec--dark">
+      <div class="wrap"><div class="dishes" data-stagger>
+        {sides.map((s) => (<div class="dish"><img src={s.img} alt={s.name} loading="lazy" /><span>{s.name}</span></div>))}
+      </div></div>
+    </section>
+  )}
+
+  {section === 'brunch' && (
+    <>
+      <section class="sec sec--dark">
+        <div class="wrap split">
+          <div>
+            <span class="kicker">Saturday &amp; Sunday &middot; 11:00 am – 3:30 pm</span>
+            <h2 class="h2" data-split>The brunch <em>additions</em></h2>
+            <ul class="chips" style="margin-top:2rem" data-stagger>{brunch.map((b) => <li>{b}</li>)}</ul>
+            <div class="btn-row"><a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve brunch <i class="ico ico-arrow arr" aria-hidden="true"></i></a></div>
+          </div>
+          <div class="stack">
+            <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.07"><img src="/img/w/brunch-6-small-2.jpg" alt="Brunch spread" loading="lazy" /></div></div>
+            <div class="mask ratio-11" data-mask style="transition-delay:300ms"><div class="px"><img src="/img/w/mimosa-1-small.jpg" alt="Mimosa" loading="lazy" /></div></div>
+          </div>
+        </div>
+      </section>
+      <section class="sec sec--cream sec--light">
+        <div class="wrap prose center">
+          <span class="kicker">The best Brazilian brunch</span>
+          <p>From 11:30 am to 3:30 pm every Saturday and Sunday, a spread of prime meats, fresh salads and flavorful sides, with crispy pão de queijo, fluffy scrambled eggs and tropical fruits, complemented by signature cocktails, fresh coffee and juices.</p>
+          <p>Planning a group brunch? <a href="/private-dining/">Plan your event</a> with our team.</p>
+        </div>
+      </section>
+    </>
+  )}
+
+  {section === 'bar' && (
+    <>
+      <section class="sec sec--dark">
+        <div class="wrap">
+          <div class="split" style="margin-bottom:5rem">
+            <div>
+              <span class="kicker">Happy hour &middot; bar area only</span>
+              <h2 class="h2" data-split>Monday – Friday, <em>12 – 6 pm</em></h2>
+              <p class="lead" style="margin-top:1.4rem" data-reveal>Unwind after a long day or start your evening with friends. Pair your drinks with crispy pão de queijo and savory coxinhas, or the sizzle of fire-roasted meats.</p>
+            </div>
+            <div class="mask ratio-43" data-mask><div class="px" data-parallax="0.06"><img src="/img/w/feed-brazilian-happy-hour.jpg" alt="Brazilian happy hour cocktails" loading="lazy" /></div></div>
+          </div>
+          <div class="dishes" data-stagger>
+            {cocktails.map((c) => (<div class="dish"><img src={c.img} alt={c.name} loading="lazy" /><span>{c.name}</span></div>))}
+          </div>
+        </div>
+      </section>
+    </>
+  )}
+
+  {section === 'dessert' && (
+    <section class="sec sec--dark">
+      <div class="wrap">
+        <div class="dishes" data-stagger>
+          {desserts.map((d) => (<div class="dish"><img src={d.img} alt={d.name} loading="lazy" /><span>{d.name}</span></div>))}
+        </div>
+        <p class="lead" style="margin-top:3rem" data-reveal>Enhance your dessert with freshly brewed espresso or cappuccino, a glass of dessert wine, or one of our specialty cocktails.</p>
+      </div>
+    </section>
+  )}
+
+  <Cta />
+</Base>

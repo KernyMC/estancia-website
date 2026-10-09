@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { locations } from '../data/site';
+---
+
+<Base title="Accessibility Statement" description="Estância is committed to making estancia.com usable for everyone. Learn about our accessibility efforts and how to contact us.">
+  <PageHero kicker="Everyone is welcome" title="Accessibility <em>statement</em>" lead="We want everyone to be able to browse our menus, find our locations and plan a visit." image="/img/w/l1010374.jpg" crumbs={[{ label: 'Accessibility' }]} />
+  <section class="sec sec--white">
+    <div class="wrap prose">
+      <p>Estância Brazilian Steakhouse is committed to making <strong>estancia.com</strong> accessible to people with disabilities. We aim to follow the Web Content Accessibility Guidelines (WCAG) 2.2, level AA.</p>
+      <h2>What we do</h2>
+      <ul>
+        <li>Semantic page structure with one main heading per page and skip links.</li>
+        <li>Full keyboard navigation with a visible focus indicator.</li>
+        <li>Text alternatives for informative images.</li>
+        <li>Form fields with visible labels.</li>
+        <li>Respect for the &ldquo;reduce motion&rdquo; setting: animations, the intro and the hero video are turned off.</li>
+        <li>Sufficient color contrast for text, with a darker gold used on light backgrounds.</li>
+      </ul>
+      <h2>Known limitations</h2>
+      <p>Some menus are published as PDF or image files and may not be fully accessible to screen readers. If you need a menu in another format, call us and we will help. Third-party services (reservations, ordering, gift cards) are managed by their providers.</p>
+      <h2>Tell us about a barrier</h2>
+      <p>If you have trouble using any part of the site, contact us and we will work to fix it or give you the information another way: <a href={`mailto:${locations.austin.eventsEmail}`}>{locations.austin.eventsEmail}</a> · {locations.austin.phone} (Austin) · {locations.leander.phone} (Leander).</p>
+      <p class="note" style="color:#6b665a">Last updated: October 8, 2026 (draft pending an accessibility audit).</p>
+    </div>
+  </section>
+</Base>

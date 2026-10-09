@@ -1,0 +1,13 @@
+---
+const items = [
+  ['churrasco', 'Churrasco'], ['salad-bar', 'Salad Bar'], ['sides', 'Sides'], ['brunch', 'Brunch'], ['bar', 'Bar'], ['dessert', 'Dessert'],
+];
+const path = Astro.url.pathname;
+---
+
+<div class="subnav" aria-label="Menu sections">
+  <div class="wrap">
+    <a href="/menu/" aria-current={path === '/menu/' ? 'page' : undefined}>Overview</a>
+    {items.map(([s, l]) => <a href={`/menu/${s}/`} aria-current={path === `/menu/${s}/` ? 'page' : undefined}>{l}</a>)}
+  </div>
+</div>

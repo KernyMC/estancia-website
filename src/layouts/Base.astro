@@ -1,0 +1,85 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/jost';
+import '../styles/global.css';
+import '../styles/gift.css';
+import '../styles/flow.css';
+import '../styles/hero-video.css';
+import '../styles/intro.css';
+import '../styles/holidays.css';
+import '../styles/film.css';
+import '../styles/carousel.css';
+import '../styles/rail.css';
+import '../styles/news.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  jsonLd?: object;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  prev?: string;
+  next?: string;
+}
+const { title, description: rawDescription = 'Estância Brazilian Steakhouse in Austin & Leander, Texas. Fire-roasted prime meats carved tableside, a gourmet salad bar and Brazilian hospitality.', image = '/img/w/churrasqueira-1-1-1.jpg', jsonLd, noindex, ogType = 'website', prev, next } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// Descripción ≤ 155 caracteres (cortada en límite de palabra); título con sufijo de marca solo si cabe en ~62
+const trim = (t: string, n: number) => (t.length <= n ? t : t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…');
+const description = trim(rawDescription.replace(/\s+/g, ' ').trim(), 155);
+const brand = ' | Estância Brazilian Steakhouse';
+const full = title.includes('Estância') || title.length + brand.length > 62 ? title : `${title}${brand}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {prev && <link rel="prev" href={new URL(prev, Astro.site)} />}
+    {next && <link rel="next" href={new URL(next, Astro.site)} />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Estância Brazilian Steakhouse" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:title" content={full} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta name="theme-color" content="#121212" />
+    <link rel="icon" href="/img/w/cropped-favicom-estancia-1-1.png" />
+    <script is:inline>
+      (function () {
+        try {
+          var d = document.documentElement;
+          d.classList.add('js');
+          // Intro solo en la carga inicial de la home, una vez por sesión (o con ?intro para verla de nuevo)
+          var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (location.pathname === '/' && !reduced && (location.search.indexOf('intro') > -1 || !sessionStorage.getItem('introSeen'))) {
+            d.classList.add('intro-pending');
+            setTimeout(function () { d.classList.remove('intro-pending'); }, 7000);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="sr-only" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>

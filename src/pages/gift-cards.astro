@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { giftCards } from '../data/site';
+
+// Cambiar aquí cuando exista el banner definitivo (ver docs/PROMPT-GIFTCARDS-BANNER.md).
+const HERO = '/img/w/dsc09630.jpg';
+
+const cards = [
+  { img: '/img/w/card25.jpg', label: '$25', name: 'Dining Card' },
+  { img: '/img/w/card100.jpg', label: '$100', name: 'Dining Card' },
+  { img: '/img/w/card150.jpg', label: '$150', name: 'Dining Card' },
+];
+const perks = [
+  { icon: 'infinity', title: 'Never expires', text: 'Use it whenever the moment is right.' },
+  { icon: 'mail', title: 'Digital or physical', text: 'Instant by email, or mailed nationwide.' },
+  { icon: 'pin', title: 'Any location', text: 'Valid at Estância Austin and Leander.' },
+  { icon: 'pen', title: 'Made personal', text: 'Add your own message before sending.' },
+];
+const steps = ['Choose the delivery method', 'Select the amount', 'Add a message and send'];
+---
+
+<Base title="Gift Cards" description="Give the gift of a premium Brazilian dining experience: digital and physical Estância gift cards with no expiration date.">
+  <PageHero kicker="Gift cards" title="Give the flavor of <em>Brazil</em>" lead="A thoughtful and delicious way to show you care. Digital cards arrive instantly by email; physical cards can be mailed nationwide." image={HERO} crumbs={[{ label: 'Gift cards' }]} />
+
+  <section class="sec sec--dark gift">
+    <div class="wrap gift__grid">
+      <div class="gift__copy">
+        <span class="kicker">The gift of a feast</span>
+        <h2 class="h1" data-split>Endless cuts, <em>one card</em></h2>
+        <p class="lead" data-reveal>Treat friends, family, coworkers or clients to the full Estância experience: premium meats carved tableside, a gourmet salad bar, fresh sides and decadent desserts, in a warm and elegant atmosphere.</p>
+
+        <ul class="perks" data-stagger>
+          {perks.map((p) => (
+            <li>
+              <span class="perks__ico"><i class={`ico ico-${p.icon}`} aria-hidden="true"></i></span>
+              <div><b>{p.title}</b><span>{p.text}</span></div>
+            </li>
+          ))}
+        </ul>
+
+        <ol class="steps" data-stagger aria-label="How to order">
+          {steps.map((s, i) => (<li><em>0{i + 1}</em>{s}</li>))}
+        </ol>
+
+        <div class="btn-pair">
+          <a class="btn btn--solid" href={giftCards.buy} target="_blank" rel="noopener" data-magnetic><i class="ico ico-gift" aria-hidden="true"></i> Buy eGift Card</a>
+          <a class="btn" href={giftCards.balance} target="_blank" rel="noopener" data-magnetic><i class="ico ico-card" aria-hidden="true"></i> Check balance</a>
+        </div>
+        <p class="note">Need a last-minute gift? Digital cards are perfect for same-day delivery.</p>
+      </div>
+
+      <div class="gstage" data-reveal="fade" aria-label="Estância dining cards">
+        <i class="ico ico-sparkle spark" style="--x:6%;--y:12%;--s:1.4rem;--d:0s" aria-hidden="true"></i>
+        <i class="ico ico-sparkle spark" style="--x:90%;--y:22%;--s:1rem;--d:1.2s" aria-hidden="true"></i>
+        <i class="ico ico-sparkle spark" style="--x:84%;--y:82%;--s:1.6rem;--d:2.1s" aria-hidden="true"></i>
+        <i class="ico ico-sparkle spark" style="--x:12%;--y:88%;--s:0.9rem;--d:0.6s" aria-hidden="true"></i>
+        {cards.map((c, i) => (
+          <div class="gslot" style={`--i:${i}`}>
+            <div class="gfloat">
+              <a class="gcard tilt" href={giftCards.buy} target="_blank" rel="noopener" aria-label={`Buy a ${c.label} ${c.name}`}>
+                <span class="gcard__in">
+                  <img src={c.img} alt={`${c.label} ${c.name}`} width="1300" height="782" loading="lazy" />
+                  <span class="gcard__foil"></span>
+                  <span class="gcard__glare"></span>
+                </span>
+                <span class="gcard__chip" aria-hidden="true">{c.label}</span>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--cream sec--light">
+    <div class="wrap split">
+      <div class="gbonus" data-reveal>
+        <div class="tilt gcard gcard--solo">
+          <span class="gcard__in">
+            <img src="/img/w/cardcomplimentary.jpg" alt="Complimentary lunch or dinner dining card" width="1300" height="782" loading="lazy" />
+            <span class="gcard__foil"></span>
+            <span class="gcard__glare"></span>
+          </span>
+        </div>
+      </div>
+      <div class="prose" style="margin:0">
+        <span class="kicker">Holiday bonus</span>
+        <h2 class="h2" data-split>Get a $25 <em>bonus</em> dining card</h2>
+        <p data-reveal style="margin-top:1.4rem">For every $100 you spend in gift cards from November 1st through December 31st, receive a $25 bonus Dining Card, valid for $25 off a Full Churrasco Dinner.</p>
+        <p class="note" style="color:#6b665a" data-reveal>Valid Sunday – Thursday, January 4 – March 25, 2027. Limit one per table; not valid with other offers, on Fridays, Saturdays or holidays, or for beverages, desserts, tax, alcohol or gratuity. Not a gift card and has no cash value.</p>
+      </div>
+    </div>
+  </section>
+</Base>

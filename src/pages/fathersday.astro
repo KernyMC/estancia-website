@@ -1,0 +1,7 @@
+---
+import EndedHoliday from '../components/EndedHoliday.astro';
+import { endedHolidays } from '../data/holidays';
+const e = endedHolidays.find((x) => x.slug === 'fathersday')!;
+---
+
+<EndedHoliday e={e} />

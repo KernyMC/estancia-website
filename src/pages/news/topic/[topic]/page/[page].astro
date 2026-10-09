@@ -1,0 +1,30 @@
+---
+import Base from '../../../../../layouts/Base.astro';
+import PageHero from '../../../../../components/PageHero.astro';
+import NewsListing from '../../../../../components/NewsListing.astro';
+import posts from '../../../../../data/posts.json';
+import { topics, PAGE_SIZE } from '../../../../../data/content';
+
+export function getStaticPaths() {
+  return Object.entries(topics).flatMap(([topic, label]) => {
+    const list = posts.filter((p) => p.topics.includes(topic));
+    const totalPages = Math.ceil(list.length / PAGE_SIZE);
+    return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => i + 2).map((n) => ({
+      params: { topic, page: String(n) },
+      props: { label, n, totalPages, total: list.length, list: list.slice((n - 1) * PAGE_SIZE, n * PAGE_SIZE) },
+    }));
+  });
+}
+const { topic } = Astro.params;
+const { label, n, totalPages, total, list } = Astro.props;
+const base = `/news/topic/${topic}/`;
+---
+
+<Base title={`${label} — News · Page ${n}`} description={`Estância's News: ${label.toLowerCase()} stories, page ${n} of ${totalPages}.`} prev={n === 2 ? base : `${base}page/${n - 1}/`} next={n < totalPages ? `${base}page/${n + 1}/` : undefined}>
+  <PageHero kicker={`${label} · Page ${n} of ${totalPages}`} title={`<em>${label}</em>`} image="/img/w/capa-de-revista2_.jpg" crumbs={[{ label: 'News', href: '/news/' }, { label, href: base }, { label: `Page ${n}` }]} />
+  <section class="sec">
+    <div class="wrap">
+      <NewsListing posts={list} page={n} totalPages={totalPages} base={base} topic={topic} total={total} />
+    </div>
+  </section>
+</Base>

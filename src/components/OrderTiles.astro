@@ -1,0 +1,23 @@
+---
+// Proveedores de pedido en una sola fila, con su logo. Los enlaces salen de `locations[x].order` (mismo orden: directo, DoorDash, Uber Eats, Grubhub).
+import type { Location } from '../data/site';
+interface Props { loc: Location }
+const { loc } = Astro.props;
+const logos = [
+  { img: '/img/w/orderdirect.png', alt: 'Order direct' },
+  { img: '/img/w/doordash.png', alt: 'DoorDash' },
+  { img: '/img/w/ubereats.png', alt: 'Uber Eats' },
+  { img: '/img/w/grubhub.png', alt: 'Grubhub' },
+];
+---
+
+<ul class="tiles" data-stagger>
+  {loc.order.map((o, i) => (
+    <li>
+      <a class="tile" href={o.url} target="_blank" rel="noopener" aria-label={`${o.label}, ${loc.name} (opens in a new tab)`}>
+        <img src={logos[i].img} alt={logos[i].alt} width="925" height="720" loading="lazy" />
+        <span class="tile__tag">{i === 0 ? 'Pickup' : 'Delivery'}</span>
+      </a>
+    </li>
+  ))}
+</ul>

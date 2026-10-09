@@ -1,0 +1,19 @@
+---
+interface Post { slug: string; title: string; date: string; excerpt: string; image: string | null; topics: string[] }
+interface Props { posts: Post[]; grid?: boolean }
+const { posts, grid = false } = Astro.props;
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+---
+
+<div class:list={['cards', 'cards--wide', grid && 'cards--grid']} data-stagger>
+  {posts.map((p) => (
+    <a class="card" href={`/news/${p.slug}/`}>
+      <div class="mask"><img src={p.image ?? '/img/w/capa-de-revista2_.jpg'} alt="" loading="lazy" /></div>
+      <div class="card__body">
+        <span class="card__meta">{fmt(p.date)}{p.topics[0] ? ` · ${p.topics[0].replace('-', ' ')}` : ''}</span>
+        <h3>{p.title}</h3>
+        <p>{p.excerpt.slice(0, 120)}{p.excerpt.length > 120 ? '…' : ''}</p>
+      </div>
+    </a>
+  ))}
+</div>

@@ -1,0 +1,18 @@
+/* Hero con el video original del sitio (churrasco.mp4, 6.5 s en bucle). */
+.hero__bg--video { overflow: hidden; background: #0c0c0c; }
+.hero__poster, .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero__video { opacity: 0; transition: opacity 1.2s var(--ease); transform: scale(1.04); }
+.hero__video.is-playing { opacity: 1; }
+/* El video ya tiene movimiento propio: se suaviza el degradado para que no apague las llamas */
+.hero::after {
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, 0.72) 0%, rgba(10, 10, 10, 0.35) 45%, rgba(10, 10, 10, 0) 75%),
+    linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.2) 42%, rgba(10, 10, 10, 0.5) 100%);
+}
+.hero h1, .hero__sub { text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55); }
+@media (max-width: 860px) {
+  .hero__video, .hero__poster { object-position: 38% center; }
+  .hero::after { background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.55) 55%, rgba(10, 10, 10, 0.6) 100%); }
+}
+/* Sin video si el usuario pide menos movimiento o ahorro de datos: se queda el póster */
+@media (prefers-reduced-motion: reduce) { .hero__video { display: none; } }

@@ -1,0 +1,198 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Cta from './Cta.astro';
+import Icon from './Icon.astro';
+import OrderTiles from './OrderTiles.astro';
+import { holidays, cardTerms, giftBonus, groupHoliday, type Holiday } from '../data/holidays';
+import { locations, giftCards } from '../data/site';
+
+interface Props { h: Holiday }
+const { h } = Astro.props;
+const others = holidays.filter((x) => x.slug !== h.slug);
+const num = (p: string) => p.replace(/[^0-9.]/g, '');
+const ld = [
+  ...h.days.map((d) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${h.name} at Estância: ${d.title}`,
+    startDate: d.iso,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    image: `https://estancia.com${h.banner}`,
+    description: h.description,
+    organizer: { '@type': 'Organization', name: 'Estância Brazilian Steakhouse', url: 'https://estancia.com/' },
+    location: [locations.austin, locations.leander].map((l) => ({ '@type': 'Place', name: `Estância ${l.name}`, address: { '@type': 'PostalAddress', streetAddress: l.address, addressLocality: l.name, addressRegion: 'TX' } })),
+    offers: d.slots.flatMap((s) => s.rows).map(([name, price]) => ({ '@type': 'Offer', name, price: num(price), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: `https://estancia.com/${h.slug}/` })),
+  })),
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: h.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://estancia.com/' }, { '@type': 'ListItem', position: 2, name: 'Holidays', item: 'https://estancia.com/holidays/' }, { '@type': 'ListItem', position: 3, name: h.name }] },
+];
+---
+
+<Base title={h.title} description={h.description} image={h.banner} jsonLd={ld}>
+  <PageHero kicker={`Holidays · ${h.dates}`} title={h.h1} lead={h.intro} image={h.hero} crumbs={[{ label: 'Holidays', href: '/holidays/' }, { label: h.name }]} />
+
+  <section class="sec sec--dark hol">
+    <div class="wrap">
+      <div class="hol__bar" data-reveal>
+        <div class="hol__book">
+          <span class="kicker">Reserve your table</span>
+          <div class="locbtns">
+            <a class="locbtn" href={locations.austin.resy} target="_blank" rel="noopener" style={`--img:url(${locations.austin.hero})`}><b>Austin</b><small>Reserve on Resy</small></a>
+            <a class="locbtn" href={locations.leander.resy} target="_blank" rel="noopener" style={`--img:url(${locations.leander.hero})`}><b>Leander</b><small>Reserve on Resy</small></a>
+          </div>
+        </div>
+        <ul class="chips">
+          <li><Icon name="calendar" /> {h.dates}</li>
+          <li><Icon name="clock" /> Both locations</li>
+          <li><Icon name="gift" /> Complimentary card</li>
+        </ul>
+      </div>
+
+      <!-- DINE-IN -->
+      <span class="kicker" style="margin-top:4rem">Dine-in specials</span>
+      <h2 class="h2" data-split>Hours &amp; <em>prices</em></h2>
+      <div class="days">
+        {h.days.map((d) => (
+          <article class="day" data-reveal>
+            <header><h3>{d.title}</h3><span>{d.label}</span></header>
+            <div class="slots">
+              {d.slots.map((s) => (
+                <div class="slot">
+                  <div class="slot__head"><b>{s.name}</b><span><Icon name="clock" /> {s.time}</span></div>
+                  <ul class="prices">{s.rows.map(([n, p]) => (<li><span>{n}</span><i></i><b>{p}</b></li>))}</ul>
+                  {s.note && <p class="slot__note">{s.note}</p>}
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+      <ul class="kids" aria-label="Kids pricing">{h.kids.map((k) => <li><Icon name="child" /> {k}</li>)}</ul>
+      <p class="note">Tax and gratuity not included. Reservations are highly recommended.</p>
+    </div>
+  </section>
+
+  <!-- TARJETA CORTESÍA -->
+  <section class="sec sec--cream sec--light">
+    <div class="wrap split">
+      <div class="gbonus" data-reveal>
+        <div class="tilt gcard gcard--solo">
+          <span class="gcard__in"><img src="/img/w/cardcomplimentary.jpg" alt="Complimentary lunch or dinner card" width="1300" height="782" loading="lazy" /><span class="gcard__foil"></span><span class="gcard__glare"></span></span>
+        </div>
+      </div>
+      <div>
+        <span class="kicker">Complimentary card</span>
+        <h2 class="h2" data-split>Dine now, <em>return</em> for free</h2>
+        <p class="lead" data-reveal style="margin-top:1.2rem">{cardTerms.summary} Dates: {h.cardDays}.</p>
+        <details class="fine" data-reveal>
+          <summary>Terms &amp; conditions</summary>
+          <ul>{cardTerms.fine.map((t) => <li>{t}</li>)}</ul>
+          <p><strong>{cardTerms.valid}</strong> {cardTerms.notValid}</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAKEOUT -->
+  <section class="sec sec--deep">
+    <div class="wrap">
+      <span class="kicker">Takeout special</span>
+      <h2 class="h2" data-split>The feast, <em>at home</em></h2>
+      <div class="pack" data-reveal>
+        <header>
+          <div><h3>{h.takeout.title}</h3><span class="pack__serves">{h.takeout.serves}</span></div>
+          <b class="pack__price">{h.takeout.price}</b>
+        </header>
+        <div class="pack__cols">
+          {h.takeout.courses.map((c) => (
+            <div>
+              <h4>{c.heading}</h4>
+              <ul>{c.items.map((i) => (<li><b>{i.name}</b>{i.desc && <span>{i.desc}</span>}</li>))}</ul>
+            </div>
+          ))}
+          {h.takeout.extras && (
+            <div>
+              <h4>{h.takeout.extras.heading} <em>{h.takeout.extras.price}</em></h4>
+              <ul>{h.takeout.extras.items.map((i) => (<li><b>{i}</b></li>))}</ul>
+            </div>
+          )}
+        </div>
+        <footer>
+          <div>
+            <h4>Pickup</h4>
+            <ul>{h.takeout.pickup.map((p) => <li>{p}</li>)}</ul>
+          </div>
+          <div>
+            <h4>Order details</h4>
+            <ul>{h.takeout.details.map((p) => <li>{p}</li>)}</ul>
+          </div>
+        </footer>
+      </div>
+      <div class="order-grid" data-tabs data-reveal>
+        <div class="tabs tabs--photo" role="tablist" aria-label="Order from">
+          <button role="tab" id={`oa-${h.slug}`} data-tab="austin" aria-selected="true" style={`--img:url(${locations.austin.hero})`}><b>Austin</b><small>{locations.austin.area}</small></button>
+          <button role="tab" id={`ol-${h.slug}`} data-tab="leander" aria-selected="false" style={`--img:url(${locations.leander.hero})`}><b>Leander</b><small>{locations.leander.area}</small></button>
+        </div>
+        {[locations.austin, locations.leander].map((l, i) => (
+          <div role="tabpanel" data-panel={l.id} hidden={i === 1} class="panel"><OrderTiles loc={l} /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {h.related && (
+    <section class="sec sec--dark">
+      <div class="wrap">
+        <span class="kicker">More November deals</span>
+        <div class="cards" style="margin-top:1rem" data-stagger>
+          {h.related.map((r) => (
+            <article class="deal"><span class="card__meta">{r.date}</span><h3>{r.title}</h3><p>{r.text}</p></article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- OFERTAS DE TEMPORADA -->
+  <section class="sec sec--cream sec--light">
+    <div class="wrap">
+      <span class="kicker">Holiday deals</span>
+      <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));margin-top:1rem" data-stagger>
+        <article class="deal deal--light">
+          <h3>Holiday group dining</h3>
+          <p>{groupHoliday.headline}: the host receives a <strong>$100</strong> dining card for lunch parties or <strong>$150</strong> for dinner parties, and every guest receives a <strong>$25</strong> dining card.</p>
+          <a class="link-arrow" href="/holidays/#group">Plan your group event <Icon name="arrow" /></a>
+        </article>
+        <article class="deal deal--light">
+          <h3>{giftBonus.headline}</h3>
+          <p>Buy gift cards from {giftBonus.window} and receive a bonus dining card for every $100 you spend.</p>
+          <a class="link-arrow" href={giftCards.buy} target="_blank" rel="noopener">Buy gift cards <Icon name="up-right" /></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sec sec--white">
+    <div class="wrap faq" style="max-width:900px">
+      <span class="kicker">Good to know</span>
+      <h2 class="h2" data-split style="margin-bottom:2rem">{h.name} <em>questions</em></h2>
+      {h.faq.map((f) => (<details><summary>{f.q}</summary><div class="ans">{f.a}</div></details>))}
+    </div>
+  </section>
+
+  <section class="sec sec--deep">
+    <div class="wrap">
+      <span class="kicker">More holidays</span>
+      <div class="cards" style="margin-top:1rem" data-stagger>
+        {others.map((o) => (
+          <a class="card" href={`/${o.slug}/`}><div class="mask" style="aspect-ratio:16/10"><img src={o.hero} alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">{o.dates}</span><h3>{o.name} at Estância</h3></div></a>
+        ))}
+        <a class="card" href="/holidays/#schedule"><div class="mask" style="aspect-ratio:16/10"><img src="/img/w/dsc09630.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">All dates</span><h3>Holiday schedule &amp; prices</h3></div></a>
+      </div>
+    </div>
+  </section>
+  <Cta />
+</Base>

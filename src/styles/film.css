@@ -1,0 +1,20 @@
+/* ---------- Marquesina: cinta de película curvada ---------- */
+.film { --fh: clamp(120px, 13.89vw, 340px); position: relative; line-height: 0; overflow: hidden; pointer-events: none; z-index: 3;
+  /* las secciones vecinas se meten detrás de la curva (zonas transparentes del SVG) */
+  margin-top: calc(var(--fh) * -0.345); margin-bottom: calc(var(--fh) * -0.46); }
+.film__svg { display: block; width: 100%; height: var(--fh); }
+.film__edge { stop-color: #7a622a; }
+.film__mid { stop-color: #b29955; }
+.film__hi { stop-color: #d6c386; }
+.film__band { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.4)); }
+.film__text { font-family: 'Jost Variable', 'Jost', sans-serif; font-size: 30px; font-weight: 400; letter-spacing: 0.32em; fill: var(--black); }
+/* variante oscura (sobre fondos negros) */
+.film--dark .film__edge { stop-color: #0a0a0a; }
+.film--dark .film__mid { stop-color: #161616; }
+.film--dark .film__hi { stop-color: #222; }
+.film--dark .film--dark .film--dark .film__text { fill: var(--gold); }
+.film--dark .film__band { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.6)); }
+/* los hijos de secciones oscuras/claras se solapan un poco con la cinta */
+.sec + .film, .film + .sec { position: relative; }
+@media (max-width: 860px) { .film__text { font-size: 34px; } }
+

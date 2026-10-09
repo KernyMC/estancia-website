@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import NewsGrid from '../../components/NewsGrid.astro';
+import Cta from '../../components/Cta.astro';
+import posts from '../../data/posts.json';
+
+export function getStaticPaths() {
+  return posts.map((post, i) => ({
+    params: { slug: post.slug },
+    props: { post, related: posts.filter((p) => p.slug !== post.slug && p.topics.some((t) => post.topics.includes(t))).slice(0, 3), i },
+  }));
+}
+const { post, related } = Astro.props;
+const date = new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  datePublished: post.date,
+  image: post.image ? `https://estancia.com${post.image}` : undefined,
+  author: { '@type': 'Organization', name: 'Estância Brazilian Steakhouse' },
+  publisher: { '@type': 'Organization', name: 'Estância Brazilian Steakhouse' },
+};
+---
+
+<Base title={post.title} description={post.excerpt} image={post.image ?? undefined} jsonLd={ld} ogType="article">
+  <PageHero kicker={`${date} · ${post.readMin} min read`} title={post.title} image={post.image ?? '/img/w/capa-de-revista2_.jpg'} crumbs={[{ label: 'News', href: '/news/' }]} />
+  <article class="sec sec--white">
+    <div class="wrap prose" set:html={post.html} />
+    <div class="wrap center" style="margin-top:4rem" data-reveal>
+      <a class="btn btn--dark" href="/reserve/" data-magnetic>Reserve a table <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+    </div>
+  </article>
+  {related.length > 0 && (
+    <section class="sec sec--cream sec--light">
+      <div class="wrap"><span class="kicker">Keep reading</span><NewsGrid posts={related} /></div>
+    </section>
+  )}
+  <Cta />
+</Base>

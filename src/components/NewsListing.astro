@@ -1,0 +1,98 @@
+---
+// Listado de noticias paginado: filtros por tema + buscador a la derecha + cuadrícula + paginación 1, 2, 3...
+import NewsGrid from './NewsGrid.astro';
+import { topics } from '../data/content';
+
+interface Post { slug: string; title: string; date: string; excerpt: string; image: string | null; topics: string[] }
+interface Props { posts: Post[]; page: number; totalPages: number; base: string; topic?: string; total: number }
+const { posts, page, totalPages, base, topic, total } = Astro.props;
+const href = (n: number) => (n === 1 ? base : `${base}page/${n}/`);
+// ventana de páginas: 1 … 4 5 6 … 12
+const nums: (number | '…')[] = [];
+for (let n = 1; n <= totalPages; n++) {
+  if (totalPages <= 7 || n === 1 || n === totalPages || Math.abs(n - page) <= 1) nums.push(n);
+  else if (nums[nums.length - 1] !== '…') nums.push('…');
+}
+---
+
+<div class="news-bar">
+  <nav class="topics" aria-label="Topics">
+    <a href="/news/" aria-current={!topic ? 'page' : undefined}>All</a>
+    {Object.entries(topics).map(([s, l]) => <a href={`/news/topic/${s}/`} aria-current={s === topic ? 'page' : undefined}>{l}</a>)}
+  </nav>
+  <form class="news-search" role="search" data-news-search action="/news/" method="get">
+    <label class="sr-only" for="news-q">Search news</label>
+    <i class="ico ico-search" aria-hidden="true"></i>
+    <input id="news-q" name="q" type="search" placeholder="Search stories" autocomplete="off" enterkeyhint="search" />
+    <button type="button" class="news-search__clear" aria-label="Clear search" hidden>&times;</button>
+  </form>
+</div>
+
+<p class="news-status" data-news-status role="status" aria-live="polite" hidden></p>
+
+<div data-news-default>
+  <NewsGrid posts={posts} grid />
+
+  {totalPages > 1 && (
+    <nav class="pager" aria-label="Pagination">
+      {page > 1 ? <a class="pager__step" href={href(page - 1)} rel="prev" aria-label="Previous page"><i class="ico ico-arrow pager__prev" aria-hidden="true"></i><span>Prev</span></a> : <span class="pager__step is-off" aria-hidden="true"><i class="ico ico-arrow pager__prev"></i><span>Prev</span></span>}
+      <ol>
+        {nums.map((n) => n === '…' ? <li class="pager__gap" aria-hidden="true">…</li> : <li><a href={href(n)} aria-label={`Page ${n}`} aria-current={n === page ? 'page' : undefined}>{n}</a></li>)}
+      </ol>
+      {page < totalPages ? <a class="pager__step" href={href(page + 1)} rel="next" aria-label="Next page"><span>Next</span><i class="ico ico-arrow" aria-hidden="true"></i></a> : <span class="pager__step is-off" aria-hidden="true"><span>Next</span><i class="ico ico-arrow"></i></span>}
+    </nav>
+  )}
+  <p class="pager__count">Showing page {page} of {totalPages} · {total} stories</p>
+</div>
+
+<div class="cards cards--wide cards--grid" data-news-results hidden></div>
+
+<script>
+  // Buscador: carga el índice una sola vez (al enfocar o escribir) y filtra sin recargar. ?q= se respeta.
+  interface Item { slug: string; title: string; date: string; excerpt: string; image: string | null; topics: string[]; text: string }
+  let index: Item[] | null = null;
+  const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  async function load() {
+    if (index) return index;
+    const res = await fetch('/news/search.json');
+    const raw: Omit<Item, 'text'>[] = await res.json();
+    index = raw.map((p) => ({ ...p, text: norm(`${p.title} ${p.excerpt} ${p.topics.join(' ')}`) }));
+    return index;
+  }
+
+  function init() {
+    const form = document.querySelector<HTMLFormElement>('[data-news-search]');
+    if (!form) return;
+    const input = form.querySelector('input')!;
+    const clear = form.querySelector<HTMLButtonElement>('.news-search__clear')!;
+    const def = document.querySelector<HTMLElement>('[data-news-default]')!;
+    const res = document.querySelector<HTMLElement>('[data-news-results]')!;
+    const status = document.querySelector<HTMLElement>('[data-news-status]')!;
+    let timer = 0;
+
+    const show = async (q: string) => {
+      const query = q.trim();
+      clear.hidden = !query;
+      if (!query) { def.hidden = false; res.hidden = true; status.hidden = true; res.innerHTML = ''; return; }
+      const words = norm(query).split(/\s+/).filter(Boolean);
+      const hits = (await load()).filter((p) => words.every((w) => p.text.includes(w)));
+      def.hidden = true; res.hidden = false; status.hidden = false;
+      status.textContent = hits.length ? `${hits.length} ${hits.length === 1 ? 'story' : 'stories'} for “${query}”` : `No stories found for “${query}”. Try another word, like “brunch” or “picanha”.`;
+      res.innerHTML = hits.map((p) => `<a class="card" href="/news/${p.slug}/"><div class="mask"><img src="${p.image ?? '/img/w/capa-de-revista2_.jpg'}" alt="" loading="lazy"></div><div class="card__body"><span class="card__meta">${fmt(p.date)}${p.topics[0] ? ' · ' + esc(p.topics[0].replace('-', ' ')) : ''}</span><h3>${esc(p.title)}</h3><p>${esc(p.excerpt.slice(0, 120))}${p.excerpt.length > 120 ? '…' : ''}</p></div></a>`).join('');
+      const url = new URL(location.href); url.searchParams.set('q', query); history.replaceState(null, '', url);
+    };
+
+    input.addEventListener('focus', () => void load(), { once: true });
+    input.addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(() => void show(input.value), 150); });
+    form.addEventListener('submit', (e) => { e.preventDefault(); void show(input.value); });
+    clear.addEventListener('click', () => { input.value = ''; void show(''); const u = new URL(location.href); u.searchParams.delete('q'); history.replaceState(null, '', u); input.focus(); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Escape') clear.click(); });
+    const q0 = new URLSearchParams(location.search).get('q');
+    if (q0) { input.value = q0; void show(q0); }
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

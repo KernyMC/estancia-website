@@ -1,0 +1,14 @@
+---
+// Solo mes y día (sin año): no permite calcular la edad. Opcional.
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+---
+
+<fieldset class="field bday">
+  <legend>Birthday (optional)</legend>
+  <div class="bday__row">
+    <label class="sr-only" for="b-month">Month</label>
+    <select id="b-month" name="birthday_month"><option value="">Month</option>{months.map((m, i) => <option value={i + 1}>{m}</option>)}</select>
+    <label class="sr-only" for="b-day">Day</label>
+    <select id="b-day" name="birthday_day"><option value="">Day</option>{Array.from({ length: 31 }, (_, i) => <option value={i + 1}>{i + 1}</option>)}</select>
+  </div>
+</fieldset>

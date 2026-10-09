@@ -1,0 +1,23 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import NewsListing from '../../../components/NewsListing.astro';
+import posts from '../../../data/posts.json';
+import { topics, PAGE_SIZE } from '../../../data/content';
+
+export function getStaticPaths() {
+  return Object.entries(topics).map(([topic, label]) => ({ params: { topic }, props: { label, list: posts.filter((p) => p.topics.includes(topic)) } }));
+}
+const { topic } = Astro.params;
+const { label, list } = Astro.props;
+const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+---
+
+<Base title={`${label} — News`} description={`Estância's News: ${label.toLowerCase()} stories.`} next={totalPages > 1 ? `/news/topic/${topic}/page/2/` : undefined}>
+  <PageHero kicker="News" title={`<em>${label}</em>`} lead={`${list.length} stories`} image="/img/w/capa-de-revista2_.jpg" crumbs={[{ label: 'News', href: '/news/' }, { label }]} />
+  <section class="sec">
+    <div class="wrap">
+      <NewsListing posts={list.slice(0, PAGE_SIZE)} page={1} totalPages={totalPages} base={`/news/topic/${topic}/`} topic={topic} total={list.length} />
+    </div>
+  </section>
+</Base>

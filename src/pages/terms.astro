@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { locations } from '../data/site';
+import { legalEmail, legalUpdated } from '../data/legal';
+---
+
+<Base title="Terms of Use" description="Terms of use for estancia.com: offers, gift cards, forms, third-party services and liability." noindex>
+  <PageHero kicker="Legal" title="Terms of <em>use</em>" lead="Draft pending review by Estância and its legal counsel." image="/img/w/dsc07446.jpg" crumbs={[{ label: 'Terms' }]} />
+  <section class="sec sec--white">
+    <div class="wrap prose">
+      <p>By using <strong>estancia.com</strong> you agree to these terms. If you do not agree, please do not use the site.</p>
+
+      <h2>Information on this site</h2>
+      <p>We work to keep menus, prices, hours, events and offers accurate, but they can change without notice and may differ by location. Photographs are illustrative. Call the restaurant to confirm before you visit.</p>
+
+      <h2>Offers, dining cards and promotions</h2>
+      <p>Offers published on this site (including complimentary dining cards, holiday promotions and group dining rewards) are subject to the terms shown with each offer: dates, days of the week, one card per table, supplies, exclusions and no cash value. Offers cannot be combined unless stated and may be changed or withdrawn at any time.</p>
+
+      <h2>Gift cards</h2>
+      <p>Gift cards are sold and managed by our provider, SecureTree, under the terms shown at purchase, including what to do if a card is lost or stolen. Bonus dining cards are not gift cards and have no cash value.</p>
+
+      <h2>Reservations, takeout and events</h2>
+      <p>Reservations, online ordering and group event requests are handled by third-party services (Resy, Toast, DoorDash, Uber Eats, Grubhub and Tripleseat). Their own terms and policies apply. Submitting an inquiry on this site does not confirm a booking: an event is confirmed only when our events team sends and you accept a written proposal. Private dining may require a food and beverage minimum; quotes may include tax, gratuity and an administrative fee.</p>
+
+      <h2>Forms and your submissions</h2>
+      <p>Information you send through our forms is used as described in the <a href="/privacy/">Privacy Policy</a>. Please provide accurate information. Job applications are used only for hiring decisions.</p>
+
+      <h2>Acceptable use</h2>
+      <p>Do not misuse the site: no unlawful activity, automated scraping that burdens the service, attempts to break or probe its security, or submitting false or harmful content.</p>
+
+      <h2>Indemnity</h2>
+      <p>You agree to hold Estância harmless from claims arising from your misuse of the site or your violation of these terms.</p>
+
+      <h2>Intellectual property</h2>
+      <p>The Estância name, logo, photographs, text and design belong to Estância Brazilian Steakhouse or its licensors. You may not copy or reuse them without written permission, except for personal, non-commercial sharing of links.</p>
+
+      <h2>Links to other sites</h2>
+      <p>This site links to services we do not control. We are not responsible for their content, availability or practices.</p>
+
+      <h2>Disclaimer and limitation of liability</h2>
+      <p>The site is provided &ldquo;as is&rdquo;. To the fullest extent permitted by law, Estância is not liable for indirect or consequential damages arising from your use of the site. Nothing here limits rights you have under applicable law.</p>
+
+      <h2>Food allergies and health</h2>
+      <p>Tell your server about any allergy or dietary restriction before ordering. Consuming raw or undercooked meats, poultry, seafood or eggs may increase your risk of foodborne illness.</p>
+
+      <h2>Governing law</h2>
+      <p>These terms are governed by the laws of the State of Texas. Any dispute will be handled in the state or federal courts located in Travis or Williamson County, Texas.</p>
+
+      <h2>Changes and contact</h2>
+      <p>We may update these terms; the date below shows the latest version. Questions: <a href={`mailto:${legalEmail}`}>{legalEmail}</a> · {locations.austin.phone} (Austin) · {locations.leander.phone} (Leander).</p>
+      <p class="note" style="color:#6b665a">Last updated: {legalUpdated} (draft).</p>
+    </div>
+  </section>
+</Base>

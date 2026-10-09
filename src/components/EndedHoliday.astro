@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Cta from './Cta.astro';
+import Icon from './Icon.astro';
+import { holidays, type endedHolidays } from '../data/holidays';
+
+interface Props { e: (typeof endedHolidays)[number] }
+const { e } = Astro.props;
+const next = holidays[0];
+---
+
+<Base title={e.title} description={e.description} image={e.banner}>
+  <PageHero kicker={`${e.name} at Estância`} title={`${e.name} <em>at Estância</em>`} lead="This year’s celebration has ended. Thank you for dining with us. See you next year." image={e.hero} crumbs={[{ label: 'Holidays', href: '/holidays/' }, { label: e.name }]} />
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div>
+        <span class="ended-banner"><Icon name="calendar" /> Ended · {e.last}</span>
+        <h2 class="h2" data-split style="margin-top:1.6rem">What we <em>served</em></h2>
+        <ul class="prices" style="margin-top:1.4rem;max-width:520px">
+          {e.summary.map((s) => (<li><span>{s}</span></li>))}
+        </ul>
+        <p class="note" style="margin-top:1.4rem">{e.takeout}</p>
+        <div class="btn-row">
+          <a class="btn btn--solid" href="/holidays/" data-magnetic>See upcoming holidays <Icon name="arrow" /></a>
+          <a class="btn" href="/reserve/" data-magnetic>Reserve a table</a>
+        </div>
+      </div>
+      <div class="mask ratio-43" data-mask><div class="px" data-parallax="0.06"><img src={e.banner} alt={`${e.name} at Estância`} loading="lazy" style="object-fit:contain;background:#111" /></div></div>
+    </div>
+  </section>
+  <section class="sec sec--deep">
+    <div class="wrap">
+      <span class="kicker">Next up</span>
+      <div class="cards" style="margin-top:1rem">
+        <a class="card" href={`/${next.slug}/`}><div class="mask" style="aspect-ratio:16/10"><img src={next.hero} alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">{next.dates}</span><h3>{next.name} at Estância</h3></div></a>
+      </div>
+    </div>
+  </section>
+  <Cta />
+</Base>

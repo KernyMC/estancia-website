@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import { specials } from '../data/content';
+---
+
+<Base title="Weekly Specials" description="Weekly specials at Estância in Austin and Leander: Monday night special, happy hour, Wine Wednesday, executive lunch and weekend brunch.">
+  <PageHero kicker="Every day" title="There&rsquo;s something <em>special</em> every day" lead="Explore everything we&rsquo;ve prepared for the week in Austin and Leander." image="/img/w/ish_0078.jpg" crumbs={[{ label: 'Specials' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <div class="cards" data-stagger>
+        {specials.map((s) => (
+          <article class="card">
+            <div class="mask"><img src={s.img} alt={s.title} loading="lazy" /><span class="badge-soon">{s.day}</span></div>
+            <div class="card__body"><h3>{s.title}</h3><p>{s.text}</p></div>
+          </article>
+        ))}
+      </div>
+      <p class="note" style="margin-top:3rem">Specials may vary by location and are subject to change. Call the restaurant to confirm.</p>
+    </div>
+  </section>
+  <section class="sec sec--deep" id="coastal">
+    <div class="wrap">
+      <span class="ended-banner">Summer 2026 · seasonal, ended</span>
+      <div class="split" style="margin-top:2rem;align-items:start">
+        <div>
+          <img src="/img/w/logo-coastal-collection.png" alt="Coastal Collection" style="width:min(100%,380px);margin-bottom:1.5rem" loading="lazy" />
+          <p class="lead" data-reveal>Fresh seafood features, summer cocktails and exclusive gourmet salad bar additions, available Monday through Friday during dinner through the end of summer.</p>
+          <h3 class="h3" style="margin-top:2rem">Seasonal salad bar features</h3>
+          <ul class="chips" style="margin-top:1rem" data-stagger><li>Shrimp cocktail</li><li>Smoked salmon</li><li>Summer harvest salad</li><li>Summer spinach salad</li></ul>
+        </div>
+        <div>
+          <h3 class="h3">Weekly seafood highlights</h3>
+          <ul class="menu-list" style="grid-template-columns:1fr;margin:1rem 0 2rem" data-stagger>
+            <li><b>Mon &amp; Wed</b><span>Seafood pasta</span></li>
+            <li><b>Tuesday</b><span>Seafood risotto</span></li>
+            <li><b>Thursday</b><span>Lobster rice</span></li>
+            <li><b>Friday</b><span>Seafood paella</span></li>
+          </ul>
+          <h3 class="h3">Special cocktails · $12</h3>
+          <ul class="chips" style="margin-top:1rem" data-stagger><li>Caipirinha (traditional or frozen)</li><li>Cucumber Collins</li><li>Watermelon Aperol Spritz</li><li>Pineapple Upside Down</li><li>Blueberry Mule</li><li>Ranch Margarita</li><li>Golden Hour Sour</li><li>Classic Sangria</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <Cta />
+</Base>

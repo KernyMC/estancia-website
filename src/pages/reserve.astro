@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { locations, hours } from '../data/site';
+---
+
+<Base title="Reserve a Table" description="Reserve your table at Estância Brazilian Steakhouse in Austin or Leander, Texas, through Resy.">
+  <PageHero kicker="Reservations" title="Reserve your <em>table</em>" lead="Reservations are highly recommended, especially on weekends, holidays and special occasions." image="/img/w/l1010374.jpg" crumbs={[{ label: 'Reserve' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap" data-tabs>
+      <div class="tabs tabs--photo" role="tablist" aria-label="Choose a location">
+        <button role="tab" id="t-austin" data-tab="austin" aria-selected="true" style={`--img:url(${locations.austin.hero})`}><b>Austin</b><small>{locations.austin.area}</small></button>
+        <button role="tab" id="t-leander" data-tab="leander" aria-selected="false" style={`--img:url(${locations.leander.hero})`}><b>Leander</b><small>{locations.leander.area}</small></button>
+      </div>
+      {[locations.austin, locations.leander].map((l, i) => (
+        <div role="tabpanel" data-panel={l.id} hidden={i === 1} aria-labelledby={`t-${l.id}`} class="panel split">
+          <div>
+            <h2 class="h1">{l.name} <em>{l.area}</em></h2>
+            <address style="font-style:normal;margin:1.6rem 0;color:#ddd">{l.address}<br />{l.cityLine}<br /><a href={`tel:${l.phone.replace(/\D/g, '')}`} style="color:var(--gold)">{l.phone}</a></address>
+            <p><span class="open-now" data-open>Hours</span></p>
+            <div class="btn-row">
+              <a class="btn btn--solid" href={l.resy} target="_blank" rel="noopener" data-magnetic>Book on Resy <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+              <a class="btn" href={`/${l.id}/private-dining/`} data-magnetic>Parties of 12+</a>
+            </div>
+            <p class="note" style="margin-top:2rem">For parties of 12 or more adults, use our group dining form so our events team can prepare your room.</p>
+          </div>
+          <ul class="hours">{hours.map((h) => (<li><b>{h.days}</b><span>{h.lines.join(' · ')}</span></li>))}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

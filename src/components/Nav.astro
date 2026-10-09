@@ -1,0 +1,43 @@
+---
+import { nav, locations } from '../data/site';
+const path = Astro.url.pathname;
+const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="nav">
+  <div class="nav__in">
+    <a class="nav__logo" href="/" aria-label="Estância Brazilian Steakhouse, home">
+      <img src="/img/w/primary-white-and-gold-3.png" alt="Estância Brazilian Steakhouse" width="168" height="58" />
+    </a>
+    <nav class="nav__menu" aria-label="Primary">
+      {nav.map((item) => (
+        <div class="nav__item">
+          <a class="nav__link" href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
+          {item.children && (
+            <div class="nav__drop">
+              {item.children.map((c) => (
+                <a href={c.href}>{c.label}{c.note && <small>{c.note}</small>}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer">
+  <ul class="drawer__list">
+    {[...nav.map((n) => ({ label: n.label, href: n.href })), { label: 'Reserve', href: '/reserve/' }, { label: 'News', href: '/news/' }].map((n, i) => (
+      <li><a href={n.href} style={`--i:${i}`}>{n.label}</a></li>
+    ))}
+  </ul>
+  <div class="drawer__foot">
+    <span>{locations.austin.address}, Austin &middot; {locations.austin.phone}</span>
+    <span>{locations.leander.address}, Leander &middot; {locations.leander.phone}</span>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+---
+import HolidayPage from '../components/HolidayPage.astro';
+import { holidays } from '../data/holidays';
+const h = holidays.find((x) => x.slug === 'new-years')!;
+---
+
+<HolidayPage h={h} />

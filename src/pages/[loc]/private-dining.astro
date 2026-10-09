@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import InquiryForm from '../../components/InquiryForm.astro';
+import { locations, type LocationId } from '../../data/site';
+
+export function getStaticPaths() {
+  return (['austin', 'leander'] as LocationId[]).map((loc) => ({ params: { loc } }));
+}
+const l = locations[Astro.params.loc as LocationId];
+const cap = l.id === 'austin' ? 'up to 120 guests in our private rooms, and up to 250 with a full buyout' : 'private rooms from 12 to 100 guests, and gatherings up to 250';
+---
+
+<Base title={`${l.name} Private Dining`} description={`Private dining and group events at Estância ${l.name}: ${cap}.`}>
+  <PageHero kicker={`${l.name} · Group dining`} title={`Private dining in <em>${l.name}</em>`} lead={`Group dining packages for parties of 12+ adults, private or non-private: ${cap}.`} image={l.hero} crumbs={[{ label: l.name, href: `/${l.id}/` }, { label: 'Private dining' }]} />
+
+  <section class="sec sec--dark" id="rooms">
+    <div class="wrap">
+      <span class="kicker">Private rooms</span>
+      <h2 class="h1" data-split style="margin-bottom:3rem">Choose your <em>room</em></h2>
+      <div class="rooms" data-stagger>
+        {l.rooms.map((r) => (
+          <article class="room">
+            <div class="mask"><img src={r.image} alt={r.name} loading="lazy" /></div>
+            <div class="room__body">
+              <div><h3>{r.name}</h3><small>{r.kind} · {r.guests}</small></div>
+              <a class="link-arrow" href={r.link ?? l.tripleseat} target="_blank" rel="noopener">Book <i class="ico ico-arrow" aria-hidden="true"></i></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--cream sec--light">
+    <div class="wrap split split--form">
+      <div>
+        <span class="kicker">Start planning</span>
+        <h2 class="h2" data-split>Corporate, celebrations, <em>everything</em></h2>
+        <p class="lead" style="margin-top:1.4rem" data-reveal>Corporate meetings, lunch &amp; learns, client appreciation, anniversaries and birthdays, weddings, graduations, fundraisers and more. Contact our events team:</p>
+        <p data-reveal><a href={`tel:${l.eventsPhone.replace(/\D/g, '')}`} style="color:var(--gold-ink)">{l.eventsPhone}</a> &middot; <a href={`mailto:${l.eventsEmail}`} style="color:var(--gold-ink)">{l.eventsEmail}</a></p>
+        <a class="btn btn--dark" href={l.tripleseat} target="_blank" rel="noopener" data-magnetic>Open the planning form <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+      </div>
+      <InquiryForm location={l.id} />
+    </div>
+  </section>
+</Base>

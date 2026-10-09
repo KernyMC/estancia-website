@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import Marquee from '../components/Marquee.astro';
+import { locations } from '../data/site';
+
+const perks = [
+  ['Custom packages', 'We can customize any package or build a custom menu.'],
+  ['Flexible layouts', 'Fully private modular rooms with table arrangements tailored to your group.'],
+  ['Seamless planning', 'Simple planning and organized billing from start to finish.'],
+  ['Private or semi-private', 'Enjoy your guests, relax and experience exceptional dining with ease.'],
+  ['Audiovisual', 'Integrated audio & visual capabilities for presentations and meetings.'],
+  ['Dining cards', 'Complimentary dining cards offered as guest favors for private events.'],
+];
+---
+
+<Base title="Private Dining & Group Events" description="Private dining rooms and group events at Estância Brazilian Steakhouse in Austin and Leander: from 12 to 250 guests.">
+  <PageHero kicker="Private dining & events" title="The perfect place for your <em>gathering</em>" lead="Intimate parties or large gatherings of any size: unparalleled group dining with Brazilian culture, delectable food and unmatched service." image="/img/w/dsc09630.jpg" crumbs={[{ label: 'Private dining' }]} />
+
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <span class="kicker">Holiday offer</span>
+          <h2 class="h1" data-split>Book 12+ and get <em>rewarded</em></h2>
+          <p class="lead" style="margin-top:1.4rem" data-reveal>Book your group celebration this December. The host receives a <strong style="color:var(--gold)">$100</strong> dining card for lunch parties or <strong style="color:var(--gold)">$150</strong> for dinner parties &mdash; and every guest receives a <strong style="color:var(--gold)">$25</strong> dining card.</p>
+        </div>
+        <ul class="chips" data-stagger>
+          <li>Corporate meetings</li><li>Lunch &amp; learn</li><li>Client appreciation</li><li>Anniversaries &amp; birthdays</li><li>Weddings &amp; rehearsals</li><li>Graduations</li><li>Fundraisers</li><li>Company trainings</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Marquee items={['12 – 250 guests', 'Private rooms', 'Custom menus', 'Audiovisual']} />
+
+  <section class="sec sec--deep">
+    <div class="wrap">
+      <div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))" data-stagger>
+        {[locations.austin, locations.leander].map((l) => (
+          <a class="card card--wide" href={`/${l.id}/private-dining/`}>
+            <div class="mask"><img src={l.image} alt={`${l.name} private dining`} loading="lazy" /></div>
+            <div class="card__body"><span class="card__meta">{l.rooms.filter((r) => r.kind === 'Private dining').length} private rooms</span><h3>{l.name}</h3><p>{l.id === 'austin' ? 'Up to 120 guests in private rooms, up to 250 with a full buyout.' : 'Rooms from 12 to 100 guests. Gatherings up to 250.'}</p></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <span class="kicker">What you get</span>
+      <h2 class="h1" data-split style="margin-bottom:3rem">Everything <em>handled</em></h2>
+      <ul class="menu-list" data-stagger>{perks.map(([t, d]) => (<li><b>{t}</b><span>{d}</span></li>))}</ul>
+    </div>
+  </section>
+
+  <section class="sec sec--cream sec--light" id="inquiry">
+    <div class="wrap split split--form">
+      <div>
+        <span class="kicker">General inquiry</span>
+        <h2 class="h2" data-split>Not sure which package <em>fits?</em></h2>
+        <p class="lead" style="margin-top:1.4rem" data-reveal>Fill out the form and someone from our events team will contact you to discuss your options.</p>
+        <p style="margin-top:1rem">Austin: <a href={`tel:${locations.austin.eventsPhone.replace(/\D/g, '')}`} style="color:var(--gold-ink)">{locations.austin.eventsPhone}</a><br />Leander: <a href={`tel:${locations.leander.eventsPhone.replace(/\D/g, '')}`} style="color:var(--gold-ink)">{locations.leander.eventsPhone}</a></p>
+      </div>
+      <InquiryForm />
+    </div>
+  </section>
+</Base>

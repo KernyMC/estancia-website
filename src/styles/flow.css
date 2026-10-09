@@ -1,0 +1,46 @@
+/* ---------- Tarjeta verde / roja + pasos que se iluminan ---------- */
+.ico-flip { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 0 0-15.5-6.2L3 8'/%3E%3Cpath d='M3 3v5h5'/%3E%3Cpath d='M3 12a9 9 0 0 0 15.5 6.2L21 16'/%3E%3Cpath d='M16 16h5v5'/%3E%3C/svg%3E"); }
+.flip-wrap { display: grid; justify-items: center; gap: 1.1rem; }
+.flip { width: min(100%, 560px); aspect-ratio: 1680 / 1010; padding: 0; border: 0; background: none; perspective: 1400px; color: inherit; animation: gfloat 7s ease-in-out infinite; }
+.flip__in { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 1s var(--ease-in-out); }
+.flip.is-go .flip__in { transform: rotateY(180deg); }
+.flip__face { position: absolute; inset: 0; display: block; border-radius: 14px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: box-shadow 0.8s; }
+.flip__face img { width: 100%; height: 100%; object-fit: cover; }
+.flip__face--stop { box-shadow: 0 30px 60px -20px rgba(200, 20, 35, 0.55), 0 10px 22px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.flip__face--go { transform: rotateY(180deg); box-shadow: 0 30px 60px -20px rgba(20, 150, 70, 0.55), 0 10px 22px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.flip__hint { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: #8d8672; }
+.flip__hint .ico { color: var(--gold); font-size: 1.1rem; }
+
+.flow { display: flex; flex-wrap: wrap; gap: 0.7rem; margin: 2.2rem 0 0; padding: 0; list-style: none; }
+.flow li { position: relative; display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.1rem 0.7rem 0.7rem; border: 1px solid var(--line); color: #9b9686; overflow: hidden; cursor: pointer; transition: color 0.5s, border-color 0.5s, background 0.5s, box-shadow 0.5s, transform 0.5s var(--ease); }
+.flow__n { flex: none; display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 1px solid currentColor; font-size: 0.85rem; transition: background 0.5s, color 0.5s, border-color 0.5s; }
+.flow__t { font-size: 1rem; }
+.flow__bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--gold); transform: scaleX(0); transform-origin: left; }
+.flow li.is-done { color: #cfc9b8; border-color: rgba(178, 153, 85, 0.55); }
+.flow li.is-done .flow__n { background: rgba(178, 153, 85, 0.2); border-color: var(--gold); color: var(--gold); }
+.flow li.is-on { color: #fff; border-color: var(--gold); background: rgba(178, 153, 85, 0.12); box-shadow: 0 0 28px rgba(178, 153, 85, 0.22); transform: translateY(-4px); }
+.flow li.is-on .flow__n { background: var(--gold); color: var(--black); border-color: var(--gold); }
+[data-flow].is-auto .flow li.is-on .flow__bar { animation: flowbar var(--step, 2600ms) linear forwards; }
+@keyframes flowbar { to { transform: scaleX(1); } }
+.flow__t { font-size: 0.92rem; }
+@media (max-width: 520px) { .flow { gap: 0.5rem; } .flow li { padding-right: 0.8rem; } .flow__t { font-size: 0.82rem; } .flow__n { width: 1.6rem; height: 1.6rem; font-size: 0.75rem; } }
+@media (prefers-reduced-motion: reduce) { .flip { animation: none; } .flip__in { transition-duration: 0.001ms; } }
+
+/* ---------- Sección compacta: tarjeta + texto + los 3 pasos en una sola fila ---------- */
+.flipsec { padding-block: clamp(3rem, 6vw, 5.5rem); }
+.flipsec .split { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(1.5rem, 4vw, 4rem); }
+.flipsec .flip { width: min(100%, 500px); }
+.flipsec .h2 { font-size: clamp(1.9rem, 3.4vw, 3.2rem); }
+.flipsec .lead { font-size: clamp(1rem, 1.25vw, 1.15rem); margin-top: 1.1rem !important; }
+.flipsec .flow { flex-wrap: nowrap; gap: 0.5rem; margin-top: 1.6rem; }
+.flipsec .flow li { flex: 1 1 0; min-width: 0; padding: 0.6rem 0.8rem 0.6rem 0.6rem; gap: 0.6rem; }
+.flipsec .flow__t { font-size: 0.84rem; line-height: 1.25; }
+.flipsec .flow__n { width: 1.6rem; height: 1.6rem; font-size: 0.75rem; }
+@media (max-width: 860px) {
+  .flipsec .split { grid-template-columns: 1fr; }
+}
+/* Móvil: los 3 pasos siguen en una fila (número arriba, texto debajo) */
+@media (max-width: 640px) {
+  .flipsec .flow li { flex-direction: column; align-items: flex-start; gap: 0.45rem; padding: 0.65rem 0.6rem; }
+  .flipsec .flow__t { font-size: 0.74rem; }
+}

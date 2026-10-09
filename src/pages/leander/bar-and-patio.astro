@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import { cocktails } from '../../data/content';
+import { locations } from '../../data/site';
+const l = locations.leander;
+---
+
+<Base title="Leander Bar & Patio" description="The Estância Leander bar and patio: handcrafted cocktails, happy hour and churrasco on the patio.">
+  <PageHero kicker="Leander · Crystal Village" title="Bar &amp; <em>patio</em>" lead="A lively bar, handcrafted cocktails and churrasco on the patio." image="/img/w/barestancia-webres-220923-ish-15.jpg" crumbs={[{ label: 'Leander', href: '/leander/' }, { label: 'Bar & patio' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">Churrasco on the patio</span>
+        <h2 class="h2" data-split>Four skewers. <em>Serves two.</em></h2>
+        <p class="lead" style="margin-top:1.4rem" data-reveal>Four grilled skewers and two traditional accompaniments, best with a cocktail in hand. Happy hour runs Monday – Friday, 12 – 6 pm in the bar area.</p>
+        <div class="btn-row"><a class="btn btn--solid" href={l.resy} target="_blank" rel="noopener" data-magnetic>Reserve <i class="ico ico-arrow arr" aria-hidden="true"></i></a><a class="btn" href="/menu/bar/" data-magnetic>Bar menu</a></div>
+      </div>
+      <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.07"><img src="/img/w/feed-churrasco-estancia.jpg" alt="Churrasco on the patio" loading="lazy" /></div></div>
+    </div>
+  </section>
+  <section class="sec sec--deep"><div class="wrap"><div class="dishes" data-stagger>{cocktails.map((c) => (<div class="dish"><img src={c.img} alt={c.name} loading="lazy" /><span>{c.name}</span></div>))}</div></div></section>
+  <Cta />
+</Base>

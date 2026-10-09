@@ -1,0 +1,149 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import Icon from '../components/Icon.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { holidays, cardTerms, giftBonus, groupHoliday, holidayTopFaq } from '../data/holidays';
+import { locations, giftCards } from '../data/site';
+
+// Filas de la tabla: una por servicio de cada día
+const rows = holidays.flatMap((h) => h.days.flatMap((d, di) => d.slots.map((s, si) => ({ h, d, s, first: di === 0 && si === 0 }))));
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: holidayTopFaq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Estância holiday dining 2026', itemListElement: holidays.map((h, i) => ({ '@type': 'ListItem', position: i + 1, url: `https://estancia.com/${h.slug}/`, name: `${h.name} at Estância` })) },
+];
+---
+
+<Base title="Holiday Dining in Austin & Leander" description="Thanksgiving, Christmas and New Year’s at Estância Brazilian Steakhouse: hours, prices, takeout and group dining. Reserve your table." image="/img/w/holidays.png" jsonLd={ld}>
+  <PageHero kicker="Holiday reservations are open" title="Your holiday <em>celebration</em> starts here" lead="Book your table or plan your holiday event. Whether it’s a holiday dinner, a corporate gathering or a celebration with family and friends, we’ll help make your occasion special." image="/img/w/dsc09630.jpg" crumbs={[{ label: 'Holidays' }]} />
+
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <div class="hol__bar">
+        <div class="hol__book">
+          <span class="kicker">Reserve your table</span>
+          <div class="locbtns">
+            <a class="locbtn" href={locations.austin.resy} target="_blank" rel="noopener" style={`--img:url(${locations.austin.hero})`}><b>Austin</b><small>Reserve on Resy</small></a>
+            <a class="locbtn" href={locations.leander.resy} target="_blank" rel="noopener" style={`--img:url(${locations.leander.hero})`}><b>Leander</b><small>Reserve on Resy</small></a>
+          </div>
+        </div>
+        <nav class="chipnav" aria-label="Jump to">
+          <a href="#schedule">Schedule &amp; prices</a><a href="#complimentary">Complimentary card</a><a href="#gift">Gift cards</a><a href="#group">Group dining</a><a href="#faq">FAQ</a>
+        </nav>
+      </div>
+
+      <!-- TARJETAS DE FERIADO -->
+      <div class="cards" style="margin-top:3.5rem" data-stagger>
+        {holidays.map((h) => (
+          <a class="card" href={`/${h.slug}/`}>
+            <div class="mask" style="aspect-ratio:4/3"><img src={h.hero} alt="" loading="lazy" /></div>
+            <div class="card__body"><span class="card__meta">{h.dates}</span><h3>{h.name} at Estância</h3><p>See hours, prices and takeout <Icon name="arrow" /></p></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HORARIOS -->
+  <section class="sec sec--deep" id="schedule">
+    <div class="wrap">
+      <span class="kicker">Holiday schedule</span>
+      <h2 class="h1" data-split>Dates, hours &amp; <em>prices</em></h2>
+      <p class="lead" style="margin-top:1rem" data-reveal>Both locations. Tax and gratuity not included. Kids 0–2 are complimentary, 3–5 are $5 and 6–12 are half price.</p>
+      <table class="ptable" data-reveal>
+        <thead><tr><th>Date</th><th>Service</th><th>Hours</th><th>Price</th></tr></thead>
+        <tbody>
+          {holidays.map((h) => (
+            <>
+              <tr class="is-group"><td colspan="4">{h.name}</td></tr>
+              {rows.filter((r) => r.h.slug === h.slug).map((r) => (
+                <tr>
+                  <td data-l="Date"><b>{r.d.title}</b><small>{r.d.label}</small></td>
+                  <td data-l="Service">{r.s.name}</td>
+                  <td data-l="Hours">{r.s.time}</td>
+                  <td class="pr" data-l="Price">{r.s.rows.map(([n, p]) => (<div><span>{n}</span><b>{p}</b></div>))}</td>
+                </tr>
+              ))}
+            </>
+          ))}
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:1.4rem">Thanksgiving, Christmas and New Year’s have takeout packages with their own pickup times; see each page. Prices and hours confirmed for 2026.</p>
+    </div>
+  </section>
+
+  <!-- TARJETA CORTESÍA -->
+  <section class="sec sec--cream sec--light" id="complimentary">
+    <div class="wrap split">
+      <div class="gbonus" data-reveal>
+        <div class="tilt gcard gcard--solo"><span class="gcard__in"><img src="/img/w/cardcomplimentary.jpg" alt="Complimentary lunch or dinner dining card" width="1300" height="782" loading="lazy" /><span class="gcard__foil"></span><span class="gcard__glare"></span></span></div>
+      </div>
+      <div>
+        <span class="kicker">Complimentary card</span>
+        <h2 class="h2" data-split>Dine on a holiday, <em>return</em> for free</h2>
+        <p class="lead" style="margin-top:1.2rem" data-reveal>{cardTerms.summary}</p>
+        <details class="fine"><summary>Terms &amp; conditions</summary>
+          <ul>{cardTerms.fine.map((t) => <li>{t}</li>)}</ul>
+          <p><strong>{cardTerms.valid}</strong> {cardTerms.notValid}</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIFT CARDS -->
+  <section class="sec sec--dark" id="gift">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">Holiday gift cards</span>
+        <h2 class="h1" data-split>Buy $100, get <em>$25</em></h2>
+        <p class="lead" style="margin-top:1.2rem" data-reveal>This holiday season, receive a {giftBonus.headline.toLowerCase()} from {giftBonus.window}.</p>
+        <div class="btn-row"><a class="btn btn--solid" href={giftCards.buy} target="_blank" rel="noopener" data-magnetic>Order gift cards <Icon name="up-right" /></a><a class="btn" href="/gift-cards/" data-magnetic>About gift cards</a></div>
+        <details class="fine" style="color:#9b9686"><summary style="color:var(--gold)">Terms &amp; conditions</summary>
+          <ul>{giftBonus.fine.map((t) => <li>{t}</li>)}</ul><p><strong>{giftBonus.valid}</strong></p></details>
+      </div>
+      <div class="mask ratio-43" data-mask><div class="px" data-parallax="0.06"><img src="/img/w/group-162.png" alt="Holiday gift cards" loading="lazy" style="object-fit:contain;background:#000" /></div></div>
+    </div>
+  </section>
+
+  <!-- GRUPOS -->
+  <section class="sec sec--deep" id="group">
+    <div class="wrap">
+      <span class="kicker">Holiday group dining</span>
+      <h2 class="h1" data-split>{groupHoliday.headline.split(' and get')[0]} and get <em>rewarded</em></h2>
+      <div class="rewards" data-stagger>{groupHoliday.rewards.map(([a, b]) => (<div><b>{a}</b><span>{b}</span></div>))}</div>
+      <ul class="menu-list" data-stagger>{groupHoliday.perks.map(([t, d]) => (<li><b>{t}</b><span>{d}</span></li>))}</ul>
+
+      <div class="capacity" style="margin-top:3rem" data-stagger>
+        {groupHoliday.capacity.map((c) => {
+          const l = locations[c.id as 'austin' | 'leander'];
+          return (<a href={`/${l.id}/private-dining/`}><span>{l.name} · {l.area}</span><b>{c.rooms}</b><span>{c.cap} capacity</span></a>);
+        })}
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--solid dl" href={groupHoliday.packages.holiday} target="_blank" rel="noopener" data-magnetic><Icon name="download" /> See holiday package</a>
+        <a class="btn dl" href={groupHoliday.packages.austin} target="_blank" rel="noopener" data-magnetic><Icon name="download" /> Austin events</a>
+        <a class="btn dl" href={groupHoliday.packages.leander} target="_blank" rel="noopener" data-magnetic><Icon name="download" /> Leander events</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--cream sec--light" id="inquiry">
+    <div class="wrap split split--form">
+      <div>
+        <span class="kicker">Start with your inquiry</span>
+        <h2 class="h2" data-split>Holiday <em>parties</em></h2>
+        <p class="lead" style="margin-top:1.2rem" data-reveal>Tell us about your event and our team will reach out with options. Austin: <a href={`tel:${locations.austin.eventsPhone.replace(/\D/g, '')}`} style="color:var(--gold-ink)">{locations.austin.eventsPhone}</a> · Leander: <a href={`tel:${locations.leander.eventsPhone.replace(/\D/g, '')}`} style="color:var(--gold-ink)">{locations.leander.eventsPhone}</a></p>
+      </div>
+      <InquiryForm holiday />
+    </div>
+  </section>
+
+  <section class="sec sec--white" id="faq">
+    <div class="wrap faq" style="max-width:900px">
+      <span class="kicker">Good to know</span>
+      <h2 class="h2" data-split style="margin-bottom:2rem">Holiday <em>questions</em></h2>
+      {holidayTopFaq.map((f) => (<details><summary>{f.q}</summary><div class="ans">{f.a}</div></details>))}
+    </div>
+  </section>
+  <Cta />
+</Base>

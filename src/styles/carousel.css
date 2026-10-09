@@ -1,0 +1,137 @@
+/* ---------- Móvil: las rejillas de tarjetas pasan a carrusel horizontal con snap ---------- */
+@media (max-width: 860px) {
+  .cards:not(.cards--grid),
+  .rooms,
+  .dishes {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    margin-inline: calc(var(--pad) * -1);
+    padding-inline: var(--pad);
+    scroll-padding-inline: var(--pad);
+    padding-bottom: 1.1rem;
+    scrollbar-width: none;
+  }
+  .cards:not(.cards--grid)::-webkit-scrollbar,
+  .rooms::-webkit-scrollbar,
+  .dishes::-webkit-scrollbar { display: none; }
+  .cards:not(.cards--grid) > *,
+  .rooms > * { flex: 0 0 min(78vw, 340px); scroll-snap-align: start; min-width: 0; }
+  .dishes > * { flex: 0 0 min(62vw, 260px); scroll-snap-align: start; }
+  /* El siguiente elemento asoma a la derecha: señal de que se desliza */
+  .cards:not(.cards--grid) > *:last-child,
+  .rooms > *:last-child,
+  .dishes > *:last-child { margin-right: var(--pad); }
+}
+
+/* ---------- Proveedores de pedido: una fila de logos, sin líneas ---------- */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(0.5rem, 1.6vw, 1.2rem); margin: 2.5rem 0 0; padding: 0; list-style: none; }
+.tile { position: relative; display: block; aspect-ratio: 925 / 720; border-radius: 12px; overflow: hidden; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease); }
+.tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease); }
+.tile:hover, .tile:focus-visible { transform: translateY(-8px); box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.85), 0 0 0 2px var(--gold); }
+.tile:hover img { transform: scale(1.06); }
+.tile__tag { position: absolute; left: 0.6rem; bottom: 0.6rem; padding: 0.25rem 0.6rem; border-radius: 99px; background: rgba(10, 10, 10, 0.7); color: #fff; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; backdrop-filter: blur(4px); }
+@media (max-width: 520px) { .tile { border-radius: 8px; } .tile__tag { display: none; } }
+
+/* ---------- CTA de reservas: imágenes laterales ---------- */
+.cta__side { position: absolute; top: 0; bottom: 0; width: clamp(200px, 19vw, 360px); pointer-events: none; z-index: 1; display: none; overflow: hidden; }
+.cta__side img { position: absolute; top: 0; height: 100%; width: auto; max-width: none; opacity: 0.6; transition: transform 2.2s var(--ease), opacity 1.6s var(--ease); }
+.cta__side--l { left: 0; -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent); mask-image: linear-gradient(90deg, #000 40%, transparent); }
+.cta__side--r { right: 0; -webkit-mask-image: linear-gradient(270deg, #000 40%, transparent); mask-image: linear-gradient(270deg, #000 40%, transparent); }
+.cta__side--l img { left: -26%; transform: translateX(-75%); }
+.cta__side--r img { right: -22%; transform: translateX(75%); }
+.cta__side.in img { transform: translateX(0); }
+@media (min-width: 1101px) { .cta__side { display: block; } }
+@media (prefers-reduced-motion: reduce) { .cta__side img { transform: none !important; } }
+
+/* ---------- Formulario de eventos compacto: 3 columnas, menos scroll ---------- */
+.split--form { grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr); align-items: start; }
+.form--3 { gap: 0.9rem 1rem; }
+.form--3 .field input, .form--3 .field select, .form--3 .field textarea { padding: 0.75rem 0.85rem; font-size: 0.95rem; }
+.form--3 .field label { font-size: 0.66rem; letter-spacing: 0.18em; }
+.form--3 .legal-note, .form--3 .note { font-size: 0.78rem; line-height: 1.45; }
+@media (min-width: 1000px) {
+  .form--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .form--3 .full { grid-column: 1 / -1; }
+}
+@media (max-width: 999px) and (min-width: 861px) { .form--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1000px) { .split--form { grid-template-columns: 1fr; } }
+
+/* ---------- Táctil: áreas de toque ≥ 44 px sin cambiar el aspecto ---------- */
+@media (max-width: 860px), (pointer: coarse) {
+  .footer li a, .footer__legal a { display: inline-block; padding-block: 0.7rem; }
+  .footer li { margin-bottom: 0; }
+  .link-arrow { padding-block: 0.8rem; }
+  a[href^='tel:'], a[href^='mailto:'] { display: inline-block; padding-block: 0.6rem; }
+  summary { padding-block: 0.8rem; }
+  .crumbs a { padding-block: 0.5rem; display: inline-block; }
+  .topics a, .chipnav a { padding-block: 0.85rem; }
+}
+.form--3 .field label { font-size: 0.7rem; }
+.tile__tag { font-size: 0.66rem; }
+@media (max-width: 860px), (pointer: coarse) { .footer p a { display: inline-block; padding-block: 0.6rem; } }
+.badge-soon { font-size: 0.72rem; }
+@media (max-width: 520px) { .btn-pair .btn { font-size: 0.72rem; } }
+.chips li:has(> a) { padding: 0; }
+.chips li > a { display: block; padding: 0.7rem 1.1rem; }
+@media (max-width: 860px), (pointer: coarse) { .subnav a { padding-block: 0.9rem; } }
+
+/* ---------- Tarjetas de local (Austin / Leander): texto compacto, legible, sin tapar la foto ---------- */
+.loc { min-height: min(72svh, 620px); padding: clamp(1.5rem, 3.5vw, 3rem); }
+.loc::after { background:
+    linear-gradient(to top, rgba(8, 8, 8, 0.97) 0%, rgba(8, 8, 8, 0.86) 24%, rgba(8, 8, 8, 0.3) 52%, rgba(8, 8, 8, 0.06) 100%),
+    linear-gradient(90deg, rgba(8, 8, 8, 0.5), transparent 60%); }
+.loc > div:not(.loc__bg) { max-width: 24rem; }
+.loc .kicker { color: var(--gold-soft); margin-bottom: 0.7rem; font-size: 0.7rem; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8); }
+.loc h3 { font-size: clamp(2rem, 3.6vw, 3.2rem); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7); }
+.loc address { margin: 0.6rem 0 0.9rem; font-size: 0.95rem; line-height: 1.55; color: #eee; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85); }
+.loc .open-now { font-size: 0.72rem; color: #f0ece0; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8); }
+.loc .btn-row { margin-top: 1.1rem; }
+.loc .btn { padding: 0.8rem 1.4rem; background: rgba(10, 10, 10, 0.35); backdrop-filter: blur(4px); }
+
+/* ---------- Selector de local con foto (pestañas y botones de reserva) ---------- */
+.tabs.tabs--photo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; border: 0; margin-bottom: 2.4rem; max-width: 680px; }
+.tabs--photo button, .locbtn { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.15rem; height: clamp(88px, 9vw, 124px); padding: 0.9rem 1.2rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; isolation: isolate; text-align: left; color: #fff;
+  background: #111 var(--img) center / cover no-repeat; transition: transform 0.5s var(--ease), border-color 0.4s, box-shadow 0.5s; }
+.tabs--photo button::before, .locbtn::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(8, 8, 8, 0.9), rgba(8, 8, 8, 0.35) 70%); transition: opacity 0.4s; }
+.tabs--photo button b, .locbtn b { font-size: clamp(1.15rem, 1.8vw, 1.5rem); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8); }
+.tabs--photo button small, .locbtn small { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-soft); }
+.tabs.tabs--photo button[aria-selected='true'] { background: #111 var(--img) center / cover no-repeat; color: #fff; border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold), 0 18px 40px -18px rgba(0, 0, 0, 0.8); }
+.tabs.tabs--photo button[aria-selected='false']::before { background: linear-gradient(to top, rgba(8, 8, 8, 0.94), rgba(8, 8, 8, 0.6)); }
+.tabs--photo button:hover, .locbtn:hover { transform: translateY(-3px); border-color: var(--gold); }
+.locbtns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
+.locbtn { display: flex; }
+@media (max-width: 520px) { .tabs--photo button, .locbtn { padding: 0.7rem 0.9rem; } .tabs--photo button small, .locbtn small { font-size: 0.6rem; letter-spacing: 0.12em; } }
+.loc { background: #111; }
+.tabs--photo button small, .locbtn small { font-size: 0.72rem; }
+@media (max-width: 520px) { .tabs--photo button small, .locbtn small { font-size: 0.7rem; letter-spacing: 0.1em; } }
+
+/* ---------- Alturas de sección homogéneas (landing escaneable) ---------- */
+.cards--wide .mask { aspect-ratio: 4 / 3; }
+.split .mask.ratio-34, .split .mask.ratio-45 { max-height: min(72svh, 640px); }
+.stats { margin-top: 2.4rem; padding-top: 1.8rem; gap: 1.2rem; }
+.stat b { font-size: clamp(2rem, 4vw, 3.4rem); }
+.locs { min-height: 0; }
+.cards--sq .mask { aspect-ratio: 1; }
+/* Cortes: tamaño original; solo un poco de aire sobre la sección para separarla de la anterior */
+.hs { padding-top: 3.5rem; }
+@media (max-width: 860px) {
+  .split .mask.ratio-34, .split .mask.ratio-45 { aspect-ratio: 4 / 3; max-height: none; }
+  .stack .mask:nth-child(2) { width: 42%; right: 4%; bottom: -8%; border-width: 6px; }
+  .stack { margin-bottom: 1.5rem; }
+  .gallery--two .mask { grid-column: auto !important; aspect-ratio: 1 !important; }
+  .gallery--two .mask:first-child { grid-column: span 2 !important; aspect-ratio: 16 / 10 !important; }
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
+  .stat b { font-size: 1.6rem; } .stat span { font-size: 0.7rem; letter-spacing: 0.06em; line-height: 1.3; display: block; }
+  .loc { min-height: min(62svh, 440px); }
+}
+
+/* Salad bar: foto un poco más ancha */
+.split--media { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); } /* el orden visual es texto | foto (split--rev) */
+.split--media .mask { aspect-ratio: 1 / 1; max-height: min(74svh, 640px); }
+@media (max-width: 860px) { .split--media { grid-template-columns: 1fr; } .split--media .mask { aspect-ratio: 4 / 3; max-height: none; } }

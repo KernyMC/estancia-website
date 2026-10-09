@@ -1,0 +1,10 @@
+import puppeteer from 'puppeteer-core';
+const [, , route = '/', fnSrc = '() => 1', w = '1440', h = '900', y = '0'] = process.argv;
+const b = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new' });
+const p = await b.newPage();
+await p.setViewport({ width: +w, height: +h });
+await p.goto('http://localhost:4327' + route, { waitUntil: 'networkidle2' });
+await p.evaluate((yy) => scrollTo(0, yy), +y);
+await new Promise((r) => setTimeout(r, 2000));
+console.log(JSON.stringify(await p.evaluate(eval('(' + fnSrc + ')')), null, 1));
+await b.close();

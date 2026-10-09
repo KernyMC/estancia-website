@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import { events } from '../../data/content';
+import { locations } from '../../data/site';
+
+export function getStaticPaths() {
+  return events.map((e) => ({ params: { slug: e.slug }, props: { e } }));
+}
+const { e } = Astro.props;
+const isPast = !!e.start && e.start < new Date().toISOString().slice(0, 10);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: e.title,
+  startDate: e.start,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: `https://estancia.com${e.image}`,
+  description: e.text,
+  organizer: { '@type': 'Organization', name: 'Estância Brazilian Steakhouse', url: 'https://estancia.com/' },
+  location: [locations.austin, locations.leander].map((l) => ({ '@type': 'Place', name: `Estância ${l.name}`, address: { '@type': 'PostalAddress', streetAddress: l.address, addressLocality: l.name, addressRegion: 'TX' } })),
+};
+---
+
+<Base title={e.title} description={e.text.slice(0, 155)} image={e.image} jsonLd={ld}>
+  <PageHero kicker={e.kicker} title={e.title} lead={`${e.when} · ${e.where}`} image={e.image} crumbs={[{ label: 'Events', href: '/events/' }, { label: e.title }]} />
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div>
+        {isPast && <span class="ended-banner" style="margin-bottom:1.4rem">This event has ended</span>}
+        <h2 class="h2" data-split>{isPast ? <>See you at the next <em>event</em></> : <>Join us at <em>Estância</em></>}</h2>
+        <p class="lead" style="margin-top:1.4rem" data-reveal>{e.text}</p>
+        {(e.ctas ?? (e.cta ? [e.cta] : [])).length > 0 && <div class="btn-row">{(e.ctas ?? (e.cta ? [e.cta] : [])).map((c, i) => <a class={`btn ${i === 0 ? 'btn--solid' : ''}`} href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel="noopener" data-magnetic>{c.label} <i class="ico ico-arrow arr" aria-hidden="true"></i></a>)}</div>}
+      </div>
+      <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.06"><img src={e.image} alt={e.title} loading="lazy" /></div></div>
+    </div>
+  </section>
+  <Cta />
+</Base>

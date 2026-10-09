@@ -1,0 +1,28 @@
+---
+// Marquesina en forma de cinta de película curvada: el texto corre a lo largo de una curva,
+// con perforaciones (sprockets) a los lados. La velocidad y el bucle se ajustan en motion.ts (initFilmStrip).
+interface Props { items: string[]; variant?: 'gold' | 'dark' }
+const { items, variant = 'gold' } = Astro.props;
+const uid = 'fs' + Math.random().toString(36).slice(2, 8);
+// una "unidad" de texto; el script la repite hasta cubrir la curva y mide su largo exacto
+const unit = items.map((t) => t.toUpperCase()).join('   ✦   ') + '   ✦   ';
+const MID = 'M -140 68 Q 720 150 1580 68'; // eje de la cinta (arco suave hacia abajo)
+---
+
+<div class:list={['film', variant === 'dark' && 'film--dark']} aria-hidden="true">
+  <svg class="film__svg" viewBox="0 0 1440 200" preserveAspectRatio="xMidYMid slice" data-film data-unit={unit}>
+    <defs>
+      <linearGradient id={`${uid}-g`} x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" class="film__edge" />
+        <stop offset="0.22" class="film__mid" />
+        <stop offset="0.5" class="film__hi" />
+        <stop offset="0.78" class="film__mid" />
+        <stop offset="1" class="film__edge" />
+      </linearGradient>
+      <path id={`${uid}-p`} d={MID} />
+    </defs>
+    <!-- cinta: dos curvas paralelas rellenas con degradado (los extremos se oscurecen: la cinta se curva) -->
+    <path class="film__band" fill={`url(#${uid}-g)`} d="M -140 28 Q 720 110 1580 28 L 1580 108 Q 720 190 -140 108 Z" />
+    <text class="film__text" dy="9"><textPath href={`#${uid}-p`} startOffset="0">{unit}</textPath></text>
+  </svg>
+</div>

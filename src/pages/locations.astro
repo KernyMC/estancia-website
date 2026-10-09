@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import { locations, hours } from '../data/site';
+---
+
+<Base title="Locations" description="Estância Brazilian Steakhouse in Austin (Arboretum) and Leander (Crystal Village), Texas: addresses, hours and phone numbers.">
+  <PageHero kicker="Find us" title="Two homes, one <em>fire</em>" lead="Austin and Leander: pick the table closest to you." image="/img/w/dsc09664.jpg" crumbs={[{ label: 'Locations' }]} />
+  <section aria-label="Locations">
+    <div class="locs">
+      {[locations.austin, locations.leander].map((l) => (
+        <a class="loc" href={`/${l.id}/`}>
+          <div class="loc__bg"><img src={l.hero} alt="" loading="lazy" /></div>
+          <div data-reveal>
+            <span class="kicker">{l.area}</span>
+            <h3>{l.name}</h3>
+            <address>{l.address}<br />{l.cityLine}<br />{l.phone}</address>
+            <span class="open-now" data-open>Hours</span>
+            <div class="btn-row"><span class="btn">View location <i class="ico ico-arrow arr" aria-hidden="true"></i></span></div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div><span class="kicker">Hours</span><h2 class="h2" data-split>Both locations, <em>same schedule</em></h2></div>
+      <ul class="hours" data-stagger>{hours.map((h) => (<li><b>{h.days}</b><span>{h.lines.join(' · ')}</span></li>))}</ul>
+    </div>
+  </section>
+  <Cta />
+</Base>

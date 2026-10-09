@@ -1,0 +1,51 @@
+/* ---------- News: filtros + buscador a la derecha + paginación ---------- */
+.ico-search { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.6-3.6'/%3E%3C/svg%3E"); }
+.news-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 2.4rem; }
+.news-bar .topics { margin-bottom: 0; }
+.news-search { position: relative; display: flex; align-items: center; flex: 0 1 340px; min-width: min(100%, 240px); }
+.news-search .ico { position: absolute; left: 1rem; color: var(--gold-ink); font-size: 1.05rem; pointer-events: none; }
+.news-search input { width: 100%; padding: 0.85rem 2.6rem 0.85rem 2.7rem; font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--white); border: 1px solid #d9d2c0; border-radius: 99px; transition: border-color 0.3s, box-shadow 0.3s; -webkit-appearance: none; appearance: none; }
+.news-search input::-webkit-search-cancel-button { display: none; }
+.news-search input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(178, 153, 85, 0.25); }
+.news-search__clear { position: absolute; right: 0.5rem; width: 2rem; height: 2rem; border: 0; border-radius: 50%; background: none; color: var(--text); font-size: 1.4rem; line-height: 1; }
+.news-search__clear:hover { background: rgba(178, 153, 85, 0.18); }
+.news-status { margin: 0 0 1.6rem; color: var(--text); }
+.pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.6rem 1.2rem; margin-top: 3.2rem; }
+.pager ol { display: flex; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.pager ol a, .pager__gap { display: grid; place-items: center; min-width: 2.7rem; height: 2.7rem; padding: 0 0.4rem; border: 1px solid transparent; color: var(--ink); font-size: 0.95rem; transition: background 0.3s, color 0.3s, border-color 0.3s; }
+.pager ol a:hover { border-color: var(--gold); }
+.pager ol a[aria-current='page'] { background: var(--gold); color: var(--black); font-weight: 500; }
+.pager__gap { color: #9b9686; }
+.pager__step { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 2.7rem; min-width: 2.7rem; padding: 0 0.6rem; font-size: 0.74rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-ink); }
+.pager__step:hover { color: var(--ink); }
+.pager__step.is-off { opacity: 0.3; }
+.pager__prev { transform: scaleX(-1); }
+.pager__count { margin: 1.4rem 0 0; text-align: center; font-size: 0.82rem; color: #8d8672; }
+@media (max-width: 860px) { .news-search { flex-basis: 100%; } .pager__step span { display: none; } }
+
+/* Sello de premio (Three Best Rated) */
+.award { display: inline-block; margin-top: 1.4rem; transition: transform 0.5s var(--ease), filter 0.5s; }
+.award img { display: block; width: 120px; height: 120px; }
+.award:hover { transform: translateY(-4px) rotate(-3deg); filter: drop-shadow(0 12px 22px rgba(0,0,0,0.5)); }
+.award--reviews { display: block; margin: 0 auto 1.4rem; width: fit-content; }
+.award--reviews img { width: clamp(88px, 9vw, 112px); height: auto; }
+
+/* Sello en las reseñas: grande, a la derecha, inclinado y fuera del flujo (no suma altura a la sección) */
+.reviews { position: relative; }
+.award--reviews { position: absolute; z-index: 4; right: clamp(1.5rem, 7vw, 8rem); top: clamp(1.2rem, 2.6vw, 2.8rem); margin: 0; width: clamp(120px, 11vw, 170px); animation: awardSway 7s ease-in-out infinite alternate; filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55)); }
+.award--reviews img { width: 100%; height: auto; transform: scale(0.55) rotate(-40deg); transition: transform 1.6s var(--ease); }
+.award--reviews.in img { transform: scale(1) rotate(0deg); }
+.award--reviews:hover { animation-play-state: paused; transform: scale(1.06) rotate(-4deg); }
+@keyframes awardSway { from { transform: rotate(6deg) translateY(0); } to { transform: rotate(-3deg) translateY(10px); } }
+@media (max-width: 860px) { .award--reviews { width: 88px; right: 1rem; top: 0.8rem; } }
+@media (max-width: 520px) { .award--reviews { display: none; } }
+@media (prefers-reduced-motion: reduce) { .award--reviews { animation: none; transform: rotate(4deg); } .award--reviews img { transform: none; } }
+
+/* ---------- Sello tipo estampa en las reseñas: inclinado, en la posición de la esquina superior derecha ---------- */
+.award--reviews { top: clamp(1.2rem, 2.6vw, 2.8rem); right: clamp(1.5rem, 7vw, 8rem); width: clamp(120px, 11vw, 170px); padding: 0; transform-origin: 50% 50%; animation: none; filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55)); rotate: -7deg; translate: 0 0; transition: opacity 0.4s, scale 0.5s var(--ease), rotate 0.5s var(--ease); }
+.award--reviews::before, .award--reviews::after { content: none; }
+.award--reviews img { transform: scale(1.7); opacity: 0; transition: transform 0.7s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.35s; }
+.award--reviews.in img { transform: scale(1); opacity: 1; }          /* entra como un sello al estamparse */
+.award--reviews:hover { scale: 1.06; rotate: -2deg; animation: none; }
+@media (max-width: 860px) { .award--reviews { width: 88px; right: 1rem; top: 0.8rem; } }
+@media (prefers-reduced-motion: reduce) { .award--reviews img { transform: none; opacity: 1; transition: none; } }

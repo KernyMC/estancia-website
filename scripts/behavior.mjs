@@ -1,0 +1,32 @@
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new' });
+const p = await b.newPage();
+await p.setViewport({ width: 1440, height: 900 });
+const errs = [];
+p.on('pageerror', (e) => errs.push(e.message));
+p.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
+await p.goto('http://localhost:4327/', { waitUntil: 'networkidle2' });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const navState = () => p.evaluate(() => document.querySelector('.nav').className);
+const out = {};
+out.top = await navState();
+await p.mouse.move(700, 500);
+await p.mouse.wheel({ deltaY: 600 }); await sleep(900); out.afterDown = await navState();
+await p.mouse.wheel({ deltaY: 700 }); await sleep(900); out.afterDown2 = await navState();
+await p.mouse.wheel({ deltaY: -250 }); await sleep(900); out.afterUp = await navState();
+await p.mouse.wheel({ deltaY: 500 }); await sleep(900); out.downAgain = await navState();
+await p.mouse.move(700, 20); await sleep(500); out.mouseTop = await navState();
+// transición suave entre páginas
+await p.evaluate(() => scrollTo(0, 0)); await sleep(500);
+await Promise.all([p.waitForNavigation({ waitUntil: 'networkidle2' }).catch(() => {}), p.evaluate(() => document.querySelector('a[href="/menu/"]').click())]);
+await sleep(2500);
+out.menuPage = await p.evaluate(() => ({ path: location.pathname, words: document.querySelectorAll('.w').length, inCount: document.querySelectorAll('.in').length, nav: document.querySelector('.nav').className, title: document.title }));
+// moneda
+await p.goto('http://localhost:4327/', { waitUntil: 'networkidle2' });
+await p.evaluate(() => document.querySelector('.coin').scrollIntoView({ block: 'center' })); await sleep(1500);
+await p.click('.coin'); await sleep(1300);
+out.coin = await p.evaluate(() => document.querySelector('.coin').className + ' ' + document.querySelector('.coin').getAttribute('aria-pressed'));
+await p.screenshot({ path: process.env.TEMP + '/est/s/coin.jpg', type: 'jpeg', quality: 60 });
+out.errors = errs;
+console.log(JSON.stringify(out, null, 1));
+await b.close();

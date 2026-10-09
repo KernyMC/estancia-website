@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FormConsent from '../components/FormConsent.astro';
+import BirthdayField from '../components/BirthdayField.astro';
+---
+
+<Base title="Subscribe" description="Join the Estância VIP list for events, specials and news from Austin and Leander.">
+  <PageHero kicker="VIP list" title="Be first at the <em>fire</em>" lead="Join our list for events, tastings and specials from Estância Austin and Leander." image="/img/w/ad-1_1-austin-leander-daou-tasting.jpg" crumbs={[{ label: 'Subscribe' }]} />
+  <section class="sec sec--cream sec--light">
+    <div class="wrap" style="max-width:760px">
+      <form class="form" data-demo>
+        <div class="field"><label for="s-first">First name</label><input id="s-first" name="first" required autocomplete="given-name" /></div>
+        <div class="field"><label for="s-last">Last name</label><input id="s-last" name="last" autocomplete="family-name" /></div>
+        <div class="field"><label for="s-email">Email</label><input id="s-email" name="email" type="email" required autocomplete="email" /></div>
+        <BirthdayField />
+        <FormConsent kind="subscribe" />
+        <input class="honey" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="full"><button class="btn btn--dark" type="submit" data-magnetic>Join the list <i class="ico ico-arrow arr" aria-hidden="true"></i></button></div>
+        <p class="form-note full" role="status">Welcome to the list! <em>(Demo build: nothing was sent.)</em></p>
+      </form>
+    </div>
+  </section>
+</Base>

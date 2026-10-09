@@ -1,0 +1,46 @@
+---
+import { locations, hours, social, footerLinks, legalLinks, nav } from '../data/site';
+const { austin, leander } = locations;
+---
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div>
+      <img class="logo" src="/img/w/primary-white-and-gold-3.png" alt="Estância Brazilian Steakhouse" width="190" height="65" loading="lazy" />
+      <p>Fire-roasted prime meats carved tableside, a gourmet salad bar and Brazilian hospitality in Austin and Leander, Texas.</p>
+      <ul>
+        {social.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}
+      </ul>
+      <a class="award" href="https://threebestrated.com/steak-houses-in-austin-tx" target="_blank" rel="noopener" aria-label="Three Best Rated: best steak houses in Austin, TX, 2025 (opens in a new tab)">
+        <img src="/img/w/award-three-best-rated.svg" alt="Three Best Rated award: steak houses in Austin, Texas, 2025" width="120" height="120" loading="lazy" />
+      </a>
+    </div>
+    <div>
+      <p class="foot-h">Austin</p>
+      <p>{austin.address}<br />{austin.cityLine}</p>
+      <p><a href={`tel:${austin.phone.replace(/\D/g, '')}`}>{austin.phone}</a></p>
+      <p><a href="/austin/">Details</a> &middot; <a href={austin.mapUrl} target="_blank" rel="noopener">Directions</a></p>
+      <p class="foot-h" style="margin-top:2rem">Leander</p>
+      <p>{leander.address}<br />{leander.cityLine}</p>
+      <p><a href={`tel:${leander.phone.replace(/\D/g, '')}`}>{leander.phone}</a></p>
+      <p><a href="/leander/">Details</a> &middot; <a href={leander.mapUrl} target="_blank" rel="noopener">Directions</a></p>
+    </div>
+    <div>
+      <p class="foot-h">Hours</p>
+      <ul>
+        {hours.map((h) => <li><strong style="color:#ddd;font-weight:500">{h.days}</strong><br />{h.lines.join(' · ')}</li>)}
+      </ul>
+    </div>
+    <div>
+      <p class="foot-h">Explore</p>
+      <ul>
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        {footerLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer__bar">
+    <span>&copy; {new Date().getFullYear()} Estância Brazilian Steakhouse. All rights reserved.</span>
+    <nav class="footer__legal" aria-label="Legal">{legalLinks.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+  </div>
+</footer>

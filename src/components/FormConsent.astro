@@ -1,0 +1,24 @@
+---
+import { consent } from '../data/legal';
+interface Props { kind: 'inquiry' | 'subscribe' | 'careers' }
+const { kind } = Astro.props;
+---
+
+{kind === 'inquiry' && (
+  <>
+    <label class="consent full"><input type="checkbox" name="marketing" /> <span>{consent.inquiryMarketing}</span></label>
+    <p class="note full legal-note">{consent.inquiry} <a href="/terms/" target="_blank">Terms</a> · <a href="/privacy/" target="_blank">Privacy</a></p>
+  </>
+)}
+{kind === 'subscribe' && (
+  <>
+    <p class="note full legal-note">{consent.subscribe} <a href="/privacy/" target="_blank">Privacy Policy</a>.</p>
+    <p class="note full legal-note">{consent.subscribeBirthday}</p>
+  </>
+)}
+{kind === 'careers' && (
+  <>
+    <p class="note full legal-note">{consent.eeo}</p>
+    <p class="note full legal-note">{consent.atWill} {consent.careers} <a href="/privacy/" target="_blank">Privacy Policy</a>.</p>
+  </>
+)}

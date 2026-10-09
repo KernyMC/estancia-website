@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { locations, hours, social } from '../data/site';
+---
+
+<Base title="Contact" description="Contact Estância Brazilian Steakhouse in Austin and Leander, Texas: addresses, phone numbers, hours and events email.">
+  <PageHero kicker="Say hello" title="Come dine <em>with us</em>" image="/img/w/l1010398-scaled.jpg" crumbs={[{ label: 'Contact' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <div class="split" style="align-items:start">
+        {[locations.austin, locations.leander].map((l) => (
+          <div data-reveal>
+            <span class="kicker">{l.area}</span>
+            <h2 class="h2">{l.name}</h2>
+            <address style="font-style:normal;margin:1.4rem 0;color:#ddd">{l.address}<br />{l.cityLine}</address>
+            <p><a href={`tel:${l.phone.replace(/\D/g, '')}`} style="color:var(--gold)">{l.phone}</a><br /><a href={`mailto:${l.eventsEmail}`} style="color:var(--gold)">{l.eventsEmail}</a></p>
+            <a class="link-arrow" href={l.mapUrl} target="_blank" rel="noopener">Directions <i class="ico ico-arrow" aria-hidden="true"></i></a>
+          </div>
+        ))}
+      </div>
+      <div class="split" style="margin-top:5rem;align-items:start">
+        <div><span class="kicker">Business hours</span><ul class="hours" data-stagger>{hours.map((h) => (<li><b>{h.days}</b><span>{h.lines.join(' · ')}</span></li>))}</ul></div>
+        <div><span class="kicker">Follow along</span><ul class="chips" data-stagger>{social.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.label}</a></li>)}</ul></div>
+      </div>
+    </div>
+  </section>
+</Base>

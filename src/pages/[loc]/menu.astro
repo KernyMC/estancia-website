@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import Icon from '../../components/Icon.astro';
+import { locations, type LocationId } from '../../data/site';
+
+export function getStaticPaths() {
+  return (['austin', 'leander'] as LocationId[]).map((loc) => ({ params: { loc } }));
+}
+const l = locations[Astro.params.loc as LocationId];
+
+// Menús reales del sitio original (imagen para ver en pantalla + PDF para descargar)
+const menus: Record<LocationId, { id: string; label: string; note: string; img: string; pdf?: string }[]> = {
+  austin: [
+    { id: 'dinner', label: 'Dinner', note: 'Mon – Thu 5 – 10 pm · Fri 5 – 10:30 pm · Sat 4 – 10:30 pm · Sun 4 – 9 pm', img: '/img/w/dinner-estancia-leander.jpg', pdf: '/menus/dinner-march.24.26.pdf' },
+    { id: 'lunch', label: 'Lunch', note: 'Monday – Friday', img: '/img/w/luch-estancia-austin.jpg', pdf: '/menus/lunch-march.24.26.pdf' },
+    { id: 'brunch', label: 'Brunch', note: 'Saturday & Sunday, 11 am – 3:30 pm', img: '/img/w/brunch-estancia-austin.jpg', pdf: '/menus/brunch-march.24.26.pdf' },
+    { id: 'happy-hour', label: 'Happy Hour', note: 'Monday – Friday, 12 – 6 pm · bar area', img: '/img/w/screenshot-2026-04-07-at-11.22.06-am.jpg', pdf: '/menus/happy-hour-3.6.26.pdf' },
+  ],
+  leander: [
+    { id: 'churrasco', label: 'Full Churrasco', note: 'Lunch · Brunch · Dinner', img: '/img/w/a-la-carte-estancia-leander.jpg' },
+    { id: 'a-la-carte', label: 'À la carte', note: 'Signature starters, entrées and sides', img: '/img/w/alc-estancia-leander.jpg', pdf: '/menus/alc-september-8-26.pdf' },
+    { id: 'happy-hour', label: 'Happy Hour', note: 'Monday – Friday, 12 – 6 pm · bar area', img: '/img/w/screenshot-2026-04-07-at-10.55.59-am.jpg', pdf: '/menus/happy-hour-3.24.26-le-1.pdf' },
+  ],
+};
+const list = menus[l.id];
+const ld = { '@context': 'https://schema.org', '@type': 'Menu', name: `Estância ${l.name} menu`, url: `https://estancia.com/${l.id}/menu/`, hasMenuSection: list.map((m) => ({ '@type': 'MenuSection', name: m.label, description: m.note })) };
+---
+
+<Base title={`${l.name} Menu`} description={`The Estância ${l.name} menus: ${list.map((m) => m.label.toLowerCase()).join(', ')}. View or download the current menus with prices.`} jsonLd={ld} image={l.hero}>
+  <PageHero kicker={`${l.name} menus`} title={`The ${l.name} <em>table</em>`} lead="Current menus with prices. Tap a tab to switch, or download the PDF." image={l.hero} crumbs={[{ label: l.name, href: `/${l.id}/` }, { label: 'Menu' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap" data-tabs>
+      <div class="tabs" role="tablist" aria-label={`${l.name} menus`}>
+        {list.map((m, i) => (<button role="tab" id={`mt-${m.id}`} data-tab={m.id} aria-selected={i === 0 ? 'true' : 'false'}>{m.label}</button>))}
+      </div>
+      {list.map((m, i) => (
+        <div role="tabpanel" data-panel={m.id} hidden={i !== 0} aria-labelledby={`mt-${m.id}`} class="panel menu-panel">
+          <div class="menu-panel__side">
+            <h2 class="h2">{m.label}</h2>
+            <p class="lead">{m.note}</p>
+            <div class="btn-row">
+              {m.pdf && <a class="btn btn--solid dl" href={m.pdf} target="_blank" rel="noopener" data-magnetic><Icon name="download" /> Download PDF</a>}
+              <a class="btn" href={m.img} target="_blank" rel="noopener" data-magnetic>View full size <Icon name="up-right" /></a>
+            </div>
+            <p class="note" style="margin-top:2rem">*Items marked with an asterisk may be served raw or undercooked. Consuming raw or undercooked meats, poultry, seafood or eggs may increase your risk of foodborne illness. Prices and offerings may change.</p>
+          </div>
+          <a class="menu-sheet" href={m.img} target="_blank" rel="noopener"><img src={m.img} alt={`${l.name} ${m.label} menu`} loading={i === 0 ? 'eager' : 'lazy'} /></a>
+        </div>
+      ))}
+      <p class="note" style="margin-top:3rem">Looking for the full overview? See the <a href="/menu/" style="color:var(--gold)">menu sections</a>. Questions: {l.phone}.</p>
+    </div>
+  </section>
+  <Cta />
+</Base>

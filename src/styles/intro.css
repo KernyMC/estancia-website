@@ -1,0 +1,39 @@
+/* Intro de la home (solo la primera carga de la sesión): logo -> cortina -> video -> aparecen los elementos. */
+.intro { display: none; }
+html.intro-pending { overflow: hidden; }
+html.intro-pending .intro { display: grid; position: fixed; inset: 0; z-index: 300; place-items: center; cursor: pointer; }
+/* Salvaguarda: si el JS falla, el telón se retira solo */
+html.intro-pending .intro { animation: introFailsafe 0.01s 6.5s forwards; }
+@keyframes introFailsafe { to { visibility: hidden; opacity: 0; } }
+
+.intro__panel { position: absolute; left: 0; right: 0; height: 50.5%; background: #0c0c0c; transition: transform 1.15s var(--ease-in-out); will-change: transform; }
+.intro__panel--t { top: 0; }
+.intro__panel--b { bottom: 0; }
+.intro__panel--t::after, .intro__panel--b::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.intro__panel--t::after { bottom: 0; } .intro__panel--b::after { top: 0; }
+.intro.is-out .intro__panel--t { transform: translateY(-101%); }
+.intro.is-out .intro__panel--b { transform: translateY(101%); }
+
+.intro__brand { position: relative; z-index: 2; display: grid; justify-items: center; gap: 1.6rem; width: min(78vw, 430px); }
+.intro__logo { width: 100%; height: auto; opacity: 0; transform: scale(0.92); animation: introLogo 1.3s var(--ease) 0.25s forwards; filter: drop-shadow(0 0 30px rgba(178, 153, 85, 0.25)); }
+@keyframes introLogo { to { opacity: 1; transform: scale(1); } }
+.intro__line { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); animation: introLine 1.2s var(--ease-in-out) 0.9s forwards; }
+@keyframes introLine { to { transform: scaleX(1); } }
+.intro__tag { font-size: 0.72rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--gold); padding-left: 0.5em; opacity: 0; animation: introTag 1s var(--ease) 1.2s forwards; }
+@keyframes introTag { to { opacity: 0.9; } }
+/* Pulso dorado suave tras la entrada del logo */
+.intro__logo { animation: introLogo 1.3s var(--ease) 0.25s forwards, introGlow 2.2s ease-in-out 1.3s infinite; }
+@keyframes introGlow { 0%, 100% { filter: drop-shadow(0 0 22px rgba(178, 153, 85, 0.18)); } 50% { filter: drop-shadow(0 0 46px rgba(178, 153, 85, 0.5)); } }
+.intro.is-out .intro__brand { transition: transform 0.9s var(--ease-in-out), opacity 0.6s 0.15s; transform: scale(1.18); opacity: 0; }
+
+/* Elementos de la home que esperan a que se abra la cortina */
+.nav { transition: transform 0.6s var(--ease), background 0.5s, backdrop-filter 0.5s, height 0.4s var(--ease), opacity 0.9s var(--ease); }
+html.intro-pending .nav { opacity: 0; transform: translateY(-24px); }
+.hero__badge, .scroll-cue { transition: opacity 1.2s var(--ease) 1.2s, transform 1.2s var(--ease) 1.2s; }
+html.intro-pending .hero__badge { opacity: 0; transform: scale(0.8) rotate(-30deg); }
+html.intro-pending .scroll-cue { opacity: 0; }
+/* El video se acerca suavemente cuando se abre la cortina */
+.hero__bg--video { transition: transform 2.4s var(--ease); }
+html.intro-pending .hero__bg--video { transform: scale(1.12); }
+
+@media (prefers-reduced-motion: reduce) { .intro { display: none !important; } html.intro-pending { overflow: auto; } }

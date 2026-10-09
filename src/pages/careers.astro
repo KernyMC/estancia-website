@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FormConsent from '../components/FormConsent.astro';
+
+// Campos de la solicitud original (estancia.com/employee-application/)
+const positions = ['Server / Churrasqueiro', 'Bartender', 'Prep / Line Cook', 'Administrative', 'Server Assistant', 'Hostess / Cashier', 'Dishwasher'];
+const states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+const yn = ['Yes', 'No'];
+const ld = { '@context': 'https://schema.org', '@type': 'JobPosting', title: 'Restaurant team member (server, gaucho, cook, bartender, host)', description: 'Join the Estância Brazilian Steakhouse team in Austin and Leander, Texas.', datePosted: '2026-10-08', employmentType: ['FULL_TIME', 'PART_TIME'], hiringOrganization: { '@type': 'Organization', name: 'Estância Brazilian Steakhouse', sameAs: 'https://estancia.com' }, jobLocation: [{ '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'Austin', addressRegion: 'TX' } }, { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'Leander', addressRegion: 'TX' } }] };
+---
+
+<Base title="Careers · Employee Application" description="Apply to join the Estância Brazilian Steakhouse team in Austin and Leander: servers, gauchos, cooks, bartenders, hosts and more." jsonLd={ld}>
+  <PageHero kicker="Join the team" title="Join the <em>Estância</em> team" lead="Looking for a fulfilling career where passion for food and exceptional service come first? Whether you’re interested in serving, cooking or assisting, Estância offers opportunities to grow and thrive." image="/img/w/dsc05748.jpg" crumbs={[{ label: 'Careers' }]} />
+  <section class="sec sec--cream sec--light">
+    <div class="wrap" style="max-width:980px">
+      <span class="kicker">Employee application</span>
+      <h2 class="h2" data-split>Tell us about <em>yourself</em></h2>
+      <form class="form app" data-demo style="margin-top:2.4rem">
+        <h3 class="full app__h">Personal information</h3>
+        <div class="field"><label for="a-first">First name</label><input id="a-first" name="a-first" required autocomplete="given-name" /></div>
+        <div class="field"><label for="a-last">Last name</label><input id="a-last" name="a-last" required autocomplete="family-name" /></div>
+        <div class="field"><label for="a-phone">Phone</label><input id="a-phone" name="a-phone" type="tel" autocomplete="tel" /></div>
+        <div class="field"><label for="a-email">Email</label><input id="a-email" name="a-email" type="email" required autocomplete="email" /></div>
+        <div class="field full"><label for="a-addr">Address</label><input id="a-addr" name="a-addr" autocomplete="address-line1" /></div>
+        <div class="field"><label for="a-city">City</label><input id="a-city" name="a-city" autocomplete="address-level2" /></div>
+        <div class="field"><label for="a-state">State</label><select id="a-state" name="a-state">{states.map((s) => <option selected={s === 'Texas'}>{s}</option>)}</select></div>
+        <div class="field"><label for="a-zip">Zip code</label><input id="a-zip" name="a-zip" inputmode="numeric" autocomplete="postal-code" /></div>
+
+        <h3 class="full app__h">The position</h3>
+        <div class="field"><label for="a-loc">Which location are you applying for?</label><select id="a-loc" name="a-loc"><option>Austin</option><option>Leander</option></select></div>
+        <div class="field"><label for="a-pos">Desired position</label><select id="a-pos" name="a-pos">{positions.map((p) => <option>{p}</option>)}</select></div>
+        <div class="field"><label for="a-start">Date available to start</label><input id="a-start" name="a-start" type="date" /></div>
+        <div class="field"><label for="a-rate">Desired hourly rate</label><input id="a-rate" name="a-rate" inputmode="decimal" placeholder="$" /></div>
+        <fieldset class="field full chk"><legend>What shifts are you available to work?</legend>
+          <label><input type="checkbox" name="shift_days" /> Days</label><label><input type="checkbox" name="shift_nights" /> Nights</label><label><input type="checkbox" name="shift_weekends" /> Weekends</label><label><input type="checkbox" name="shift_holidays" /> Holidays</label></fieldset>
+        <fieldset class="field full chk"><legend>Availability</legend>
+          <label><input type="radio" name="avail" value="part-time" /> Part-time</label><label><input type="radio" name="avail" value="full-time" /> Full-time</label></fieldset>
+
+        <h3 class="full app__h">Background</h3>
+        <div class="field"><label for="a-elig">Are you legally eligible for employment in the U.S.?</label><select id="a-elig" name="a-elig">{yn.map((v) => <option>{v}</option>)}</select></div>
+        <div class="field"><label for="a-prev">Have you applied to or worked at Estância before?</label><select id="a-prev" name="a-prev"><option>No</option><option>Yes</option></select></div>
+        <div class="field"><label for="a-disch">Have you ever been involuntarily discharged from a job?</label><select id="a-disch" name="a-disch"><option>No</option><option>Yes</option></select></div>
+        <div class="field full"><label for="a-expl">If you answered yes to any question above, please explain</label><textarea id="a-expl" name="a-expl" rows="3"></textarea></div>
+
+        <h3 class="full app__h">Education</h3>
+        <div class="field"><label for="a-hs">High school (name // years completed)</label><input id="a-hs" name="a-hs" /></div>
+        <div class="field"><label for="a-hsg">Did you graduate high school?</label><select id="a-hsg" name="a-hsg">{yn.map((v) => <option>{v}</option>)}</select></div>
+        <div class="field"><label for="a-col">College (name // years completed)</label><input id="a-col" name="a-col" /></div>
+        <div class="field"><label for="a-colg">Did you graduate college?</label><select id="a-colg" name="a-colg"><option>No</option><option>Yes</option></select></div>
+
+        <h3 class="full app__h">Professional work experience</h3>
+        {[1, 2].map((n) => (
+          <>
+            <div class="field full"><label for={`a-co${n}`}>Company {n} (company // phone // address // supervisor)</label><input id={`a-co${n}`} name={`a-co${n}`} /></div>
+            <div class="field"><label for={`a-ti${n}`}>Position (job title // hourly rate)</label><input id={`a-ti${n}`} name={`a-ti${n}`} /></div>
+            <div class="field"><label for={`a-re${n}`}>Responsibilities</label><input id={`a-re${n}`} name={`a-re${n}`} /></div>
+            <div class="field"><label for={`a-sd${n}`}>Start date</label><input id={`a-sd${n}`} name={`a-sd${n}`} type="date" /></div>
+            <div class="field"><label for={`a-ed${n}`}>End date</label><input id={`a-ed${n}`} name={`a-ed${n}`} type="date" /></div>
+            <div class="field"><label for={`a-rl${n}`}>Reason for leaving</label><input id={`a-rl${n}`} name={`a-rl${n}`} /></div>
+            <div class="field"><label for={`a-ct${n}`}>May we contact this employer?</label><select id={`a-ct${n}`} name={`a-ct${n}`}>{yn.map((v) => <option>{v}</option>)}</select></div>
+          </>
+        ))}
+        <div class="field full"><label for="a-skills">Special abilities or knowledge relevant to the job</label><textarea id="a-skills" name="a-skills" rows="3"></textarea></div>
+        <div class="field full"><label for="a-cv">Attach resume</label><input id="a-cv" name="a-cv" type="file" accept=".pdf,.doc,.docx" /></div>
+
+        <FormConsent kind="careers" />
+        <label class="consent full"><input type="checkbox" name="certify" required /> <span>I certify that the information in this application is true to the best of my knowledge.</span></label>
+        <input class="honey" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="full"><button class="btn btn--dark" type="submit" data-magnetic>Submit application <i class="ico ico-arrow arr" aria-hidden="true"></i></button></div>
+        <p class="form-note full" role="status">Thank you! Your application was received. <em>(Demo build: nothing was sent. In production, applications go to the hiring team by encrypted email or an applicant tracking system, never to the CMS.)</em></p>
+      </form>
+    </div>
+  </section>
+</Base>

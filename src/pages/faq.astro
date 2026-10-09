@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import { faqs } from '../data/content';
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+
+<Base title="FAQ" description="Answers about the Estância churrasco experience, reservations, takeout, groups and dress code." jsonLd={ld}>
+  <PageHero kicker="Good to know" title="Frequently asked <em>questions</em>" image="/img/w/ish_0069.jpg" crumbs={[{ label: 'FAQ' }]} />
+  <section class="sec sec--white">
+    <div class="wrap faq" style="max-width:920px" data-stagger>
+      {faqs.map((f) => (<details><summary>{f.q}</summary><div class="ans">{f.a}</div></details>))}
+    </div>
+  </section>
+  <Cta />
+</Base>

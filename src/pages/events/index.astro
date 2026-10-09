@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { eventItems } from '../../data/content';
+
+const today = new Date().toISOString().slice(0, 10); // fecha del build; recompilar a diario
+const sorted = eventItems();
+const upcoming = sorted.filter((e) => (e.start ?? '') >= today);
+const past = sorted.filter((e) => (e.start ?? '') < today).reverse();
+---
+
+<Base title="Events" description="Tastings, holiday dinners and special events at Estância Brazilian Steakhouse in Austin and Leander.">
+  <PageHero kicker="Events & holidays" title="Gather around the <em>fire</em>" lead="Wine tastings, holiday dinners and seasonal celebrations in Austin and Leander." image="/img/w/dsc09630.jpg" crumbs={[{ label: 'Events' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <span class="kicker">Upcoming</span>
+      <div class="cards cards--sq" data-stagger style="margin-top:1rem">
+        {upcoming.map((e) => (
+          <a class="card" href={e.href}>
+            <div class="mask"><img src={e.image} alt="" loading="lazy" /><span class="badge-soon">{e.kicker}</span></div>
+            <div class="card__body"><span class="card__meta">{e.when}</span><h3>{e.title}</h3><p>{e.where}</p></div>
+          </a>
+        ))}
+      </div>
+      {past.length > 0 && (
+        <>
+          <span class="kicker" style="margin-top:6rem">Past events</span>
+          <div class="cards cards--sq" data-stagger style="margin-top:1rem">
+            {past.map((e) => (
+              <a class="card" href={e.href}>
+                <div class="mask"><img src={e.image} alt="" loading="lazy" style="filter:grayscale(0.6)" /><span class="badge-soon badge-past">Past</span></div>
+                <div class="card__body"><span class="card__meta">{e.when}</span><h3>{e.title}</h3></div>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

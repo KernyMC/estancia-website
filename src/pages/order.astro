@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import OrderTiles from '../components/OrderTiles.astro';
+import { locations } from '../data/site';
+---
+
+<Base title="Order Takeout" description="Order Estância takeout online or through Toast, DoorDash, Uber Eats and Grubhub in Austin and Leander.">
+  <PageHero kicker="Takeout & delivery" title="Brazilian flavor, <em>to go</em>" lead="All your favorite Brazilian dishes, from the comfort of your own home." image="/img/w/is-a-brazilian-steakhouse-worth-it.jpg" crumbs={[{ label: 'Order' }]} />
+  <section class="sec sec--dark">
+    <div class="wrap" data-tabs>
+      <div class="tabs tabs--photo" role="tablist" aria-label="Choose a location">
+        <button role="tab" id="o-austin" data-tab="austin" aria-selected="true" style={`--img:url(${locations.austin.hero})`}><b>Austin</b><small>{locations.austin.area}</small></button>
+        <button role="tab" id="o-leander" data-tab="leander" aria-selected="false" style={`--img:url(${locations.leander.hero})`}><b>Leander</b><small>{locations.leander.area}</small></button>
+      </div>
+      {[locations.austin, locations.leander].map((l, i) => (
+        <div role="tabpanel" data-panel={l.id} hidden={i === 1} aria-labelledby={`o-${l.id}`} class="panel">
+          <h2 class="h2">Order from <em>{l.name}</em></h2>
+          <OrderTiles loc={l} />
+          <p class="note" style="margin-top:2rem">Order direct for pickup (best price); delivery is available through our partners. Orders can be placed online or in person up to 1 day in advance. Allow up to 30 minutes for preparation. 8.25% tax + 15% handling fee applied to takeout orders. No gratuity necessary.</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

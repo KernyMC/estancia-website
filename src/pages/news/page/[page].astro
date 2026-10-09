@@ -1,0 +1,25 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import NewsListing from '../../../components/NewsListing.astro';
+import posts from '../../../data/posts.json';
+import { PAGE_SIZE } from '../../../data/content';
+
+export function getStaticPaths() {
+  const totalPages = Math.ceil(posts.length / PAGE_SIZE);
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => i + 2).map((n) => ({
+    params: { page: String(n) },
+    props: { n, totalPages, list: posts.slice((n - 1) * PAGE_SIZE, n * PAGE_SIZE) },
+  }));
+}
+const { n, totalPages, list } = Astro.props;
+---
+
+<Base title={`News · Page ${n}`} description={`Estância's News, page ${n} of ${totalPages}: guides, stories and events from our Brazilian steakhouse.`} prev={n === 2 ? '/news/' : `/news/page/${n - 1}/`} next={n < totalPages ? `/news/page/${n + 1}/` : undefined}>
+  <PageHero kicker={`Page ${n} of ${totalPages}`} title="Stories from the <em>grill</em>" image="/img/w/capa-de-revista2_.jpg" crumbs={[{ label: 'News', href: '/news/' }, { label: `Page ${n}` }]} />
+  <section class="sec">
+    <div class="wrap">
+      <NewsListing posts={list} page={n} totalPages={totalPages} base="/news/" total={posts.length} />
+    </div>
+  </section>
+</Base>

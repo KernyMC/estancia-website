@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+import Marquee from '../components/Marquee.astro';
+import Cta from '../components/Cta.astro';
+import SocialRail from '../components/SocialRail.astro';
+import { locations } from '../data/site';
+import { meats, eventItems, reviews } from '../data/content';
+import posts from '../data/posts.json';
+
+const { austin, leander } = locations;
+const today = new Date().toISOString().slice(0, 10); // fecha del build
+const upcoming = eventItems().filter((e) => e.start && e.start >= today).sort((a, b) => a.start!.localeCompare(b.start!)).slice(0, 3);
+const latest = posts.slice(0, 3);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: 'Estância Brazilian Steakhouse',
+  servesCuisine: 'Brazilian',
+  priceRange: '$$$',
+  url: 'https://estancia.com/',
+  image: 'https://estancia.com/img/w/churrasqueira-1-1-1.jpg',
+  subOrganization: [austin, leander].map((l) => ({ '@type': 'Restaurant', name: `Estância ${l.name}`, url: `https://estancia.com/${l.id}/` })),
+};
+---
+
+<Base title="Estância Brazilian Steakhouse | Austin & Leander, TX" jsonLd={ld}>
+  <SocialRail />
+
+  <!-- INTRO: logo centrado -> cortina -> video (ver src/scripts/motion.ts: initIntro) -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__panel intro__panel--t"></div>
+    <div class="intro__panel intro__panel--b"></div>
+    <div class="intro__brand">
+      <img class="intro__logo" src="/img/w/primary-white-and-gold-3.png" alt="" width="430" height="148" />
+      <span class="intro__line"></span>
+      <span class="intro__tag">Austin &middot; Leander &middot; Texas</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero glow">
+    <div class="hero__bg hero__bg--video">
+      <img class="hero__poster" src="/img/w/churrasco-poster.jpg" alt="" fetchpriority="high" />
+      <video class="hero__video" autoplay muted loop playsinline preload="auto" poster="/img/w/churrasco-poster.jpg" aria-hidden="true" tabindex="-1">
+        <source src="/video/churrasco.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="wrap hero__in">
+      <span class="kicker" data-reveal style="--d:300">Brazilian Steakhouse &middot; Austin &amp; Leander</span>
+      <h1 class="display" data-split>Fire, salt &amp; <em>ceremony</em></h1>
+      <p class="hero__sub" data-reveal style="--d:1000">Prime meats carved tableside by our gauchos, a gourmet salad bar and the warmth of Southern Brazil &mdash; one continuous feast.</p>
+      <div class="btn-row" data-reveal style="--d:1200">
+        <a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve a table <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+        <a class="btn" href="/menu/" data-magnetic>Explore the menu</a>
+      </div>
+    </div>
+    <div class="hero__badge" aria-hidden="true">
+      <svg viewBox="0 0 150 150"><defs><path id="c" d="M75,75 m-62,0 a62,62 0 1,1 124,0 a62,62 0 1,1 -124,0" /></defs><text font-size="10.5" letter-spacing="4.2" fill="#e8dcc0" font-family="Jost Variable, sans-serif"><textPath href="#c">GAUCHOS • FIRE • SALAD BAR • CAIPIRINHAS •</textPath></text></svg>
+      <span>4.8<small>22K+ REVIEWS</small></span>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"></div>
+  </section>
+
+  <Marquee items={['Churrasco', 'Gourmet Salad Bar', 'Caipirinhas', 'Brazilian Brunch', 'Gauchos', 'Private Dining']} />
+
+  <!-- INTRO -->
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">The Estância experience</span>
+        <h2 class="h1" data-split>More than a meal. A <em>complete</em> experience.</h2>
+        <p class="lead" style="margin-top:2rem" data-reveal>From the moment you arrive, you&rsquo;re welcomed into a warm, elegant atmosphere. Our gauchos carve premium cuts tableside with continuous service throughout your meal &mdash; alongside fresh gourmet sides, an elevated salad bar, handcrafted cocktails and a thoughtfully curated wine list.</p>
+        <a class="link-arrow" href="/menu/churrasco/" data-reveal style="--d:150">Discover the cuts <i class="ico ico-arrow" aria-hidden="true"></i></a>
+      </div>
+      <div class="stack">
+        <div class="mask ratio-34" data-mask><div class="px" data-parallax="0.07"><img src="/img/w/dsc05748.jpg" alt="A gaucho carving lamb chops tableside" loading="lazy" /></div></div>
+        <div class="mask ratio-43" data-mask style="transition-delay:300ms"><div class="px" data-parallax="-0.05"><img src="/img/w/ish_0110.jpg" alt="Lamb chops with mint sauce" loading="lazy" /></div></div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="stats" data-stagger>
+        <div class="stat"><b data-count="19">0</b><span>Years of churrasco</span></div>
+        <div class="stat"><b data-count="15">0</b><span>Fire-roasted cuts</span></div>
+        <div class="stat"><b data-count="40" data-suffix="+">0</b><span>Salad bar items</span></div>
+        <div class="stat"><b data-count="4.8">0</b><span>Google rating</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORTES: scroll horizontal -->
+  <section class="hs" style={`--hs-n:${meats.length}`} aria-label="The cuts">
+    <div class="hs__stick">
+      <div class="hs__head">
+        <div>
+          <span class="kicker">From the skewer to your plate</span>
+          <h2 class="h2" data-split>The <em>cuts</em></h2>
+        </div>
+        <a class="link-arrow" href="/menu/churrasco/">All meats <i class="ico ico-arrow" aria-hidden="true"></i></a>
+      </div>
+      <div class="hs__track">
+        {meats.map((m) => (
+          <article class="cut">
+            <div class="mask mask--static"><img src={m.img} alt={m.name} loading="lazy" /></div>
+            <h3>{m.name}</h3>
+          </article>
+        ))}
+      </div>
+      <div class="hs__bar" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <!-- MONEDA -->
+  <section class="sec sec--deep flipsec">
+    <div class="wrap split" data-flow>
+      <div class="flip-wrap" data-reveal>
+        <button class="flip" type="button" aria-pressed="false" aria-label="Flip the card: green means keep the meat coming, red means a pause">
+          <span class="flip__in">
+            <span class="flip__face flip__face--stop"><img src="/img/w/tarjetaroja.jpg" alt="Red side: Não, obrigado. No, thank you." width="1200" height="722" loading="lazy" /></span>
+            <span class="flip__face flip__face--go"><img src="/img/w/tarjetaverde.jpg" alt="Green side: Sim, por favor. Yes, please." width="1200" height="722" loading="lazy" /></span>
+          </span>
+        </button>
+        <span class="flip__hint"><i class="ico ico-flip" aria-hidden="true"></i> Tap the card</span>
+      </div>
+      <div>
+        <span class="kicker">How it works</span>
+        <h2 class="h2" data-split>Green means <em>go</em>. Red means rest.</h2>
+        <p class="lead" style="margin-top:1.6rem" data-reveal>Flip your card to green and the gauchos keep the skewers coming &mdash; picanha, filet mignon, lamb, ribs. Turn it red whenever you want a pause.</p>
+        <ol class="flow" aria-label="How the card works">
+          <li data-step="0"><span class="flow__n">1</span><span class="flow__t">Visit the salad bar</span><i class="flow__bar" aria-hidden="true"></i></li>
+          <li data-step="1"><span class="flow__n">2</span><span class="flow__t">Flip to green</span><i class="flow__bar" aria-hidden="true"></i></li>
+          <li data-step="2"><span class="flow__n">3</span><span class="flow__t">Savor, then flip to red</span><i class="flow__bar" aria-hidden="true"></i></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALAD BAR -->
+  <section class="sec sec--dark" style="overflow:hidden">
+    <div class="wrap">
+      <div class="split split--rev split--media">
+        <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.08"><img src="/img/w/dsc04985-scaled.jpg" alt="Gourmet salad bar" loading="lazy" /></div></div>
+        <div>
+          <span class="kicker">Gourmet salad bar</span>
+          <h2 class="h1" data-split>Don&rsquo;t eat less. Eat <em>right</em>.</h2>
+          <p class="lead" style="margin-top:1.6rem" data-reveal>Over forty items &mdash; seasonal salads, fresh vegetables, aged cheeses, smoked salmon and charcuterie. Keto and gluten-free options always available.</p>
+          <ul class="chips" style="margin-top:2rem" data-stagger>
+            {['Smoked salmon', 'Hearts of palm', 'Prosciutto', 'Manchego', 'Waldorf salad', 'Fresh mozzarella'].map((c) => <li>{c}</li>)}
+          </ul>
+          <a class="link-arrow" style="margin-top:2.2rem" href="/menu/salad-bar/">See the salad bar <i class="ico ico-arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCALES -->
+  <section aria-label="Locations">
+    <div class="locs">
+      {[austin, leander].map((l) => (
+        <a class="loc" href={`/${l.id}/`}>
+          <div class="loc__bg"><img src={l.hero} alt="" loading="lazy" /></div>
+          <div data-reveal>
+            <span class="kicker">{l.area}</span>
+            <h3>{l.name}</h3>
+            <address>{l.address}<br />{l.cityLine}<br />{l.phone}</address>
+            <span class="open-now" data-open>Hours</span>
+            <div class="btn-row"><span class="btn">View location <i class="ico ico-arrow arr" aria-hidden="true"></i></span></div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- PRIVATE DINING -->
+  <section class="sec sec--cream sec--light">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">Private dining &amp; events</span>
+        <h2 class="h1" data-split>The perfect place for your <em>gathering</em></h2>
+        <p class="lead" style="margin-top:1.6rem" data-reveal>From intimate dinners of twelve to full buyouts of up to 250 guests, we have the space, the menu and the team. Birthdays, graduations, corporate dinners, weddings and more.</p>
+        <div class="btn-row">
+          <a class="btn btn--dark" href="/private-dining/" data-magnetic>Plan your event <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+          <a class="link-arrow" style="align-self:center" href="/private-dining/#rooms">View rooms <i class="ico ico-arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="gallery gallery--two" style="grid-template-columns:repeat(2,1fr)">
+        <div class="mask" style="grid-column:span 2;aspect-ratio:16/10" data-mask><div class="px" data-parallax="0.06"><img src="/img/w/dsc09630.jpg" alt="Long banquet table set for a private event" loading="lazy" /></div></div>
+        <div class="mask" style="grid-column:span 1;aspect-ratio:1" data-mask><div class="px"><img src="/img/w/butterfly-room.jpg" alt="The Butterfly Room" loading="lazy" /></div></div>
+        <div class="mask" style="grid-column:span 1;aspect-ratio:1" data-mask><div class="px"><img src="/img/w/dsc07446.jpg" alt="Private dining room" loading="lazy" /></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTOS -->
+  <section class="sec sec--dark">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:1.5rem;margin-bottom:3.5rem">
+        <div><span class="kicker">What&rsquo;s happening</span><h2 class="h1" data-split>Upcoming at <em>Estância</em></h2></div>
+        <a class="link-arrow" href="/events/">All events <i class="ico ico-arrow" aria-hidden="true"></i></a>
+      </div>
+      <div class="cards cards--sq" data-stagger>
+        {upcoming.map((e) => (
+          <a class="card" href={e.href}>
+            <div class="mask"><img src={e.image} alt="" loading="lazy" /><span class="badge-soon">{e.kicker}</span></div>
+            <div class="card__body"><span class="card__meta">{e.when}</span><h3>{e.title}</h3></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section class="sec--deep reviews" style="padding-block:clamp(3rem,6vw,5rem)">
+    <div class="wrap center" style="margin-bottom:2.5rem">
+      <a class="award award--reviews" data-reveal="fade" href="https://threebestrated.com/steak-houses-in-austin-tx" target="_blank" rel="noopener" aria-label="Three Best Rated: best steak houses in Austin, TX, 2025 (opens in a new tab)"><img src="/img/w/award-three-best-rated.svg" alt="Three Best Rated award: steak houses in Austin, Texas, 2025" width="110" height="110" loading="lazy" /></a>
+      <span class="kicker">Posted on Google</span>
+      <h2 class="h2" data-split>Loved in <em>Texas</em></h2>
+    </div>
+    <div class="marquee marquee--quotes">
+      <div class="marquee__track">
+        {[0, 1].map(() => reviews.map((r) => (
+          <figure class="quote" style="margin-block:0"><span class="stars" role="img" aria-label="5 stars"><i class="ico ico-star"></i><i class="ico ico-star"></i><i class="ico ico-star"></i><i class="ico ico-star"></i><i class="ico ico-star"></i></span><p>{r.text}</p><b>{r.name}</b></figure>
+        )))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="sec">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:1.5rem;margin-bottom:3.5rem">
+        <div><span class="kicker">News</span><h2 class="h1" data-split>From the <em>grill</em></h2></div>
+        <a class="link-arrow" href="/news/">All stories <i class="ico ico-arrow" aria-hidden="true"></i></a>
+      </div>
+      <div class="cards cards--wide" data-stagger>
+        {latest.map((p) => (
+          <a class="card" href={`/news/${p.slug}/`}>
+            <div class="mask"><img src={p.image ?? '/img/w/capa-de-revista2_.jpg'} alt="" loading="lazy" /></div>
+            <div class="card__body"><span class="card__meta">{new Date(p.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span><h3>{p.title}</h3></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

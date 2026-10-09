@@ -1,0 +1,16 @@
+---
+// Riel de redes pegado al lateral izquierdo, centrado verticalmente y sutil (solo escritorio).
+// `mix-blend-mode: difference` lo hace legible sobre secciones oscuras y claras sin cambiar de color.
+import { social } from '../data/site';
+const icon: Record<string, string> = { Instagram: 'instagram', Facebook: 'facebook', TikTok: 'tiktok', YouTube: 'youtube' };
+---
+
+<aside class="rail" aria-label="Social media">
+  <span class="rail__line" aria-hidden="true"></span>
+  <ul>
+    {social.map((s) => (
+      <li><a href={s.url} target="_blank" rel="noopener" aria-label={`${s.label} (opens in a new tab)`}><i class={`ico ico-${icon[s.label]}`} aria-hidden="true"></i><span class="rail__tip" aria-hidden="true">{s.label}</span></a></li>
+    ))}
+  </ul>
+  <span class="rail__line" aria-hidden="true"></span>
+</aside>

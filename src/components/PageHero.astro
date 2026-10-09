@@ -1,0 +1,25 @@
+---
+interface Props {
+  kicker?: string;
+  title: string; // admite <em>
+  lead?: string;
+  image: string;
+  crumbs?: { label: string; href?: string }[];
+}
+const { kicker, title, lead, image, crumbs = [] } = Astro.props;
+---
+
+<section class="phero glow">
+  <div class="phero__bg"><div data-parallax="0.12" style="position:absolute;inset:-8% 0"><img src={image} alt="" fetchpriority="high" /></div></div>
+  <div class="wrap phero__in">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        {crumbs.map((c) => (<><span>/</span>{c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}</>))}
+      </nav>
+    )}
+    {kicker && <span class="kicker">{kicker}</span>}
+    <h1 class="h1" data-split set:html={title} />
+    {lead && <p data-reveal style="--d:500">{lead}</p>}
+  </div>
+</section>

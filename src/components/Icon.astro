@@ -1,0 +1,8 @@
+---
+// Iconos SVG como máscara (heredan currentColor). Definiciones en src/styles/global.css (.ico-*).
+interface Props { name: 'arrow' | 'up-right' | 'calendar' | 'clock' | 'gift' | 'child' | 'star' | 'pin' | 'phone' | 'download' | 'check' }
+const { name } = Astro.props;
+const map: Record<string, string> = { arrow: 'arrow', 'up-right': 'up-right' };
+---
+
+<i class={`ico ico-${map[name] ?? name}`} aria-hidden="true"></i>

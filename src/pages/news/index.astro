@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import NewsListing from '../../components/NewsListing.astro';
+import posts from '../../data/posts.json';
+import { PAGE_SIZE } from '../../data/content';
+
+const totalPages = Math.ceil(posts.length / PAGE_SIZE);
+---
+
+<Base title="News" description="Estância's News: guides, stories and events from our Brazilian steakhouse in Austin and Leander." next={totalPages > 1 ? '/news/page/2/' : undefined}>
+  <PageHero kicker="Estância's News" title="Stories from the <em>grill</em>" lead="Guides to churrasco, Brazilian dining, events and what's happening at our tables." image="/img/w/capa-de-revista2_.jpg" crumbs={[{ label: 'News' }]} />
+  <section class="sec">
+    <div class="wrap">
+      <NewsListing posts={posts.slice(0, PAGE_SIZE)} page={1} totalPages={totalPages} base="/news/" total={posts.length} />
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Marquee from '../../components/Marquee.astro';
+import Cta from '../../components/Cta.astro';
+import { locations, hours, hoursSpec, type LocationId } from '../../data/site';
+
+export function getStaticPaths() {
+  return (['austin', 'leander'] as LocationId[]).map((loc) => ({ params: { loc } }));
+}
+const l = locations[Astro.params.loc as LocationId];
+const other = l.id === 'austin' ? locations.leander : locations.austin;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: `Estância Brazilian Steakhouse ${l.name}`,
+  servesCuisine: 'Brazilian steakhouse',
+  telephone: l.phone,
+  address: { '@type': 'PostalAddress', streetAddress: l.address, addressLocality: l.name, addressRegion: 'TX', postalCode: l.cityLine.slice(-5) },
+  url: `https://estancia.com/${l.id}/`,
+  hasMenu: `https://estancia.com/${l.id}/menu/`,
+  priceRange: '$$$',
+  acceptsReservations: true,
+  image: `https://estancia.com${l.hero}`,
+  sameAs: [l.resy],
+  openingHoursSpecification: hoursSpec.flatMap((h) => h.ranges.map(([opens, closes]) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: h.days, opens, closes }))),
+};
+---
+
+<Base title={`${l.name}, TX`} description={`Estância Brazilian Steakhouse in ${l.name}, Texas — ${l.address}. Hours, reservations, private dining and takeout.`} jsonLd={ld} image={l.hero}>
+  <PageHero kicker={`${l.area} · ${l.name}, Texas`} title={`Estância <em>${l.name}</em>`} lead={l.blurb} image={l.hero} crumbs={[{ label: 'Locations', href: '/locations/' }, { label: l.name }]} />
+
+  <section class="sec sec--dark">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">Visit us</span>
+        <h2 class="h2" data-split>The Estância experience <em>awaits</em></h2>
+        <p class="lead" style="margin-top:1.6rem" data-reveal>Our gauchos carve premium cuts tableside with continuous service. Enjoy fresh gourmet sides, an elevated salad bar, handcrafted cocktails and a thoughtfully curated wine list &mdash; for a relaxed lunch, a night out or a special celebration.</p>
+        <address style="font-style:normal;margin-top:2rem;color:#ddd" data-reveal>
+          {l.address}<br />{l.cityLine}<br />
+          <a href={`tel:${l.phone.replace(/\D/g, '')}`} style="color:var(--gold)">{l.phone}</a>
+        </address>
+        <p style="margin-top:1rem"><span class="open-now" data-open>Hours</span></p>
+        <div class="btn-row">
+          <a class="btn btn--solid" href={l.resy} target="_blank" rel="noopener" data-magnetic>Reserve on Resy <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+          <a class="btn" href={l.mapUrl} target="_blank" rel="noopener" data-magnetic>Get directions</a>
+        </div>
+      </div>
+      <div>
+        <ul class="hours" data-stagger>
+          {hours.map((h) => (<li><b>{h.days}</b><span>{h.lines.join(' · ')}</span></li>))}
+        </ul>
+        <p class="note" style="margin-top:1.5rem">Happy hour Monday – Friday, 12 – 6 pm (bar area only). Brunch Saturday &amp; Sunday, 11 am – 3:30 pm.</p>
+      </div>
+    </div>
+  </section>
+
+  <Marquee items={['Reservations', 'Takeout', 'Private Dining', 'Happy Hour', 'Brunch']} />
+
+  <section class="sec sec--deep">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:1.5rem;margin-bottom:3rem">
+        <div><span class="kicker">Private dining</span><h2 class="h1" data-split>Rooms for every <em>occasion</em></h2></div>
+        <a class="link-arrow" href={`/${l.id}/private-dining/`}>All rooms <i class="ico ico-arrow" aria-hidden="true"></i></a>
+      </div>
+      <div class="rooms" data-stagger>
+        {l.rooms.map((r) => (
+          <article class="room"><div class="mask"><img src={r.image} alt={r.name} loading="lazy" /></div>
+            <div class="room__body"><div><h3>{r.name}</h3><small>{r.kind}</small></div><span style="color:#ddd">{r.guests}</span></div></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--cream sec--light">
+    <div class="wrap cards" data-stagger>
+      <a class="card" href="/menu/"><div class="mask ratio-43" style="aspect-ratio:4/3"><img src="/img/w/ish_0078.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Menu</span><h3>See what&rsquo;s on the table</h3></div></a>
+      <a class="card" href="/order/"><div class="mask" style="aspect-ratio:4/3"><img src="/img/w/is-a-brazilian-steakhouse-worth-it.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Takeout</span><h3>Order for pickup or delivery</h3></div></a>
+      <a class="card" href={`/${other.id}/`}><div class="mask" style="aspect-ratio:4/3"><img src={other.hero} alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Also in Texas</span><h3>Visit Estância {other.name}</h3></div></a>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

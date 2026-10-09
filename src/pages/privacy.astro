@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { locations } from '../data/site';
+import { legalEmail, legalUpdated } from '../data/legal';
+---
+
+<Base title="Privacy Policy" description="How Estância Brazilian Steakhouse collects, uses and protects your information on estancia.com." noindex>
+  <PageHero kicker="Legal" title="Privacy <em>policy</em>" lead="Draft pending review by Estância and its legal counsel. It replaces the generic WordPress template used on the current site." image="/img/w/dsc07446.jpg" crumbs={[{ label: 'Privacy' }]} />
+  <section class="sec sec--white">
+    <div class="wrap prose">
+      <p>This policy explains what information Estância Brazilian Steakhouse (&ldquo;Estância&rdquo;, &ldquo;we&rdquo;) collects through <strong>estancia.com</strong> and how we use it. Our website address is https://estancia.com.</p>
+
+      <h2>Information we collect</h2>
+      <ul>
+        <li><strong>Forms you submit:</strong> event and group dining inquiries, newsletter sign-ups (name, email and, optionally, the month and day of your birthday, used only for a birthday offer) and contact requests. We collect only what you type into those forms.</li>
+        <li><strong>Job applications:</strong> the details and resume you provide when applying. Applications are used only for hiring and are not published.</li>
+        <li><strong>Spam protection:</strong> our forms use an anti-spam check (Cloudflare Turnstile) that may read basic browser signals to tell people from bots.</li>
+        <li><strong>Technical data:</strong> IP address, browser type and pages visited, collected through analytics and advertising tools (for example Google Analytics and the Meta Pixel) to understand how the site is used.</li>
+      </ul>
+
+      <h2>Services run by other companies</h2>
+      <p>Some actions happen on partner sites with their own privacy policies: reservations on <strong>Resy</strong>; takeout and delivery on <strong>Toast, DoorDash, Uber Eats and Grubhub</strong>; group event requests on <strong>Tripleseat</strong>; and gift cards on <strong>SecureTree</strong>. When you follow those links, the partner collects and processes your information. We also link to Google Maps and to our profiles on Instagram, Facebook, TikTok and YouTube.</p>
+
+      <h2>How we use information</h2>
+      <p>To answer your requests, plan events, process applications, send news and offers you ask for, improve the website, and meet legal obligations. We do not sell your personal information for money. We use advertising and analytics cookies (for example the Meta Pixel); see “Your Privacy Choices” below.</p>
+
+      <h2>Cookies</h2>
+      <p>The site uses cookies and similar technologies for analytics and advertising measurement. You can block or delete cookies in your browser settings; some features may then work differently.</p>
+
+      <h2>How long we keep it</h2>
+      <p>We keep inquiries and newsletter data for as long as needed to serve you or until you ask us to remove it. Job applications are kept for a limited period for hiring purposes.</p>
+
+      <h2 id="choices">Your Privacy Choices</h2>
+      <p>You can block or delete cookies in your browser settings. If your browser sends a Global Privacy Control (GPC) signal, we treat it as a request not to load advertising pixels. You can also unsubscribe from any email with the link at the bottom of the message.</p>
+      <h2>Your rights</h2>
+      <p>You can ask to access, correct or delete your information, or unsubscribe from emails at any time, by contacting us below.</p>
+
+      <h2>Children</h2>
+      <p>This website is not directed to children under 13 and we do not knowingly collect their information.</p>
+
+      <h2>Contact</h2>
+      <p>
+        Estância Brazilian Steakhouse<br />
+        {locations.austin.address}, {locations.austin.cityLine} · {locations.austin.phone}<br />
+        {locations.leander.address}, {locations.leander.cityLine} · {locations.leander.phone}<br />
+        <a href={`mailto:${legalEmail}`}>{legalEmail}</a>
+      </p>
+      <p class="note" style="color:#6b665a">Last updated: {legalUpdated} (draft).</p>
+    </div>
+  </section>
+</Base>
