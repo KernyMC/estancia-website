@@ -1,0 +1,333 @@
+---
+/**
+ * Shared photo lightbox. Drop one instance inside any gallery wrapper that
+ * carries `data-lightbox-root`. Any `<img class="lightbox-trigger">` inside
+ * that root opens it; images are grouped for prev/next + thumbnails by their
+ * closest ancestor with `data-lightbox-group` (falls back to the whole root).
+ */
+---
+
+<div class="lightbox" data-lightbox hidden>
+  <button type="button" class="lightbox-close" data-lightbox-close aria-label="Close photo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  </button>
+  <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M15 6l-6 6 6 6" />
+    </svg>
+  </button>
+  <button type="button" class="lightbox-nav lightbox-next" data-lightbox-next aria-label="Next photo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M9 6l6 6-6 6" />
+    </svg>
+  </button>
+  <div class="lightbox-body">
+    <img data-lightbox-img src="" alt="" />
+    <div class="lightbox-thumbs" data-lightbox-thumbs></div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lightbox]').forEach((lightbox) => {
+    const root = lightbox.closest<HTMLElement>('[data-lightbox-root]');
+    if (!root) return;
+
+    const lightboxImg = lightbox.querySelector<HTMLImageElement>('[data-lightbox-img]');
+    const lightboxThumbs = lightbox.querySelector<HTMLElement>('[data-lightbox-thumbs]');
+    const prevBtn = lightbox.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
+    const nextBtn = lightbox.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+
+    let slides: { src: string; alt: string }[] = [];
+    let slideIndex = 0;
+
+    const renderSlide = () => {
+      if (!lightboxImg || slides.length === 0) return;
+      const slide = slides[slideIndex];
+      const requestedSrc = slide.src;
+
+      lightboxImg.style.opacity = '0';
+      const preload = new Image();
+      preload.onload = preload.onerror = () => {
+        if (slides[slideIndex]?.src !== requestedSrc) return;
+        lightboxImg.src = requestedSrc;
+        lightboxImg.alt = slide.alt;
+        lightboxImg.style.opacity = '1';
+      };
+      preload.src = requestedSrc;
+
+      lightboxThumbs?.querySelectorAll<HTMLButtonElement>('.lightbox-thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === slideIndex);
+      });
+    };
+
+    const goTo = (index: number) => {
+      if (slides.length === 0) return;
+      slideIndex = (index + slides.length) % slides.length;
+      renderSlide();
+    };
+
+    const openLightbox = (clickedImg: HTMLImageElement) => {
+      if (!lightboxImg) return;
+
+      const group = clickedImg.closest<HTMLElement>('[data-lightbox-group]') ?? root;
+      const imgs = Array.from(group.querySelectorAll<HTMLImageElement>('.lightbox-trigger'));
+
+      slides = imgs.map((img) => ({ src: img.src, alt: img.alt }));
+      slideIndex = Math.max(0, imgs.indexOf(clickedImg));
+
+      const hasMultiple = slides.length > 1;
+      if (prevBtn) prevBtn.hidden = !hasMultiple;
+      if (nextBtn) nextBtn.hidden = !hasMultiple;
+
+      if (lightboxThumbs) {
+        lightboxThumbs.innerHTML = '';
+        if (hasMultiple) {
+          slides.forEach((slide, i) => {
+            const thumb = document.createElement('button');
+            thumb.type = 'button';
+            thumb.className = 'lightbox-thumb';
+            thumb.setAttribute('aria-label', slide.alt);
+            const thumbImg = document.createElement('img');
+            thumbImg.src = slide.src;
+            thumbImg.alt = '';
+            thumb.appendChild(thumbImg);
+            thumb.addEventListener('click', () => goTo(i));
+            lightboxThumbs.appendChild(thumb);
+          });
+        }
+      }
+
+      renderSlide();
+      lightbox.hidden = false;
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+      if (!lightboxImg) return;
+      lightbox.hidden = true;
+      lightboxImg.src = '';
+      if (lightboxThumbs) lightboxThumbs.innerHTML = '';
+      slides = [];
+      document.body.style.overflow = '';
+    };
+
+    root.querySelectorAll<HTMLImageElement>('.lightbox-trigger').forEach((img) => {
+      img.addEventListener('click', () => openLightbox(img));
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(img);
+        }
+      });
+    });
+
+    prevBtn?.addEventListener('click', () => goTo(slideIndex - 1));
+    nextBtn?.addEventListener('click', () => goTo(slideIndex + 1));
+
+    // Swipe left/right to change photo on touch devices.
+    const SWIPE_THRESHOLD = 40;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    lightbox.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        const t = e.touches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+      },
+      { passive: true },
+    );
+
+    lightbox.addEventListener(
+      'touchend',
+      (e: TouchEvent) => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+        goTo(dx < 0 ? slideIndex + 1 : slideIndex - 1);
+      },
+      { passive: true },
+    );
+
+    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.hidden) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') goTo(slideIndex - 1);
+      if (e.key === 'ArrowRight') goTo(slideIndex + 1);
+    });
+  });
+</script>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-lightbox);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 25, 46, 0.94);
+    padding: 3.5rem 1.25rem 1.25rem;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox-close,
+  .lightbox-nav {
+    position: absolute;
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    width: 42px;
+    height: 42px;
+  }
+
+  .lightbox-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .lightbox-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+  }
+
+  .lightbox-nav[hidden] {
+    display: none;
+  }
+
+  .lightbox-nav svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .lightbox-prev {
+    left: 0.5rem;
+  }
+
+  .lightbox-next {
+    right: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .lightbox-prev {
+      left: 1.5rem;
+    }
+
+    .lightbox-next {
+      right: 1.5rem;
+    }
+  }
+
+  .lightbox-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 100%;
+  }
+
+  .lightbox-body img {
+    width: auto;
+    height: auto;
+    min-height: min(50vh, 360px);
+    max-width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+    background: transparent;
+    transition: opacity 0.15s ease;
+  }
+
+  .lightbox-thumbs {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.6rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  }
+
+  .lightbox-thumbs::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .lightbox-thumbs::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .lightbox-thumbs::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+  }
+
+  /*
+   * :global() — these thumbnails are created with document.createElement()
+   * at runtime (see the <script> above), so they never receive Astro's
+   * scoped data-astro-cid attribute. A scoped selector would silently never
+   * match them.
+   */
+  :global(.lightbox-thumb) {
+    flex-shrink: 0;
+    appearance: none;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+
+  :global(.lightbox-thumb.active),
+  :global(.lightbox-thumb:hover) {
+    opacity: 1;
+    border-color: var(--brand);
+  }
+
+  :global(.lightbox-thumb img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>

@@ -1,0 +1,796 @@
+---
+import Base from '../layouts/Base.astro';
+import { getShip, getTour, getStays, getSocialLinks, whatsappUrl } from '../lib/content';
+import { formatPrice } from '../lib/availability';
+import { countryCodes, defaultCountry } from '../lib/phone-codes';
+import PrivacyPolicyContent from '../components/PrivacyPolicyContent.astro';
+
+/** Kept in sync with the server-side cap in src/pages/api/inquiry.ts. */
+const MESSAGE_MAX_LENGTH = 1000;
+
+const params = Astro.url.searchParams;
+const shipSlug = params.get('ship');
+const tourSlug = params.get('tour');
+const staySlug = params.get('stay');
+const start = params.get('start');
+const price = params.get('price');
+
+const ship = shipSlug ? await getShip(shipSlug) : undefined;
+const tour = tourSlug ? await getTour(tourSlug) : undefined;
+const stay = staySlug ? (await getStays()).find((s) => s.slug === staySlug) : undefined;
+
+let contextLine = '';
+let prefillMessage = '';
+
+if (ship) {
+  contextLine = start
+    ? `${ship.name}, departure starting ${start}${price ? `, from ${formatPrice(Number(price))}/person` : ''}`
+    : ship.name;
+  prefillMessage = `I'd like to book ${ship.name}${start ? ` for the departure starting ${start}` : ''}.`;
+} else if (tour) {
+  contextLine = tour.name;
+  prefillMessage = `I'd like to book ${tour.name}.`;
+} else if (stay) {
+  contextLine = `${stay.name}, ${stay.location}`;
+  prefillMessage = `I'd like to check availability for ${stay.name}.`;
+}
+
+// Real contact info from Sanity (schemaTypes/socialLinks.ts) — cards only
+// render when the field is actually set, never a fabricated placeholder.
+const socialLinks = await getSocialLinks();
+const contactEmail = socialLinks?.personalEmail || socialLinks?.email || null;
+
+/** "19735804445" -> "+1 973 580 4445". Falls back to a plain "+" prefix for shapes we don't recognize. */
+function formatPhoneDisplay(digits: string): string {
+  if (/^1\d{10}$/.test(digits)) {
+    return `+1 ${digits.slice(1, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
+  }
+  return `+${digits}`;
+}
+
+const whatsappDisplay = socialLinks?.whatsappNumber ? formatPhoneDisplay(socialLinks.whatsappNumber) : null;
+const whatsappHref = socialLinks?.whatsappNumber
+  ? whatsappUrl(socialLinks.whatsappNumber, socialLinks.whatsappDefaultMessage || "Hi! I'd like to ask about availability.")
+  : null;
+---
+
+<Base
+  title="Contact | Galápagos & Beyond"
+  description="Plan your Galápagos trip: request a quote, ask about availability, or book directly with our team."
+>
+  <section class="contact-section">
+    <div class="container contact-grid">
+      <div class="contact-card">
+        <p class="eyebrow">Get in touch</p>
+        <h1>Plan your trip</h1>
+        <p class="hero-sub">
+          Tell us what you're looking for and our team, based in the Galápagos, will get back to you.
+        </p>
+
+        <hr class="divider" />
+
+        <form id="contact-form" class="contact-form" novalidate>
+          {
+            contextLine && (
+              <div class="context-note">
+                <span class="context-label">About</span>
+                <span>{contextLine}</span>
+              </div>
+            )
+          }
+
+          <div class="field-row two-col">
+            <label class="field">
+              <span>First name</span>
+              <input id="firstName" name="firstName" type="text" required autocomplete="given-name" placeholder="First name" />
+            </label>
+            <label class="field">
+              <span>Last name</span>
+              <input id="lastName" name="lastName" type="text" required autocomplete="family-name" placeholder="Last name" />
+            </label>
+          </div>
+
+          <div class="field-row two-col">
+            <label class="field">
+              <span>Email address</span>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="Email address" />
+            </label>
+            <label class="field">
+              <span>Travelers <em>(optional)</em></span>
+              <input id="travelers" name="travelers" type="number" min="1" placeholder="e.g. 2" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Phone <em>(optional)</em></span>
+            <div class="phone-row">
+              <div class="phone-code-picker" data-phone-picker>
+                <button type="button" class="phone-code-btn" data-phone-btn aria-haspopup="listbox" aria-expanded="false">
+                  <img class="phone-flag" data-phone-flag src={`https://flagcdn.com/${defaultCountry.iso}.svg`} alt="" width="20" height="15" />
+                  <span data-phone-dial>{defaultCountry.dial}</span>
+                  <svg class="phone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div class="phone-code-panel" data-phone-panel hidden>
+                  <input
+                    type="text"
+                    class="phone-code-search"
+                    data-phone-search
+                    placeholder="Search country…"
+                    autocomplete="off"
+                    aria-label="Search country"
+                  />
+                  <ul class="phone-code-list" data-phone-list role="listbox">
+                    {countryCodes.map((c) => (
+                      <li role="option" data-dial={c.dial} data-iso={c.iso} data-name={c.name} data-search={`${c.name} ${c.dial}`.toLowerCase()} tabindex="-1">
+                        <img src={`https://flagcdn.com/${c.iso}.svg`} alt="" width="20" height="15" loading="lazy" />
+                        <span class="phone-opt-name">{c.name}</span>
+                        <span class="phone-opt-dial">{c.dial}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="phone-code-empty" data-phone-empty hidden>No matches</p>
+                </div>
+                <input type="hidden" name="phoneCode" value={defaultCountry.dial} data-phone-input />
+              </div>
+              <input type="tel" name="phone" maxlength="30" autocomplete="tel-national" placeholder="99 123 4567" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="field-label-row">
+              Message
+              <span class="char-count" data-char-count>{prefillMessage.length}/{MESSAGE_MAX_LENGTH}</span>
+            </span>
+            <textarea
+              id="message"
+              name="message"
+              rows="3"
+              required
+              maxlength={MESSAGE_MAX_LENGTH}
+              placeholder="Leave us a message"
+              data-char-count-input
+            >{prefillMessage}</textarea>
+          </label>
+
+          <input type="hidden" name="context" value={contextLine} />
+
+          <label class="consent-row">
+            <input type="checkbox" name="consent" required data-consent-input />
+            <span>
+              I agree to the
+              <button type="button" class="privacy-link" data-privacy-open>privacy policy</button>
+            </span>
+          </label>
+
+          <button type="submit" class="btn btn-primary submit-btn" data-submit-btn disabled>Send message</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <dialog class="privacy-dialog" data-privacy-dialog aria-label="Privacy policy">
+        <div class="privacy-dialog-head">
+          <h2>Privacy Policy</h2>
+          <button type="button" class="privacy-dialog-close" data-privacy-close aria-label="Close">✕</button>
+        </div>
+        <div class="privacy-dialog-body prose">
+          <PrivacyPolicyContent />
+        </div>
+        <p class="privacy-dialog-footer">
+          <a href="/privacy/" target="_blank" rel="noopener">Open full page in a new tab</a>
+        </p>
+      </dialog>
+
+      <div class="contact-side">
+        <div class="contact-photo">
+          <img
+            src="https://cdn.sanity.io/images/gxkh85js/production/ac52b89f164b8e2ad519446dfaea2b6f160da634-1000x1000.avif"
+            alt="Galápagos & Beyond"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="info-cards">
+          {
+            contactEmail && (
+              <a class="info-card" href={`mailto:${contactEmail}`}>
+                <span class="info-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                </span>
+                <span class="info-body">
+                  <span class="info-label">Email</span>
+                  <span class="info-value">{contactEmail}</span>
+                </span>
+              </a>
+            )
+          }
+
+          {
+            whatsappDisplay && whatsappHref && (
+              <a class="info-card" href={whatsappHref} target="_blank" rel="noopener">
+                <span class="info-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" />
+                  </svg>
+                </span>
+                <span class="info-body">
+                  <span class="info-label">WhatsApp</span>
+                  <span class="info-value">{whatsappDisplay}</span>
+                </span>
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { wirePhoneCodePicker, buildPhoneValue } from '../scripts/phone-code-picker';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  if (form) wirePhoneCodePicker(form);
+
+  const messageInput = form?.querySelector<HTMLTextAreaElement>('[data-char-count-input]');
+  const charCount = form?.querySelector<HTMLElement>('[data-char-count]');
+  if (messageInput && charCount) {
+    const max = messageInput.maxLength;
+    const update = () => {
+      charCount.textContent = `${messageInput.value.length}/${max}`;
+    };
+    messageInput.addEventListener('input', update);
+    update();
+  }
+
+  // Submit stays disabled until the privacy-policy consent box is checked.
+  const consentInput = form?.querySelector<HTMLInputElement>('[data-consent-input]');
+  const submitBtn = form?.querySelector<HTMLButtonElement>('[data-submit-btn]');
+  const syncSubmitState = () => {
+    if (submitBtn) submitBtn.disabled = !consentInput?.checked;
+  };
+  consentInput?.addEventListener('change', syncSubmitState);
+  syncSubmitState();
+
+  // Privacy policy modal — reading it never navigates away, so nothing typed is lost.
+  const privacyDialog = document.querySelector<HTMLDialogElement>('[data-privacy-dialog]');
+  const privacyOpenBtn = document.querySelector<HTMLButtonElement>('[data-privacy-open]');
+  const privacyCloseBtn = privacyDialog?.querySelector<HTMLButtonElement>('[data-privacy-close]');
+  privacyOpenBtn?.addEventListener('click', () => privacyDialog?.showModal());
+  privacyCloseBtn?.addEventListener('click', () => privacyDialog?.close());
+  privacyDialog?.addEventListener('click', (e) => {
+    if (e.target === privacyDialog) privacyDialog.close();
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!status || !form) return;
+
+    const data = new FormData(form);
+    const firstName = (data.get('firstName') as string)?.trim() ?? '';
+    const lastName = (data.get('lastName') as string)?.trim() ?? '';
+
+    const payload = {
+      name: [firstName, lastName].filter(Boolean).join(' '),
+      email: data.get('email'),
+      phone: buildPhoneValue(data),
+      travelers: data.get('travelers') || undefined,
+      message: data.get('message'),
+      context: data.get('context') || undefined,
+    };
+
+    if (submitBtn) submitBtn.disabled = true;
+    status.textContent = 'Sending…';
+    status.className = 'form-status';
+
+    try {
+      const res = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('failed');
+      status.textContent = "Thanks, we've received your message and will reply soon.";
+      status.classList.add('success');
+      form.reset();
+      messageInput?.dispatchEvent(new Event('input'));
+    } catch {
+      status.textContent = 'Something went wrong. Please try again or email us directly.';
+      status.classList.add('error');
+    } finally {
+      syncSubmitState();
+    }
+  });
+</script>
+
+<style>
+  .contact-section {
+    padding-block: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--sand);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .contact-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eyebrow {
+    color: var(--brand-deep);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    margin-bottom: 0.35rem;
+  }
+
+  .contact-card h1 {
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 1.9rem);
+    line-height: 1.15;
+  }
+
+  .hero-sub {
+    margin-top: 0.5rem;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  .divider {
+    margin: 1rem 0;
+    border: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .field-row.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .context-note {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--sand);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+  }
+
+  .context-label {
+    font-weight: 700;
+    color: var(--brand-deep);
+  }
+
+  .field {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .field span {
+    font-size: var(--text-xs);
+    font-weight: 620;
+  }
+
+  .field-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .char-count {
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .field em {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-style: normal;
+  }
+
+  .field input,
+  .field textarea {
+    font: inherit;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--sand);
+    color: var(--ink);
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+    border-color: var(--brand);
+    background: var(--white);
+  }
+
+  .phone-row {
+    display: flex;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .phone-row input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .phone-code-picker {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .phone-code-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 100%;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--sand);
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .phone-code-btn:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .phone-code-btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  .phone-flag {
+    width: 18px;
+    height: 13px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .phone-chevron {
+    width: 12px;
+    height: 12px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .phone-code-panel {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 0;
+    z-index: 10;
+    width: 240px;
+    max-width: 80vw;
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .phone-code-panel[hidden] {
+    display: none;
+  }
+
+  .phone-code-search {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    margin-bottom: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: var(--text-sm);
+    background: var(--white);
+  }
+
+  .phone-code-search:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  .phone-code-list {
+    max-height: 220px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .phone-code-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: calc(var(--radius) - 4px);
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .phone-code-list li[hidden] {
+    display: none;
+  }
+
+  .phone-code-list li:hover,
+  .phone-code-list li:focus-visible {
+    background: var(--sand);
+  }
+
+  .phone-code-list img {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .consent-row input {
+    margin-top: 0.2rem;
+  }
+
+  .privacy-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 0.35rem;
+  }
+
+  .submit-btn {
+    justify-self: start;
+    margin-top: 0.25rem;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .privacy-dialog {
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 0;
+    width: min(92vw, 640px);
+    max-height: min(85vh, 720px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .privacy-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .privacy-dialog::backdrop {
+    background: rgba(16, 25, 46, 0.55);
+  }
+
+  .privacy-dialog-head {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .privacy-dialog-head h2 {
+    font-size: var(--text-lg);
+  }
+
+  .privacy-dialog-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--sand);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .privacy-dialog-close:hover {
+    background: var(--line);
+  }
+
+  .privacy-dialog-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .privacy-dialog-body :global(h2) {
+    font-size: var(--text-base);
+    margin: 1.5rem 0 0.6rem;
+  }
+
+  .privacy-dialog-body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .privacy-dialog-body :global(p) {
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    margin-bottom: 0.75rem;
+  }
+
+  .privacy-dialog-body :global(ul) {
+    margin: 0 0 0.75rem;
+    padding-left: 1.2rem;
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+
+  .privacy-dialog-body :global(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  .privacy-dialog-body :global(a) {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .privacy-dialog-body :global(strong) {
+    color: var(--ink);
+  }
+
+  .privacy-dialog-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--text-sm);
+  }
+
+  .privacy-dialog-footer a {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .form-status {
+    font-size: var(--text-sm);
+    min-height: 1.2em;
+  }
+
+  .form-status.success {
+    color: var(--success);
+  }
+
+  .form-status.error {
+    color: var(--error);
+  }
+
+  .contact-side {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .contact-photo {
+    aspect-ratio: 700 / 646;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--sand);
+  }
+
+  .contact-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .info-cards {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .info-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--brand) 14%, transparent);
+    color: var(--brand-deep);
+  }
+
+  .info-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .info-body {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .info-label {
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+  }
+
+  .info-value {
+    font-weight: 620;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-side {
+      order: -1;
+    }
+
+    .contact-photo {
+      aspect-ratio: 16 / 9;
+    }
+
+    .field-row.two-col {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

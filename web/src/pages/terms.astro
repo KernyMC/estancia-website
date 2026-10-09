@@ -1,0 +1,16 @@
+---
+import LegalPage from '../layouts/LegalPage.astro';
+import { PortableText } from '@portabletext/astro';
+import { getLegalPage } from '../lib/content';
+
+const legalPage = await getLegalPage('terms');
+---
+
+<LegalPage
+  title={legalPage?.title ?? 'Terms & Conditions | Galápagos & Beyond'}
+  description={legalPage?.description ?? ''}
+  heading={legalPage?.heading ?? 'Terms & Conditions'}
+  lastUpdated={legalPage?.lastUpdated ?? ''}
+>
+  {legalPage && <PortableText value={legalPage.body} />}
+</LegalPage>

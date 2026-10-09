@@ -1,0 +1,68 @@
+---
+import { faqLd, type FaqEntry } from '../lib/seo';
+
+interface Props {
+  faqs: FaqEntry[];
+  title?: string;
+  /** Whether to emit FAQPage JSON-LD. Set false if another block on the page already does. */
+  emitSchema?: boolean;
+}
+
+const { faqs, title = 'Frequently asked questions', emitSchema = true } = Astro.props;
+const ld = emitSchema ? faqLd(faqs) : null;
+---
+
+{
+  faqs.length > 0 && (
+    <section class="block faq-block" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">{title}</h2>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary>{f.question}</summary>
+            <div class="faq-answer" set:html={f.answer} />
+          </details>
+        ))}
+      </div>
+      {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    </section>
+  )
+}
+
+<style>
+  .faq-block h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: 1.25rem;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    background: var(--white);
+  }
+
+  .faq-item summary {
+    cursor: pointer;
+    font-weight: 620;
+    font-size: var(--text-sm);
+  }
+
+  .faq-answer {
+    margin-top: 0.75rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+
+  .faq-answer :global(a) {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

@@ -1,0 +1,279 @@
+---
+import { getReviews } from '../../lib/content';
+import ReviewCard from '../reviews/ReviewCard.astro';
+import PolaroidFeature from './PolaroidFeature.astro';
+
+const staysImage =
+  'https://cdn.sanity.io/images/gxkh85js/production/d69f932fc942e241c7247d2189a14b45d40032a7-1560x1000.webp';
+const staysCrabImage =
+  'https://cdn.sanity.io/images/gxkh85js/production/189a3511ed1699ba5fad889cc4463ff48c00c5af-1560x878.webp';
+const galapagosCondoHref = '/condo-galapagos/';
+
+// Quemado a propósito: es una sección de diseño, no un dato de Sanity — la
+// página real (/stays/quito-condos/) sí vive en Sanity, esto es solo un
+// teaser visual en home.
+const quitoImageA =
+  'https://cdn.sanity.io/images/gxkh85js/production/5b8387d273936fb480f98c1a2bf470cb5964988b-2000x1333.avif';
+const quitoImageB =
+  'https://cdn.sanity.io/images/gxkh85js/production/410fc77b585eaf8ec09ace1c926236d49184f3a8-2000x1333.avif';
+const quitoImageC =
+  'https://cdn.sanity.io/images/gxkh85js/production/c1389fe8f5b2ed2b1a1eb0f31f852e2b10e49d37-1440x960.webp';
+const quitoHref = '/stays/quito-condos/';
+
+const reviews = await getReviews();
+const marqueeReviews = reviews.length > 0 ? [...reviews, ...reviews] : [];
+const marqueeSeconds = Math.max(24, reviews.length * 7);
+---
+
+<section class="stays">
+  <div class="container stays-grid">
+    <div class="stays-media">
+      <img src={staysImage} alt="Aparthotel Galápagos & Beyond en Santa Cruz" loading="lazy" />
+    </div>
+
+    <div class="stays-content">
+      <div class="stays-text">
+        <p class="eyebrow">Places to stay</p>
+        <h2>Five floors, five private condos</h2>
+        <p class="stays-sub">
+          Independent condos in Puerto Ayora, each with its own floor and
+          private bathrooms. Guests share the pool, jacuzzi, sauna and
+          rooftop terrace, with breakfast served daily, plus free bikes and
+          snorkel gear to explore Santa Cruz.
+        </p>
+        <a class="btn btn-primary stays-cta" href={galapagosCondoHref}>
+          See More
+        </a>
+      </div>
+
+      {/* Cangrejo decorativo, sin valor informativo */}
+      <div class="stays-crab" aria-hidden="true">
+        <img src={staysCrabImage} alt="" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<PolaroidFeature
+  eyebrow="Also in Quito"
+  title="Exclusive Condos Galápagos & Beyond"
+  body="Independent condos in Quito, run by the same team that plans your cruises and tours: a comfortable base before or after the islands."
+  ctaLabel="See more"
+  ctaHref={quitoHref}
+  imageA={{ src: quitoImageA, alt: 'Exclusive Condos Galápagos & Beyond in Quito' }}
+  imageB={{ src: quitoImageB, alt: 'Exclusive Condos Galápagos & Beyond in Quito' }}
+  imageC={{ src: quitoImageC, alt: 'Exterior area, Quito Condo, Galápagos & Beyond' }}
+/>
+
+<section class="reviews">
+  <div class="container section-head">
+    <p class="eyebrow">Verified guest reviews</p>
+    <h2>What guests say</h2>
+  </div>
+
+  {
+    marqueeReviews.length > 0 ? (
+      <div class="review-marquee">
+        <ul class="review-track" style={`--marquee-duration: ${marqueeSeconds}s`}>
+          {marqueeReviews.map((r) => (
+            <ReviewCard review={r} />
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="container">
+        <p class="reviews-empty">Guest reviews are being added here.</p>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .stays,
+  .reviews {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .stays {
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    overflow-x: hidden;
+  }
+
+  /* Tighten the gap between the Puerto Ayora block and the Quito one —
+     PolaroidFeature's own padding-block is generous by design (96px), but
+     that's too much sandwiched between two "stay" sections right on top of
+     each other. Scoped to this instance only via the adjacent selector. */
+  .stays + :global(.polaroid-feature) {
+    padding-top: 0;
+  }
+
+  .stays .container {
+    max-width: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .stays-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: stretch;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  .stays-media {
+    align-self: start;
+    overflow: hidden;
+    border-radius: 0 0 var(--radius-lg) 0;
+  }
+
+  .stays-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .stays-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .stays-text {
+    position: relative;
+    z-index: 2;
+    max-width: 46ch;
+    padding-bottom: 2rem;
+    text-align: center;
+  }
+
+  .section-head {
+    text-align: center;
+  }
+
+  .stays-cta {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 50%;
+    z-index: 3;
+  }
+
+  .stays-crab {
+    align-self: center;
+    width: min(595px, 92%);
+    aspect-ratio: 1560 / 878;
+    margin-top: 2.5rem;
+  }
+
+  .stays-crab img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .section-head {
+    max-width: 62ch;
+  }
+
+  .reviews .section-head {
+    max-width: none;
+  }
+
+  .eyebrow {
+    color: var(--brand-deep);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .stays-sub {
+    margin-top: 0.1rem;
+    color: var(--ink-soft);
+    padding-block: clamp(0.10rem, 1.5vw, 2rem);
+  }
+
+  .review-marquee {
+    margin-top: 2.5rem;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .review-track {
+    display: flex;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.5rem;
+    width: max-content;
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+  }
+
+  .review-marquee:hover .review-track {
+    animation-play-state: paused;
+  }
+
+  .review-track :global(.review-card) {
+    flex: 0 0 360px;
+    width: 360px;
+  }
+
+  @keyframes marquee {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: -50% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .review-track {
+      animation: none;
+    }
+  }
+
+  .reviews-empty {
+    margin-top: 1.75rem;
+    padding: 1.75rem;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 800px) {
+    .stays .container {
+      margin-left: auto;
+      padding-left: var(--gutter);
+    }
+
+    .stays-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stays-cta {
+      position: static;
+      translate: none;
+      margin-top: 1.5rem;
+      display: inline-block;
+    }
+
+    .stays-text {
+      padding-bottom: 0;
+    }
+
+    .stays-crab {
+      width: min(595px, 100%);
+    }
+
+    .review-track :global(.review-card) {
+      flex: 0 0 300px;
+      width: 300px;
+    }
+  }
+</style>

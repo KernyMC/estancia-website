@@ -1,0 +1,80 @@
+---
+import { getShips } from '../../lib/content';
+import { getNearestDeparture } from '../../lib/availability';
+import CardActions from '../CardActions.astro';
+import ShipCard from './ShipCard.astro';
+
+interface Props {
+  shipSlug: string;
+  categorySlug?: string;
+}
+
+const { shipSlug, categorySlug } = Astro.props;
+
+const allShips = await getShips();
+const related = allShips.filter((s) => s.slug !== shipSlug && s.category?.slug === categorySlug).slice(0, 3);
+const relatedWithDeparture = await Promise.all(
+  (related.length > 0 ? related : allShips.filter((s) => s.slug !== shipSlug).slice(0, 3)).map(
+    async (s) => ({ ship: s, departure: await getNearestDeparture(s) })
+  )
+);
+---
+
+{
+  relatedWithDeparture.length > 0 && (
+    <section class="related">
+      <div class="container">
+        <h2>Other cruises to consider</h2>
+        <ul class="related-grid">
+          {relatedWithDeparture.map(({ ship: s, departure: dep }) => (
+            <li>
+              <ShipCard ship={s} departure={dep} />
+              <CardActions
+                type="cruise"
+                slug={s.slug}
+                name={s.name}
+                href={`/cruises/${s.slug}/`}
+                thumbnail={s.heroImage}
+                departureStart={dep?.start}
+                departureEnd={dep?.end}
+                canAddToCart={Boolean(dep)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    background: var(--sand);
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .related h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: 1.75rem;
+  }
+
+  .related-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  /* CardActions is a sibling of ShipCard's <a>, needs this to anchor. */
+  .related-grid > li {
+    position: relative;
+  }
+
+  @media (max-width: 980px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

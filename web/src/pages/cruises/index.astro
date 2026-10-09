@@ -1,0 +1,353 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqSection from '../../components/FaqSection.astro';
+import { getShips, getCruiseClasses, shipExperiences, SHIP_EXPERIENCES, type Ship } from '../../lib/content';
+import { getNearestDeparture, type Departure } from '../../lib/availability';
+import cruiseFaqs from '../../data/cruiseFaqs.json';
+import CardActions from '../../components/CardActions.astro';
+import ShipCard from '../../components/ship/ShipCard.astro';
+
+const cruiseClasses = await getCruiseClasses();
+const CLASS_FILTERS = [{ slug: 'all', label: 'All' }, ...cruiseClasses.map((c) => ({ slug: c.slug, label: c.name }))];
+const PAGE_SIZE = 9;
+const params = Astro.url.searchParams;
+const activeClass = params.get('class') ?? 'all';
+const activeExp = params.get('exp') ?? 'all';
+
+const allShips = await getShips();
+const withDepartures = await Promise.all(
+  allShips.map(async (ship) => ({
+    ship,
+    departure: await getNearestDeparture(ship),
+    experiences: shipExperiences(ship),
+  }))
+);
+
+interface ShipListItem {
+  ship: Ship;
+  departure: Departure | undefined;
+  experiences: string[];
+}
+
+const filtered: ShipListItem[] = withDepartures
+  .filter(({ ship }) => activeClass === 'all' || ship.category?.slug === activeClass)
+  .filter(({ experiences }) => activeExp === 'all' || (experiences as string[]).includes(activeExp))
+  .sort((a, b) => {
+    if (!a.departure) return 1;
+    if (!b.departure) return -1;
+    return a.departure.start.localeCompare(b.departure.start);
+  });
+
+const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+const requestedPage = parseInt(params.get('page') ?? '1', 10) || 1;
+const currentPage = Math.min(Math.max(1, requestedPage), totalPages);
+const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+/**
+ * Build a hub URL overriding one or more filters while preserving the rest.
+ * Changing class/exp always drops back to page 1 (a stale page number from
+ * the old, larger result set could point past the end of the new one) —
+ * callers that only want a page change pass just `{ page }`.
+ */
+const buildHref = (overrides: { class?: string; exp?: string; page?: string }) => {
+  const next = new URLSearchParams(params);
+  const resetPage = overrides.class !== undefined || overrides.exp !== undefined;
+  const combined = resetPage ? { ...overrides, page: overrides.page ?? '1' } : overrides;
+
+  for (const [key, value] of Object.entries(combined)) {
+    if (value === 'all' || (key === 'page' && value === '1')) next.delete(key);
+    else next.set(key, value);
+  }
+  const qs = next.toString();
+  return qs ? `/cruises/?${qs}` : '/cruises/';
+};
+
+const classHref = (slug: string) => buildHref({ class: slug });
+
+// Only show experience pills the fleet actually supports (never fabricated).
+const availableExperiences = SHIP_EXPERIENCES.filter((exp) =>
+  withDepartures.some(({ experiences }) => experiences.includes(exp.slug))
+);
+
+const faqs = cruiseFaqs.items;
+---
+
+<Base
+  title="Luxury Galápagos Cruises: Small Ships, Yachts & Catamarans | Galápagos & Beyond"
+  description="Our full fleet of small-ship Galápagos cruises with live availability and instant booking, in Luxury, First Class and Tourist Superior."
+  image="/logos/galapagosandbeyond-logo.svg"
+>
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Cruises' }]} />
+
+  <section class="hub-hero">
+    <div class="container">
+      <p class="eyebrow">Small-ship cruises</p>
+      <h1>Galápagos Cruises</h1>
+      <p class="hub-intro">
+        Eight small ships across the archipelago: catamarans, yachts and
+        live-aboard divers, each with live availability pulled straight
+        from our booking system. Prices shown are per person for the next
+        open departure.
+      </p>
+    </div>
+  </section>
+
+  <section class="hub-list">
+    <div class="container">
+      <div class="filter-group">
+        <span class="filter-label">Class</span>
+        <nav class="filters" aria-label="Filter by class">
+          {
+            CLASS_FILTERS.map((f) => (
+              <a class:list={['filter-pill', { active: activeClass === f.slug }]} href={classHref(f.slug)}>
+                {f.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+
+      {
+        availableExperiences.length > 0 && (
+          <div class="filter-group">
+            <span class="filter-label">Experience</span>
+            <nav class="filters" aria-label="Filter by experience">
+              <a
+                class:list={['filter-pill', { active: activeExp === 'all' }]}
+                href={buildHref({ exp: 'all' })}
+              >
+                All
+              </a>
+              {availableExperiences.map((exp) => (
+                <a
+                  class:list={['filter-pill', { active: activeExp === exp.slug }]}
+                  href={buildHref({ exp: exp.slug })}
+                >
+                  {exp.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )
+      }
+
+      {
+        filtered.length === 0 ? (
+          <p class="empty">No cruises in this class right now.</p>
+        ) : (
+          <ul class="ship-grid">
+            {pageItems.map(({ ship, departure }) => (
+              <li>
+                <ShipCard ship={ship} departure={departure} />
+                <CardActions
+                  type="cruise"
+                  slug={ship.slug}
+                  name={ship.name}
+                  href={`/cruises/${ship.slug}/`}
+                  thumbnail={ship.heroImage}
+                  departureStart={departure?.start}
+                  departureEnd={departure?.end}
+                  canAddToCart={Boolean(departure)}
+                />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      {
+        totalPages > 1 && (
+          <nav class="pagination" aria-label="Cruises pagination">
+            <a
+              class:list={['page-link', 'page-arrow', { disabled: currentPage === 1 }]}
+              href={buildHref({ page: String(Math.max(1, currentPage - 1)) })}
+              aria-disabled={currentPage === 1}
+            >
+              Prev
+            </a>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+              <a
+                class:list={['page-link', { active: n === currentPage }]}
+                href={buildHref({ page: String(n) })}
+                aria-current={n === currentPage ? 'page' : undefined}
+              >
+                {n}
+              </a>
+            ))}
+            <a
+              class:list={['page-link', 'page-arrow', { disabled: currentPage === totalPages }]}
+              href={buildHref({ page: String(Math.min(totalPages, currentPage + 1)) })}
+              aria-disabled={currentPage === totalPages}
+            >
+              Next
+            </a>
+          </nav>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="hub-faq">
+    <div class="container">
+      <FaqSection faqs={faqs} title="Galápagos cruise questions, answered" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hub-hero {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1rem;
+    background: var(--sand);
+  }
+
+  .hub-hero .eyebrow {
+    color: var(--brand-deep);
+    margin-bottom: 0.6rem;
+  }
+
+  .hub-hero h1 {
+    font-size: var(--text-hero);
+    max-width: 18ch;
+  }
+
+  .hub-intro {
+    margin-top: 1.1rem;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: var(--text-lg);
+  }
+
+  .hub-list {
+    background: var(--sand);
+    padding-block: 0 clamp(3rem, 7vw, 5rem);
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .filter-group:last-of-type {
+    margin-bottom: 2rem;
+  }
+
+  .filter-label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    min-width: 4.5rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .hub-faq {
+    background: var(--sand);
+    padding-block: 0 clamp(3rem, 7vw, 5rem);
+  }
+
+  .filter-pill {
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--white);
+    color: var(--ink-soft);
+  }
+
+  .filter-pill:hover {
+    border-color: var(--brand);
+    color: var(--brand-deep);
+  }
+
+  .filter-pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--white);
+  }
+
+  .empty {
+    color: var(--ink-soft);
+    padding-block: 2rem;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 2.25rem;
+  }
+
+  .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--white);
+    color: var(--ink-soft);
+  }
+
+  .page-link:hover {
+    border-color: var(--brand);
+    color: var(--brand-deep);
+  }
+
+  .page-link.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--white);
+  }
+
+  .page-arrow {
+    padding-inline: 1.1rem;
+  }
+
+  .page-link.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .ship-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* CardActions is a sibling of ShipCard's <a>, so this wrapper needs to
+     anchor its absolute positioning. */
+  .ship-grid > li {
+    position: relative;
+  }
+
+  @media (max-width: 980px) {
+    .ship-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .ship-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+---
+
+<div class="cookie-banner" id="cookie-banner" hidden>
+  <button type="button" class="cookie-close" id="cookie-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  </button>
+  <div class="cookie-inner">
+    <p>
+      We use essential cookies to run this site and payment cookies to
+      process bookings. With your consent, we'd also like to use analytics
+      cookies to understand what's useful. See our <a href="/cookies/">Cookie Policy</a>.
+    </p>
+    <div class="cookie-actions">
+      <button type="button" class="btn-cookie btn-cookie-decline" id="cookie-decline">Essential only</button>
+      <button type="button" class="btn-cookie btn-cookie-accept" id="cookie-accept">Accept all</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'gab-cookie-consent';
+  const banner = document.getElementById('cookie-banner');
+
+  if (banner && !localStorage.getItem(STORAGE_KEY)) {
+    banner.hidden = false;
+  }
+
+  document.getElementById('cookie-accept')?.addEventListener('click', () => {
+    localStorage.setItem(STORAGE_KEY, 'all');
+    if (banner) banner.hidden = true;
+  });
+
+  document.getElementById('cookie-decline')?.addEventListener('click', () => {
+    localStorage.setItem(STORAGE_KEY, 'essential');
+    if (banner) banner.hidden = true;
+  });
+
+  // Closing without an explicit choice is treated the same as "Essential
+  // only" — dismissing the banner should never imply consent to analytics.
+  document.getElementById('cookie-close')?.addEventListener('click', () => {
+    localStorage.setItem(STORAGE_KEY, 'essential');
+    if (banner) banner.hidden = true;
+  });
+</script>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-cookie);
+    background: var(--ink);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 1.1rem clamp(1rem, 4vw, 2rem);
+  }
+
+  .cookie-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+  }
+
+  .cookie-close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cookie-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+  }
+
+  .cookie-inner {
+    max-width: var(--container);
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-right: 2rem;
+  }
+
+  .cookie-inner p {
+    margin: 0;
+    font-size: var(--text-sm);
+    max-width: 62ch;
+    line-height: 1.55;
+  }
+
+  .cookie-inner a {
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cookie-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  .btn-cookie {
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    color: var(--white);
+    white-space: nowrap;
+  }
+
+  .btn-cookie-accept {
+    background: var(--brand);
+    border-color: var(--brand);
+  }
+
+  .btn-cookie-accept:hover {
+    background: var(--brand-deep);
+  }
+
+  .btn-cookie-decline:hover {
+    border-color: var(--white);
+  }
+
+  @media (max-width: 640px) {
+    .cookie-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

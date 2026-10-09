@@ -1,0 +1,60 @@
+---
+/**
+ * Full body of a tour category hub (/tours/[category]/, e.g. /tours/diving/)
+ * — extracted out of pages/tours/[slug].astro so that file can stay a thin
+ * router choosing between this and TourDetailPage.astro (both would
+ * otherwise collide on the same `/tours/:param` route pattern if split
+ * into separate page files).
+ */
+import ToursGrid from './ToursGrid.astro';
+import type { TourCategoryPage as TourCategoryPageData } from '../../lib/content';
+
+interface Props {
+  category: TourCategoryPageData;
+}
+
+const { category } = Astro.props;
+---
+
+<section class="hub-hero">
+  <div class="container">
+    <p class="eyebrow">Island adventures</p>
+    <h1>{category.heading}</h1>
+    <p class="hub-intro">{category.description}</p>
+  </div>
+</section>
+
+<section class="hub-list">
+  <div class="container">
+    <ToursGrid categorySlug={category.slug} />
+  </div>
+</section>
+
+<style>
+  .hub-hero {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1rem;
+    background: var(--sand);
+  }
+
+  .hub-hero .eyebrow {
+    color: var(--brand-deep);
+    margin-bottom: 0.6rem;
+  }
+
+  .hub-hero h1 {
+    font-size: var(--text-hero);
+    max-width: 18ch;
+  }
+
+  .hub-intro {
+    margin-top: 1.1rem;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: var(--text-lg);
+  }
+
+  .hub-list {
+    background: var(--sand);
+    padding-block: 2rem clamp(3rem, 7vw, 5rem);
+  }
+</style>

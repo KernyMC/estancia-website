@@ -1,0 +1,16 @@
+---
+import LegalPage from '../layouts/LegalPage.astro';
+import PrivacyPolicyContent from '../components/PrivacyPolicyContent.astro';
+import { getLegalPage } from '../lib/content';
+
+const legalPage = await getLegalPage('privacy');
+---
+
+<LegalPage
+  title={legalPage?.title ?? 'Privacy Policy | Galápagos & Beyond'}
+  description={legalPage?.description ?? ''}
+  heading={legalPage?.heading ?? 'Privacy Policy'}
+  lastUpdated={legalPage?.lastUpdated ?? ''}
+>
+  <PrivacyPolicyContent />
+</LegalPage>

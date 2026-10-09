@@ -1,0 +1,18 @@
+# Local development database. Production runs its own Postgres container
+# managed by Dokploy — this file is never deployed.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: gab-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gab
+      POSTGRES_PASSWORD: gab_dev_password
+      POSTGRES_DB: gab
+    ports:
+      - '5432:5432'
+    volumes:
+      - gab-pgdata:/var/lib/postgresql/data
+
+volumes:
+  gab-pgdata:

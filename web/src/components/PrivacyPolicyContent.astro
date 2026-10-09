@@ -1,0 +1,14 @@
+---
+/**
+ * The actual Privacy Policy copy, shared between /privacy/ (full page) and
+ * the quick-reference modal on the contact form — one source of text, two
+ * places it renders, so they can never drift out of sync. Content is
+ * authored in Sanity Studio (schemaTypes/legalPage.ts, page: "privacy").
+ */
+import { PortableText } from '@portabletext/astro';
+import { getLegalPage } from '../lib/content';
+
+const legalPage = await getLegalPage('privacy');
+---
+
+{legalPage && <PortableText value={legalPage.body} />}

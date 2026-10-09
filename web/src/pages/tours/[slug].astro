@@ -1,0 +1,54 @@
+---
+/**
+ * One dynamic segment, two possible meanings: `/tours/diving/` is a
+ * category hub, `/tours/kicker-rock/` is a single tour. Both need to live
+ * at the same `/tours/:param` route pattern, so this file resolves which
+ * one it is and delegates to the matching component — splitting them into
+ * separate page files (e.g. `[category].astro` + `[slug].astro`) would
+ * collide on that identical pattern.
+ */
+import Base from '../../layouts/Base.astro';
+import TourCategoryPage from '../../components/tours/TourCategoryPage.astro';
+import TourDetailPage from '../../components/tours/TourDetailPage.astro';
+import { getTour, getTourCategories } from '../../lib/content';
+import { productLd } from '../../lib/seo';
+import { todayIso, tourFromPrice } from '../../lib/seasonal-pricing';
+
+const { slug } = Astro.params;
+
+const categories = await getTourCategories();
+const category = slug ? categories.find((c) => c.slug === slug) : undefined;
+
+const tour = !category && slug ? await getTour(slug) : undefined;
+
+if (!category && !tour) {
+  return Astro.redirect('/tours/');
+}
+
+const tourUrl = tour ? `/tours/${tour.slug}/` : undefined;
+
+// Product JSON-LD — Offer price only when it exists in the source (never fabricated).
+const tourJsonLd = tour
+  ? productLd({
+      name: tour.name,
+      description: tour.seo.description || tour.description?.slice(0, 300),
+      image: tour.thumbnail,
+      url: tourUrl!,
+      category: tour.category?.name,
+      price: tourFromPrice(tour, todayIso()) ?? undefined,
+    })
+  : undefined;
+
+const title = category
+  ? category.seo.title || `Galápagos ${category.heading} | Galápagos & Beyond`
+  : tour!.seo.title || (tour!.category ? `${tour!.name}: ${tour!.category.name}` : tour!.name);
+
+const description = category
+  ? category.seo.description || category.description
+  : tour!.seo.description ||
+    `${tour!.name}${tour!.category ? `, a ${tour!.category.name} tour` : ''} in the Galápagos Islands. Book online.`;
+---
+
+<Base title={title} description={description} canonical={tourUrl} image={tour?.thumbnail} jsonLd={tourJsonLd}>
+  {category ? <TourCategoryPage category={category} /> : <TourDetailPage tour={tour!} />}
+</Base>

@@ -1,0 +1,430 @@
+---
+import { getCruiseClasses, getTourCategories } from '../lib/content';
+
+const [cruiseClasses, tourCategories] = await Promise.all([getCruiseClasses(), getTourCategories()]);
+
+const nav = [
+  {
+    label: 'Cruises',
+    href: '/cruises/',
+    children: [
+      { label: 'All Cruises', href: '/cruises/' },
+      ...cruiseClasses.map((c) => ({ label: c.name, href: `/cruises/?class=${c.slug}` })),
+    ],
+  },
+  {
+    label: 'Tours',
+    href: '/tours/',
+    children: [
+      { label: 'All Tours', href: '/tours/' },
+      ...tourCategories.map((c) => ({ label: c.name, href: `/tours/${c.slug}/` })),
+    ],
+  },
+  {
+    label: 'Stays',
+    href: '/stays/',
+    children: [
+      { label: 'Condo Galápagos', href: '/condo-galapagos/' },
+      { label: 'Quito Condo', href: '/stays/quito-condos/' },
+    ],
+  },
+  { label: 'Amazon', href: 'https://ecuadorandbeyond.com/', external: true },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <img class="brand-logo" src="/logos/galapagosandbeyond-logo.svg" alt="Galápagos & Beyond" width="44" height="44" />
+      <span class="brand-name">Galápagos <em>&amp;</em> Beyond</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul class="nav-list">
+        {
+          nav.map((item) => (
+            <li class:list={['nav-item', { 'has-sub': item.children }]}>
+              <a
+                class="nav-link"
+                href={item.href}
+                target={item.external ? '_blank' : undefined}
+                rel={item.external ? 'noopener noreferrer' : undefined}
+              >
+                {item.label}
+                {item.children && (
+                  <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                )}
+              </a>
+              {item.children && (
+                <ul class="sub-list">
+                  {item.children.map((child) => (
+                    <li>
+                      <a class="sub-link" href={child.href}>
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-open-drawer="favorites" aria-haspopup="dialog">
+        <span class="visually-hidden">Saved trips</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
+        </svg>
+        <span class="badge" data-fav-count hidden></span>
+      </button>
+      <button class="icon-btn" type="button" data-open-drawer="cart" aria-haspopup="dialog">
+        <span class="visually-hidden">Cart</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12Z" />
+          <path d="M6 6 5 2H2" />
+          <circle cx="9.5" cy="20" r="1.4" fill="currentColor" stroke="none" />
+          <circle cx="17.5" cy="20" r="1.4" fill="currentColor" stroke="none" />
+        </svg>
+        <span class="badge" data-cart-count hidden></span>
+      </button>
+      <span class="visually-hidden" aria-live="polite" data-store-announce></span>
+    </div>
+
+    <a class="btn btn-primary header-cta" href="/contact/">Plan your trip</a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">
+      <span class="visually-hidden">Menu</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Main" hidden>
+    <div class="container">
+      {
+        nav.map((item) => (
+          <div class="mobile-group">
+            <a
+              class="mobile-hub"
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+            >
+              {item.label}
+            </a>
+            {item.children && (
+              <ul class="mobile-sub">
+                {item.children.map((child) => (
+                  <li>
+                    <a href={child.href}>{child.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+      <a class="btn btn-primary mobile-cta" href="/contact/">Plan your trip</a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const panel = document.querySelector<HTMLElement>('.mobile-nav');
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    if (panel) panel.hidden = open;
+  });
+
+  // Hide the header on scroll-down, reveal on scroll-up — skipped while the
+  // mobile menu is open so it can't slide away mid-interaction.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking || !header) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const mobileMenuOpen = panel && !panel.hidden;
+        // Mirrored on <html> (not just the header) so sticky elements below
+        // it — jump-nav tabs, sidebar cards — can collapse their own
+        // top-offset via --header-offset instead of leaving a gap where the
+        // header used to be. See html.header-hidden in global.css.
+        const hide = !mobileMenuOpen && y >= 80 && y > lastY;
+
+        header.classList.toggle('header-hidden', hide);
+        document.documentElement.classList.toggle('header-hidden', hide);
+
+        lastY = y;
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+
+  import('../scripts/cart-store').then(({ cartCount, favoritesCount, STORE_EVENT }) => {
+    const cartBadge = document.querySelector<HTMLElement>('[data-cart-count]');
+    const favBadge = document.querySelector<HTMLElement>('[data-fav-count]');
+    const announce = document.querySelector<HTMLElement>('[data-store-announce]');
+
+    function paint() {
+      const cart = cartCount();
+      const fav = favoritesCount();
+      if (cartBadge) {
+        cartBadge.textContent = String(cart);
+        cartBadge.hidden = cart === 0;
+      }
+      if (favBadge) {
+        favBadge.textContent = String(fav);
+        favBadge.hidden = fav === 0;
+      }
+      if (announce) {
+        announce.textContent = `${cart} trip${cart === 1 ? '' : 's'} in cart, ${fav} saved`;
+      }
+    }
+
+    paint();
+    window.addEventListener(STORE_EVENT, paint);
+  });
+
+  // The drawer (CartDrawer.astro, mounted once in Base.astro) listens for
+  // this on window — decoupled so mount order between Header and the drawer
+  // never matters.
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-open-drawer]')) {
+    btn.addEventListener('click', () => {
+      window.dispatchEvent(
+        new CustomEvent('gab:open-drawer', { detail: { tab: btn.dataset.openDrawer } })
+      );
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    translate: 0 0;
+    transition: translate 0.35s ease-out;
+  }
+
+  .site-header.header-hidden {
+    translate: 0 -100%;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: var(--header-h);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .brand-logo {
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 620;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-name em {
+    color: var(--brand);
+    font-style: italic;
+  }
+
+  .main-nav {
+    margin-left: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.85rem;
+    font-size: var(--text-sm);
+    font-weight: 550;
+    color: var(--ink);
+    border-radius: 8px;
+  }
+
+  .nav-link:hover {
+    color: var(--brand-deep);
+  }
+
+  .chevron {
+    color: var(--ink-soft);
+    transition: rotate 0.2s ease;
+  }
+
+  .has-sub:hover .chevron,
+  .has-sub:focus-within .chevron {
+    rotate: 180deg;
+  }
+
+  .sub-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 210px;
+    margin: 0;
+    padding: 0.5rem;
+    list-style: none;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    translate: 0 6px;
+    visibility: hidden;
+    transition: opacity 0.18s ease, translate 0.18s ease, visibility 0.18s;
+  }
+
+  .has-sub:hover .sub-list,
+  .has-sub:focus-within .sub-list {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+  }
+
+  .sub-link {
+    display: block;
+    padding: 0.55rem 0.8rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    border-radius: 8px;
+  }
+
+  .sub-link:hover {
+    background: var(--sand);
+    color: var(--ink);
+  }
+
+  .header-cta {
+    padding-block: 0.6rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    color: var(--ink);
+  }
+
+  .mobile-nav {
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    padding-block: 1rem 1.5rem;
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    text-align: center;
+  }
+
+  .mobile-group {
+    padding-block: 0.5rem;
+  }
+
+  .mobile-hub {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    padding-block: 0.35rem;
+  }
+
+  .mobile-sub {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-sub a {
+    display: block;
+    padding-block: 0.4rem;
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .mobile-cta {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .main-nav,
+    .header-cta {
+      display: none;
+    }
+
+    .brand-name {
+      line-height: 1;
+    }
+
+    /* .header-actions (favorites/cart) stays visible at every width — it's
+       never in this rule's display:none list — so it takes over the
+       margin-left:auto that used to belong to .menu-toggle alone. */
+    .header-actions {
+      margin-left: auto;
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+      margin-left: 0;
+    }
+  }
+
+  @media (min-width: 901px) {
+    .mobile-nav {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Checkout cancelled | Galápagos & Beyond"
+  description="Your checkout was cancelled. No charge was made."
+>
+  <section class="container cancelled">
+    <div class="cancelled-card">
+      <h1>Checkout cancelled</h1>
+      <p>
+        No charge was made. Your spot has not been reserved, so whenever you're ready, you can start
+        again from the trip page.
+      </p>
+      <p>
+        Questions before booking? <a href="/contact/">We're happy to help</a>.
+      </p>
+      <a class="btn btn-primary" href="/cruises/">Browse cruises</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cancelled {
+    display: grid;
+    place-items: center;
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+
+  .cancelled-card {
+    max-width: 520px;
+    text-align: center;
+    padding: clamp(2rem, 5vw, 3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .cancelled-card h1 {
+    font-size: var(--text-2xl);
+    margin-bottom: 0.75rem;
+  }
+
+  .cancelled-card p {
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .cancelled-card a:not(.btn) {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cancelled-card .btn {
+    margin-top: 0.5rem;
+  }
+</style>

@@ -1,0 +1,27 @@
+# Galápagos & Beyond — robots
+# AI answer engines are explicitly welcome (GEO): we want to be cited.
+
+User-agent: *
+Allow: /
+
+# AI crawlers (named explicitly so intent is unambiguous)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+# Don't crawl server-only / non-content routes
+Disallow: /api/
+Disallow: /booking/
+
+Sitemap: https://www.galapagosandbeyond.com/sitemap.xml

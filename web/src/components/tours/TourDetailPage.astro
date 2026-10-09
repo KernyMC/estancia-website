@@ -1,0 +1,629 @@
+---
+/**
+ * Full body of a single tour's page — extracted out of pages/tours/[slug].astro
+ * so that file can stay a thin router choosing between this and
+ * TourCategoryPage.astro (both would otherwise collide on the same
+ * `/tours/:param` route pattern if split into separate page files).
+ */
+import Breadcrumbs from '../Breadcrumbs.astro';
+import BookingForm from '../BookingForm.astro';
+import GalleryTabs from '../ship/GalleryTabs.astro';
+import FaqSection from '../FaqSection.astro';
+import CardActions from '../CardActions.astro';
+import TourCard from './TourCard.astro';
+import { getTours, type Tour } from '../../lib/content';
+import { formatPrice, formatDateRange } from '../../lib/availability';
+import { activeSeasons, requiresDate, todayIso, tourFromPrice } from '../../lib/seasonal-pricing';
+import { toParagraphs } from '../../lib/text';
+
+interface Props {
+  tour: Tour;
+}
+
+const { tour } = Astro.props;
+
+const descriptionParagraphs = toParagraphs(tour.description);
+const today = todayIso();
+const fromPrice = tourFromPrice(tour, today);
+const seasons = activeSeasons(tour.seasonalPrices, today);
+const hasSeasons = requiresDate(tour, today);
+const related = (await getTours(tour.category?.slug))
+  .filter((t) => t.slug !== tour.slug)
+  .slice(0, 3);
+---
+
+<Breadcrumbs
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Tours', href: '/tours/' },
+    { label: tour.name },
+  ]}
+/>
+<section class="tour-hero">
+  <img src={tour.thumbnail} alt={tour.name} class="hero-img" fetchpriority="high" />
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="container hero-content">
+    {tour.category && <span class="hero-chip">{tour.category.name}</span>}
+    <h1>{tour.name}</h1>
+    <p class="hero-meta">{tour.durationDays} day{tour.durationDays > 1 ? 's' : ''}</p>
+    {
+      fromPrice && (
+        <p class="hero-price">
+          from <strong>{formatPrice(fromPrice)}</strong> / person
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<div class="container tour-layout">
+  <div class="tour-main">
+    {
+      (descriptionParagraphs.length > 0 || tour.highlights.length > 0) && (
+        <section class="block">
+          <h2>Overview</h2>
+          {descriptionParagraphs.map((p) => (
+            <p class="lead-text">{p}</p>
+          ))}
+          {tour.highlights.length > 0 && (
+            <ul class="highlight-list">
+              {tour.highlights.map((h) => (
+                <li>{h.replace(/^[•\s]+/, '')}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )
+    }
+
+    {
+      hasSeasons && (
+        <section class="block" aria-labelledby="season-prices-title">
+          <h2 id="season-prices-title">Prices by travel date</h2>
+          <ul class="season-list">
+            {seasons.map((s) => (
+              <li class="season-row">
+                <div class="season-when">
+                  {s.label && <strong>{s.label}</strong>}
+                  <span>{formatDateRange(s.startDate, s.endDate)}</span>
+                </div>
+                <div class="season-price">
+                  <strong>{formatPrice(s.price)}</strong> <span>/ adult</span>
+                  {s.childPrice !== s.price && s.childPrice != null && (
+                    <span class="season-child">{formatPrice(s.childPrice)} / child</span>
+                  )}
+                </div>
+              </li>
+            ))}
+            {tour.price && (
+              <li class="season-row season-row-base">
+                <div class="season-when">
+                  <strong>Any other date</strong>
+                </div>
+                <div class="season-price">
+                  <strong>{formatPrice(tour.price)}</strong> <span>/ adult</span>
+                  {tour.childPrice != null && tour.childPrice !== tour.price && (
+                    <span class="season-child">{formatPrice(tour.childPrice)} / child</span>
+                  )}
+                </div>
+              </li>
+            )}
+          </ul>
+          <p class="season-note">The price depends on the day your trip starts.</p>
+        </section>
+      )
+    }
+
+    {
+      tour.gallery.length > 0 && (
+        <section class="block">
+          <h2>Gallery</h2>
+          <GalleryTabs tabs={[{ label: 'Gallery', images: tour.gallery.slice(0, 9) }]} shipName={tour.name} />
+        </section>
+      )
+    }
+
+    {
+      (tour.include.length > 0 || tour.exclude.length > 0) && (
+        <section class="block include-exclude">
+          {tour.include.length > 0 && (
+            <div>
+              <h3>Included</h3>
+              <ul class="check-list included">
+                {tour.include.map((i) => (
+                  <li>{i.replace(/^[•\s]+/, '')}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {tour.exclude.length > 0 && (
+            <div>
+              <h3>Not included</h3>
+              <ul class="check-list excluded">
+                {tour.exclude.map((i) => (
+                  <li>{i.replace(/^[•\s]+/, '')}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )
+    }
+
+    {tour.faq.length > 0 && <FaqSection faqs={tour.faq} title={`${tour.name}: frequently asked questions`} />}
+  </div>
+
+  <aside class="tour-sidebar">
+    <div class="sidebar-card">
+      {
+        fromPrice ? (
+          <>
+            <p class="sidebar-label" data-sidebar-label>From</p>
+            <p class="sidebar-price" data-sidebar-price data-base-price={tour.price ?? ''} data-from-price={fromPrice}>
+              {formatPrice(fromPrice)}
+            </p>
+            <p class="sidebar-meta">per person</p>
+            <p class="sidebar-season-note" data-sidebar-season-note hidden />
+            <p class="sidebar-addon-note" data-sidebar-addon-note hidden />
+            <button type="button" class="btn btn-primary sidebar-cta" data-open-booking-dialog>
+              Book this tour
+            </button>
+            <p class="sidebar-hint">Choose your dates, pay securely online.</p>
+
+            <dialog class="booking-dialog" data-tour-booking-dialog aria-label={`Book ${tour.name}`}>
+              <div class="dialog-head">
+                <div>
+                  <h3>Book {tour.name}</h3>
+                  <p class="dialog-sub" data-dialog-price>{formatPrice(fromPrice)} / person</p>
+                </div>
+                <button type="button" class="dialog-close" data-dialog-close aria-label="Close">
+                  ✕
+                </button>
+              </div>
+              <BookingForm type="tour" slug={tour.slug} addOns={tour.addOns} seasons={seasons} />
+            </dialog>
+          </>
+        ) : (
+          <a class="btn btn-primary sidebar-cta" href={`/contact/?tour=${tour.slug}`}>
+            Request a quote
+          </a>
+        )
+      }
+      <a class="sidebar-link" href="/contact/">Ask a question</a>
+    </div>
+  </aside>
+</div>
+
+{
+  related.length > 0 && (
+    <section class="related">
+      <div class="container">
+        <h2>More {tour.category?.name ?? 'tours'}</h2>
+        <ul class="related-grid">
+          {related.map((t) => (
+            <li>
+              <TourCard tour={t} headingLevel="h3" />
+              <CardActions
+                type="tour"
+                slug={t.slug}
+                name={t.name}
+                href={`/tours/${t.slug}/`}
+                thumbnail={t.thumbnail}
+                canAddToCart={Boolean(tourFromPrice(t, today)) && !requiresDate(t, today)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-open-booking-dialog]');
+  const dialog = document.querySelector<HTMLDialogElement>('[data-tour-booking-dialog]');
+  openBtn?.addEventListener('click', () => dialog?.showModal());
+  dialog?.querySelector('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>
+
+<style>
+  .tour-hero {
+    position: relative;
+    height: min(56dvh, 520px);
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(16, 25, 46, 0.15) 0%, rgba(16, 25, 46, 0.75) 100%);
+  }
+
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    translate: -50% 0;
+    width: 100%;
+    padding-bottom: 2rem;
+    color: var(--white);
+  }
+
+  .hero-chip {
+    display: inline-block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(1.8rem, 1.4rem + 1.8vw, 2.7rem);
+  }
+
+  .hero-meta {
+    margin-top: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .hero-price {
+    margin-top: 0.4rem;
+    font-size: var(--text-lg);
+  }
+
+  .hero-price strong {
+    font-family: var(--font-display);
+    font-size: 1.4em;
+  }
+
+  .tour-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .block {
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .block:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .block h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: 1.25rem;
+  }
+
+  .lead-text {
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    max-width: 68ch;
+  }
+
+  .highlight-list {
+    margin-top: 1.25rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .highlight-list li {
+    padding-left: 1.4rem;
+    position: relative;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .highlight-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .include-exclude {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .include-exclude h3 {
+    font-size: var(--text-lg);
+    margin-bottom: 0.9rem;
+  }
+
+  .check-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .check-list li {
+    padding-left: 1.3rem;
+    position: relative;
+  }
+
+  .check-list.included li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--brand-deep);
+    font-weight: 700;
+  }
+
+  .check-list.excluded li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  .tour-sidebar {
+    position: relative;
+  }
+
+  .sidebar-card {
+    position: sticky;
+    top: calc(var(--header-offset) + 1.5rem);
+    transition: top 0.35s ease-out;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+      url('https://cdn.sanity.io/images/gxkh85js/production/30efb8e889ed291fac0ede8dbdedebaa0d0ce152-1024x1536.webp') center / cover no-repeat,
+      var(--white);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .sidebar-label {
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  .sidebar-price {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 640;
+    margin-top: 0.2rem;
+  }
+
+  .sidebar-meta {
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    margin-top: 0.2rem;
+  }
+
+  .sidebar-addon-note {
+    font-size: var(--text-xs);
+    color: var(--brand-deep);
+    font-weight: 600;
+    margin-top: 0.3rem;
+  }
+
+  .sidebar-addon-note[hidden] {
+    display: none;
+  }
+
+  .sidebar-season-note {
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    margin-top: 0.3rem;
+  }
+
+  .sidebar-season-note[hidden] {
+    display: none;
+  }
+
+  .season-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .season-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    padding: 0.85rem 1rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--text-sm);
+  }
+
+  .season-row:first-child {
+    border-top: none;
+  }
+
+  .season-row-base {
+    background: var(--sand);
+  }
+
+  .season-when {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .season-when span,
+  .season-price span {
+    color: var(--ink-soft);
+  }
+
+  .season-price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .season-price strong {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+  }
+
+  .season-child {
+    margin-left: 0.5rem;
+  }
+
+  .season-note {
+    margin-top: 0.6rem;
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+  }
+
+  .sidebar-cta {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.25rem;
+  }
+
+  .sidebar-hint {
+    margin-top: 0.6rem;
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+  }
+
+  .booking-dialog {
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    width: min(92vw, 460px);
+    max-height: min(92vh, 860px);
+    overflow-y: auto;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .booking-dialog::backdrop {
+    background: rgba(16, 25, 46, 0.55);
+  }
+
+  .dialog-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .dialog-head h3 {
+    font-size: var(--text-lg);
+  }
+
+  .dialog-sub {
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    margin-top: 0.25rem;
+  }
+
+  .dialog-close {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--ink-soft);
+    padding: 0.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .dialog-close:hover {
+    color: var(--ink);
+  }
+
+  .sidebar-link {
+    display: block;
+    text-align: center;
+    margin-top: 0.9rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--brand-deep);
+  }
+
+  .sidebar-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .related {
+    background: var(--sand);
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .related h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: 1.75rem;
+  }
+
+  /* CardActions is a sibling of TourCard's <a>, needs this to anchor. */
+  .related-grid > li {
+    position: relative;
+  }
+
+  .related-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 980px) {
+    .tour-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .tour-sidebar {
+      order: -1;
+    }
+
+    .sidebar-card {
+      position: static;
+    }
+
+    .include-exclude {
+      grid-template-columns: 1fr;
+    }
+
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

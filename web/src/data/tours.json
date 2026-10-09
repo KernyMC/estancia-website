@@ -1,0 +1,901 @@
+[
+  {
+    "slug": "tour-to-bartolome-island",
+    "name": "Day Land Tour Bartolomé",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 270,
+    "childPrice": 270,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "• Bartolome is a volcanic islet located off the east coast of Santiago Island.",
+      "• 6:30 am leave the hotel.",
+      "• The island has one of the most beautiful landscapes in the archipelago.",
+      "• It has a volcanic cone that is easy to climb due to stairs and handrail. A grand view of other islands is seen from the top of the cone.",
+      "• The Pinnacle Rock is the distinctive characteristic of this island, and the most representative landmark of the Galapagos.",
+      "• Wildlife – Land: Lava Herons, Sally Light-foot Crabs, Galapagos Hawks, Lava Cacti.",
+      "Marine Wildlife: Sea Lions, Galapagos Penguins, Marine Iguanas, Galapagos Sharks, White-tip Sharks, Sea Turtles, Rays, Pelagic and Reef Fish.",
+      "• Difficulty Level: Moderate – some hiking – slope.",
+      "• Activities: Hiking, Snorkeling, Swimming."
+    ],
+    "include": [
+      "• Bilingual Professional Guide.",
+      "• Transportation – pick up/ drop off at hotel.",
+      "• Snorkeling equipment.",
+      "• Lunch"
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-1-scaled.webp?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/7-days-adventure-galapagos-and-beyond-landscape-scaled.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-1-scaled.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-2.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-3.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-4.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Daily-Land-Tour-Bartolome-galapagos-and-beyond-5.webp"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "8-day-adventure",
+    "name": "8 Day Adventure",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive",
+      "LAND TOUR PACKAGES"
+    ],
+    "durationDays": 8,
+    "price": 2400,
+    "childPrice": 2400,
+    "description": "",
+    "excerpt": "",
+    "highlights": [],
+    "include": [
+      "Bilingual Professional Guide.",
+      "All meals",
+      "Excursions",
+      "Accomodations",
+      "Transportation",
+      "Snorkeling equipment included",
+      "Cocktails, Wine, Soda, and Water",
+      "Wetsuit"
+    ],
+    "exclude": [
+      "Park entrance fee not included"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2024/02/snorkeling-galapagos-and-beyond-4.jpg?fit=1400%2C1400&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC7456-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/CIMG3899-min.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC5839-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC7003-min-1-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC6051-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/DSC6016-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/GALAPAGOS-3-de-15.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC6602-min-1-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/santafe1.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC3541-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC0586-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC_0483-1-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC0967-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC6987-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC7447-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC1333-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC6674-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/P5261220-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/bartolome.png"
+    ],
+    "seo": {
+      "title": "",
+      "description": "7 day Adventure All inclusive tours in Galapagos. Billingual Professional Guide, Park entrance fee included"
+    }
+  },
+  {
+    "slug": "tour-to-the-tunnels-isabela-island",
+    "name": "Tour to the Tunnels – Isabela Island",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 150,
+    "childPrice": 270,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long). When snorkeling in the lava tube, you can see sea horses and turtles. During the walk sea marine iguanas, sea lions, and blue footed boobies can be observed .",
+      "Week 1",
+      "7:30 am departure time",
+      "13:00 back to Puerto Villamil",
+      "Week 2",
+      "11 am departure",
+      "17:00 back to Puerto Villamil",
+      "During the walking tour frigate birds, blue footed boobies, marine iguanas, and sea lions can be seen.",
+      "Snorkelers can view sharks, rays, sea turtles, and tropical fish.",
+      "Lunch served aboard the boat."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Box Lunch"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-1.webp?fit=1920%2C1080&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-1.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-2.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-3.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-4.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-5.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-6.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-7.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-8a.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-9a.webp"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "day-land-tour-santa-cruz-2",
+    "name": "Day Land Tour Santa Cruz",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 70,
+    "childPrice": 270,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "• Highland tour includes observation of one of the largest species of giant tortoises that can be seen in the wild.",
+      "• Visitors tour inside lava tubes created by lava flowing to the ocean.",
+      "• Stop to view the Twin Craters.",
+      "• Afternoon tour to the German Beach if time permits."
+    ],
+    "include": [
+      "• Bilingual Professional Guide.",
+      "• Transportation – pick up/ drop off at hotel.",
+      "• Entrance fee to a private farm to view tortoises.",
+      "• Boat transportation fee to German Beach.",
+      "• Lunch at private farm"
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-3.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-4.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-5.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-6.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-7.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-8.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-9.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-10.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/7-days-adventure-galapagos-and-beyond-galapagos-turtle-2.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-1.webp"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "day-snorkeling-at-pinzon-island-and-landing-on-santa-cruz-tour",
+    "name": "Day Snorkeling at Pinzon Island and landing on Santa Cruz tour",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 140,
+    "childPrice": 270,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "• This is a full day tour (7 to 8 hours)",
+      "• Landing is not allowed.",
+      "• Pinzon is a great snorkeling site.",
+      "• Snorkelers can view sea lions, sea turtles, reef sharks, rays, and tropical fish.",
+      "• Land and explore a beach on Santa Cruz Island.",
+      "• Lunch served aboard the boat."
+    ],
+    "include": [
+      "• Bilingual Professional Guide.",
+      "• Transportation – pick up/ drop off at hotel.",
+      "• Snorkeling equipment.",
+      "• Box Lunch."
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2024/01/4-days-adventure-galapagos-and-beyond-snorkeling.webp?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-1.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/snorkeling-galapagos-and-beyond-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-2.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-3.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-4.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/Day-Land-Tpur-Santa-Fe-Island-Galapgos-and-beyond-5.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-6.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/Day-Snorkeling-at-Pinzon-Island-and-landing-on-Santa-Cruz-tour-galapagos-and-beyond-7.webp"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "day-land-tour-north-seymour-2",
+    "name": "Day Land Tour North Seymour",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 235,
+    "childPrice": 270,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "• The island is home to some of Galapagos birds such as blue- footed boobies",
+      "• It hosts one of the largest populations of magnificent frigatebirds.",
+      "• North Seymour has a visitor trail of approximately 2 kilometers in length crossing the island.",
+      "• Wildlife – Land: Blue-Footed Boobies, Frigatebirds, Colonies of Sea Lions, Marine Iguanas, Land Iguanas (occasionally), Swallow-tailed Gulls, Red-billed Tropicbirds and Nazca Boobies (occasionally).",
+      "Marine Wildlife: White-tip Sharks, Galapagos Sharks, Rays, Pelagic and Reef Fish.",
+      "• Difficulty Level: Moderate – some hiking over unpathed and rocky trails. The total distance of the trail is 2 miles.",
+      "• Activities: Hiking, Snorkeling Swimming"
+    ],
+    "include": [
+      "• Bilingual Professional Guide.",
+      "• Transportation – pick up/ drop off at hotel.",
+      "• Snorkeling equipment.",
+      "• Box Lunch."
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2024/01/day-land-tour-santa-cruz-galapagos-and-beyond-9.webp?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/7-days-adventure-galapagos-and-beyond-boobie.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/7-days-adventure-galapagos-and-beyond-iguana-2.webp",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC1330-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/7-days-adventure-galapagos-and-beyond-fragata.webp"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "espanola-island-day-trip",
+    "name": "Española Island Day Trip",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 150,
+    "childPrice": 150,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "Tintoreras is a 1.5 hour walk where you can see white tipped reef shark, marine iguanas, sea lions, blue footed boobies, and penguins.",
+      "Tortuga Rock is a snorkeling or diving tour.",
+      "Departures 07:30 am.",
+      "Back to Puerto Villamil 13:00",
+      "During the walking tour frigate birds, blue footed boobies, marine iguanas, and sea lions can be seen.",
+      "Snorkelers can view sharks, rays, sea turtles, and tropical fish.",
+      "Lunch served aboard the boat."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Box Lunch"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg?fit=1920%2C1080&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-7.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-4.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long)."
+    }
+  },
+  {
+    "slug": "floreana-island-day-trip",
+    "name": "Floreana Island Day Trip",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 140,
+    "childPrice": 140,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "The boat ride to Floreana  Island takes 1hour and 45 minutes (each way).",
+      "Wet landing on  the beach at Cormorant Point.",
+      "Short walk to the Flamingo lagoon and white beach ( flour beach).",
+      "Go snorkeling with sea lions, sea turtles, sharks, rays, and tropical fish.",
+      "Highlights on land: Blue-footed boobies, frigate birds,  and rays.",
+      "Sail to Enderby Rock",
+      "Go snorkeling again with sharks, rays, sea lions, and turtles. From the boat you can view Frigate birds,  boobies, and Tropic birds.",
+      "5 pm: Come back to Puerto Ayora."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Lunch on the boat"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-3.jpg?fit=1920%2C1079&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-1.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/snorkeling-galapagos-and-beyond-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/floreana-island-dayn-trip-galapagos-and-beyond-6.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long)."
+    }
+  },
+  {
+    "slug": "isabela-island-all-inclusive",
+    "name": "Isabela Island All Inclusive",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive"
+    ],
+    "durationDays": 3,
+    "price": 1020,
+    "childPrice": 900,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "This flexible package can be two or three days. It is $300 a day per person. It includes transportation to and from Santa Cruz to Isabela Island, accommodations, and boat tours.",
+      "Day 1: In the afternoon, travel by speed boat from Puerto Ayora, Santa Cruz to Puerto Villamil, Isabela Island. Check in at hotel and visit the Flamingo Lagoon in the wetlands and go walking or swimming on the beach.",
+      "Day 2: Take the boat to Tunnels tour and back to Puerto Villamil (week 1, 7:30 am, week 2, 11 am).",
+      "Day 3: 7:30 am take the boat to Tintoreras (walking)and Turtle Rock (snorkeling) and back to Puerto Villamil at 1pm. Leave for Santa Cruz at 3pm."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Box Lunch"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg?fit=1920%2C1080&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-7.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Hab-doble-matrimonial-1.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Hab-doble-twin-3.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long). All inclusive tour"
+    }
+  },
+  {
+    "slug": "tour-to-the-tunnels-all-inclusive",
+    "name": "Tour to the Tunnels All Inclusive",
+    "category": "day-tours",
+    "tourTypes": [
+      "All Inclusive"
+    ],
+    "durationDays": 1,
+    "price": 149.99,
+    "childPrice": 150,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "This flexible package can be two or three days. It is $300 a day per person. It includes transportation to and from Santa Cruz to Isabela Island, accommodations, and boat tours.",
+      "Day 1: In the afternoon, travel by speed boat from Puerto Ayora, Santa Cruz to Puerto Villamil, Isabela Island. Check in at hotel and visit the Flamingo Lagoon in the wetlands and go walking or swimming on the beach.",
+      "Day 2: Take the boat to Tunnels tour and back to Puerto Villamil (week 1, 7:30 am, week 2, 11 am).",
+      "Day 3: 7:30 am take the boat to Tintoreras (walking)and Turtle Rock (snorkeling) and back to Puerto Villamil at 1pm. Leave for Santa Cruz at 3pm."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Box Lunch"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-1.jpg?fit=1920%2C1080&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-1.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-6.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-7.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-8a.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tour-to-the-tunnels-galapagos-and-beyond-9a.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long)."
+    }
+  },
+  {
+    "slug": "tintoreras-and-tortuga-rock",
+    "name": "Tintoreras and Tortuga Rock itinerary",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 150,
+    "childPrice": 150,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "Tintoreras is a 1.5 hour walk where you can see white tipped reef shark, marine iguanas, sea lions, blue footed boobies, and penguins.",
+      "Tortuga Rock is a snorkeling or diving tour.",
+      "Departures 07:30 am.",
+      "Back to Puerto Villamil 13:00",
+      "During the walking tour frigate birds, blue footed boobies, marine iguanas, and sea lions can be seen.",
+      "Snorkelers can view sharks, rays, sea turtles, and tropical fish.",
+      "Lunch served aboard the boat."
+    ],
+    "include": [
+      "Bilingual Professional Guide.",
+      "Snorkeling equipment.",
+      "Box Lunch"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg?fit=1920%2C1080&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/Tintoreras-tortuga-rock-7.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2025/09/tintoreras-tour-galapagos-and-beyond-4.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": "The Tunnels is a lava tube formation where you can go snorkeling and take a short walk (800 meters long)."
+    }
+  },
+  {
+    "slug": "gordonrocks-diving-tour",
+    "name": "Galapagos Diving day trips | Gordon Rocks Diving Tour",
+    "category": "diving",
+    "tourTypes": [
+      "Diving Tours"
+    ],
+    "durationDays": 1,
+    "price": 200,
+    "childPrice": 200,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "Galapagos Diving day trips – North Seymour Experience.",
+      "Our Galapagos Diving day trips to North Seymour Experience is one of the best daily diving tours. This Diving Tour will take you through the most amazing diving spots in Gordon Rocks.",
+      "You will enjoy sea activities in the most remarkable landscapes. Make it the best way to explore all sides of Galapagos beauties."
+    ],
+    "include": [
+      "2 dives.",
+      "Complete Dive Gear: 5- 7mm wetsuit, Regulator, BCD, mask, fins, booties, hood, gloves, weight belt and tanks with 12ltr or 15ltr with AIR and valve system YOKE (the person who brings your regulator system DIN must bring their own adapter)",
+      "Bilingual Professional Guide.",
+      "Transportation – pick up/drop off at Dive center.",
+      "Box Lunch between dives"
+    ],
+    "exclude": [
+      "Dive computer (available for rent US $ 15 plus tax per day).",
+      "Air Tickets.",
+      "Galapagos National Park Entry Fee.",
+      "Other services not mention on the program.",
+      "Tips &amp; Gratuities (optional)"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.08.17-AM.jpeg?fit=1024%2C768&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-11.16.02-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.15.46-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.12.17-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.08.17-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-7.58.49-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/AnyDesk_6v6rp6kuLO.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/AnyDesk_dV1wxCX2rw.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "7-day-adventure",
+    "name": "7 Day Adventure",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive",
+      "LAND TOUR PACKAGES"
+    ],
+    "durationDays": 7,
+    "price": 2380,
+    "childPrice": 2380,
+    "description": "",
+    "excerpt": "",
+    "highlights": [],
+    "include": [
+      "Bilingual Professional Guide.",
+      "All meals",
+      "Excursions",
+      "Accomodations",
+      "Transportation",
+      "Snorkeling equipment included",
+      "Cocktails, Wine, Soda, and Water",
+      "Wetsuit"
+    ],
+    "exclude": [
+      "Park entrance fee not included"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/PC281509-min-scaled.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC7456-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/CIMG3899-min.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC5839-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC7003-min-1-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC6051-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/DSC6016-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/GALAPAGOS-3-de-15.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC6602-min-1-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/santafe1.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC3541-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC0586-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC_0483-1-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC0967-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/09/DSC6987-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC7447-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC1333-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC6674-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/P5261220-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/bartolome.png"
+    ],
+    "seo": {
+      "title": "",
+      "description": "7 day Adventure All inclusive tours in Galapagos. Billingual Professional Guide, Park entrance fee included"
+    }
+  },
+  {
+    "slug": "snorkeling-santa-fe",
+    "name": "Snorkeling tour to Santa Fe and Beach landing on Playa Escondida, Santa Cruz",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 140,
+    "childPrice": 139.98,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "•This is a full day tour (7 to 8 hours)",
+      "•Santa Fe has great snorkeling sites",
+      "•Snorkeling at two different sites plus the chance to do some fishing",
+      "• Equipment is included",
+      "•Snorkelers can view sea lions, sea turtles, reef sharks, rays, and tropical fish",
+      "•On the way back to Puerto Ayora Land and explore Playa Escondida on Santa Cruz Island",
+      "• Lunch served aboard the boat"
+    ],
+    "include": [
+      "•\tBilingual Professional Guide.",
+      "•\tTransportation – pick up/ drop off at hotel.",
+      "•\tSnorkeling equipment.",
+      "•\tBox Lunch, tea, water, snacks, and fruits"
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/03/AnyDesk_6v6rp6kuLO.png?fit=1529%2C847&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/AnyDesk_6v6rp6kuLO.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/snorkeling-galapagos-and-beyond-4.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/AnyDesk_dV1wxCX2rw.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/P5261220-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/DSC6016-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/santafe4.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/CIMG3899-min.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/snorkeling-galapagos-and-beyond-1.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "6-day-adventure",
+    "name": "6 Day Adventure",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive",
+      "LAND TOUR PACKAGES"
+    ],
+    "durationDays": 6,
+    "price": 1800,
+    "childPrice": 1800,
+    "description": "Day 1: Airport pick up. Visit the Chatos Reserve and view giant tortoises in their natural habitat. Includes\r\nlunch in the Highlands at a private ranch.\r\nDay 2: Hike to Tortuga Bay Beach to enjoy sunbathing, exploring and snorkeling. View sea turtles and\r\nother sea creatures plus a population of iguanas. Optional return to Puerto Ayora via boat.\r\nAfter lunch, take a tour of Charles Darwin Research station.\r\nDay 3: Boat trip to North Seymour to walk through the nesting areas of blue footed boobies and frigate birds.\r\nDay 4 : Snorkel at Pinzon Island.\r\nDay 5:  Snorkeling tour to Santa Fe Island / Landing on a beach on Santa Cruz\r\nDay 6: View the twin craters and transfer to the airport.",
+    "excerpt": "",
+    "highlights": [],
+    "include": [
+      "Bilingual Professional Guide.",
+      "All meals",
+      "Excursions",
+      "Accomodations",
+      "Transportation",
+      "Snorkeling equipment included",
+      "Wine, Soda, and Water",
+      "Wetsuit"
+    ],
+    "exclude": [
+      "Park entrance fee not included"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/PC281509-min-scaled.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [],
+    "seo": {
+      "title": "",
+      "description": "6 day Adventure All inclusive tours in Galapagos, billingual guided tour, park entrance fee included, water, soda, wine, all meals included"
+    }
+  },
+  {
+    "slug": "5-days-adventure",
+    "name": "5 Day Adventure",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive"
+    ],
+    "durationDays": 5,
+    "price": 1500,
+    "childPrice": 1500,
+    "description": "Day 1: Airport pick up. Visit the Chatos Reserve and view giant tortoises in their natural habitat. Includes\r\nlunch in the Highlands at a private ranch.\r\nDay 2: Hike to Tortuga Bay Beach to enjoy sunbathing, exploring and snorkeling. View sea turtles and\r\nother sea creatures plus a population of iguanas. Optional return to Puerto Ayora via boat.\r\nAfter lunch, take a tour of Charles Darwin Research station.\r\nDay 3:  Boat trip to Santa Fe for Snorkeling only / Landing on Playa Escondida Beach . View sea turtles, sea lions, landing on the beach of Santa Cruz.\r\nDay 4: Boat trip to Pinzon Island for snorkeling only. Land and Explore a beach on Santa Cruz.\r\n\r\nDay 5 : View the twin craters and transfer to the airport.",
+    "excerpt": "",
+    "highlights": [],
+    "include": [
+      "Bilingual Professional Guide.",
+      "All meals",
+      "Excursions",
+      "Accomodations",
+      "Transportation",
+      "Snorkeling equipment included",
+      "Wine,Soda, and Water",
+      "Park entrance fee included",
+      "Wetsuit"
+    ],
+    "exclude": [],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/09/DSC7003-min-1-scaled.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [],
+    "seo": {
+      "title": "",
+      "description": "%%title%% in the Galapagos Island, enjoy the island with an excellent tourist guide that will show you the wonders of the island"
+    }
+  },
+  {
+    "slug": "4-day-adventure",
+    "name": "4 Days Adventure",
+    "category": "multi-day",
+    "tourTypes": [
+      "All Inclusive",
+      "LAND TOUR PACKAGES"
+    ],
+    "durationDays": 4,
+    "price": 1200,
+    "childPrice": 1200,
+    "description": "Day 1: Airport pick up. Visit the Chatos Reserve and view giant tortoises in their natural habitat. Includes\r\nlunch in the Highlands at a private ranch.\r\nDay 2: Hike to Tortuga Bay Beach to enjoy sunbathing, exploring and snorkeling. View sea turtles and\r\nother sea creatures plus a population of iguanas. Optional return to Puerto Ayora via boat.\r\nAfter lunch, take a tour of Charles Darwin Research station.\r\nDay 3: Snorkeling tour to Pinzon Island / Landing on a beach on Santa Cruz. (Note:This boat tour can be changed to snorkeling to Santa Fe or Floreana Island upon request.)\r\n\r\nDay 4: View the twin craters and transfer to the airport.",
+    "excerpt": "",
+    "highlights": [],
+    "include": [
+      "Bilingual Professional Guide.",
+      "All meals",
+      "Excursions",
+      "Accomodations",
+      "Transportation",
+      "Wine,Soda and Water",
+      "Wet Suit"
+    ],
+    "exclude": [
+      "Park entrance fee not included"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/DSC7456-scaled.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [],
+    "seo": {
+      "title": "",
+      "description": "%%title%% Our Galapagos Islands Tours travel packages are flexible enough for you to explore the Enchanted Islands by choosing the kind of hotel of your preference or budget.These tours focus on a close encounter with the natural life of the islands, so maximize your stay with itineraries and encounters with the local culture."
+    }
+  },
+  {
+    "slug": "diving-tour-north-seymour",
+    "name": "Galapagos Diving day trips | North Seymour Island Full day tour",
+    "category": "diving",
+    "tourTypes": [
+      "Diving Tours"
+    ],
+    "durationDays": 1,
+    "price": 235,
+    "childPrice": 234.96,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "Galapagos Diving day trips – North Seymour Experience.",
+      "Our Galapagos Diving day trips to North Seymour Experience is one of the best daily diving tours. This Diving Tour will take you through the most amazing diving spots in Gordon Rocks.",
+      "You will enjoy sea activities in the most remarkable landscapes. Make it the best way to explore all sides of Galapagos beauties."
+    ],
+    "include": [
+      "2 dives.",
+      "Complete Dive Gear: 5- 7mm wetsuit, Regulator, BCD, mask, fins, booties, hood, gloves, weight belt and tanks with 12ltr or 15ltr with AIR and valve system YOKE (the person who brings your regulator system DIN must bring their own adapter)",
+      "Bilingual Professional Guide.",
+      "Transportation – pick up/drop off at Dive center.",
+      "Box Lunch between dives"
+    ],
+    "exclude": [
+      "Dive computer (available for rent US $ 15 plus tax per day).",
+      "Air Tickets.",
+      "Galapagos National Park Entry Fee.",
+      "Other services not mention on the program.",
+      "Tips &amp; Gratuities (optional)"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-11.16.02-AM.jpeg?fit=686%2C686&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-11.16.02-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.15.46-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.12.17-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-8.08.17-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/WhatsApp-Image-2025-04-18-at-7.58.49-AM.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/03/AnyDesk_6v6rp6kuLO.png",
+      "https://galapagosandbeyond.com/wp-content/uploads/2024/02/AnyDesk_dV1wxCX2rw.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/IMG_9589.jpeg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/12/photo132.jpeg"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "day-land-tour-south-plaza",
+    "name": "Day Land Tour  South Plaza",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 220,
+    "childPrice": 220,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "•\tSouth Plaza is a small island off the east coast of Santa Cruz.",
+      "•\tThis walking tour is rated moderate difficulty due to the rocky terrain on one side of the island.",
+      "•\tHabitat of Galapagos Giant Land Iguanas, red billed tropic birds, and swallow-tailed gulls,",
+      "•\tHome of a large sea lion colony.",
+      "•\tDepending on the season, the Sesuvium ground vegetation changes its color from intense green in the rainy season to red in the dry season"
+    ],
+    "include": [
+      "•\tBilingual Professional Guide.",
+      "•\tTransportation – pick up/ drop off at hotel.",
+      "•\tLunch"
+    ],
+    "exclude": [
+      "•\tSnorkeling is prohibited on the island"
+    ],
+    "address": "",
+    "thumbnail": "https://i0.wp.com/galapagosandbeyond.com/wp-content/uploads/2023/02/DSC0979-min-scaled.jpg?fit=2560%2C2560&ssl=1",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC3138-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC0979-min-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2023/02/DSC0384-min-scaled.jpg"
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  },
+  {
+    "slug": "kicker-rock",
+    "name": "Kicker Rock Tour",
+    "category": "day-tours",
+    "tourTypes": [
+      "Daily Land Tours"
+    ],
+    "durationDays": 1,
+    "price": 179.98,
+    "childPrice": 179.97,
+    "description": "",
+    "excerpt": "",
+    "highlights": [
+      "Iconic Snorkeling: Experience two thrilling open-water snorkeling sessions in the famous channel of Kicker Rock.",
+      "Abundant Marine Life: Swim alongside hammerhead sharks, Galapagos sharks, sea turtles, rays, and playful sea lions.",
+      "Unique Bird Watching: Spot native coastal birds, including blue-footed boobies and frigatebirds, nesting directly on the towering rock walls.",
+      "Pristine Beaches: Relax, swim, and observe wildlife at a beautiful, secluded beach (Cerro Brujo, Manglecito, or Puerto Grande).",
+      "All-Inclusive Experience: Enjoy a hassle-free 7-hour adventure with lunch, towels, and premium snorkeling equipment included.",
+      "8:00 AM departure from Puerto Baquerizo Moreno, San Cristóbal.",
+      "3:00 PM return to Puerto Baquerizo Moreno."
+    ],
+    "include": [
+      "• Bilingual Professional Guide.",
+      "• Transportation – pick up/ drop off at hotel.",
+      "• Snorkeling equipment.",
+      "• Lunch"
+    ],
+    "exclude": [
+      "Wetsuit"
+    ],
+    "address": "",
+    "thumbnail": "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-9.jpg",
+    "gallery": [
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-1.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-2.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-3.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-4-scaled.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-5.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-6.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-7.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-8.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-9.jpg",
+      "https://galapagosandbeyond.com/wp-content/uploads/2026/07/isla-lobo-galapagos-and-beyond-10.jpg"
+    ],
+    "addOns": [
+      {
+        "slug": "diving-upgrade",
+        "name": "Diving upgrade",
+        "description": "Swap snorkeling for two open-water scuba dives in the Kicker Rock channel — same schedule, same boat, includes full diving equipment instead of snorkel gear.",
+        "priceDelta": 110.02
+      }
+    ],
+    "seo": {
+      "title": "",
+      "description": ""
+    }
+  }
+]

@@ -1,0 +1,73 @@
+---
+import { getTours } from '../../lib/content';
+import CardActions from '../CardActions.astro';
+import TourCard from './TourCard.astro';
+import { requiresDate, todayIso, tourFromPrice } from '../../lib/seasonal-pricing';
+
+interface Props {
+  categorySlug?: string;
+}
+
+const { categorySlug } = Astro.props;
+const tours = await getTours(categorySlug);
+const today = todayIso();
+---
+
+{
+  tours.length === 0 ? (
+    <p class="empty">No tours in this category right now.</p>
+  ) : (
+    <ul class="tour-grid" data-tours-grid>
+      {tours.map((tour) => (
+        <li
+          data-tour-item
+          data-category={tour.category?.slug}
+          data-tour-search={[tour.name, tour.description, ...tour.highlights].join(' ').toLowerCase()}
+        >
+          <TourCard tour={tour} />
+          <CardActions
+            type="tour"
+            slug={tour.slug}
+            name={tour.name}
+            href={`/tours/${tour.slug}/`}
+            thumbnail={tour.thumbnail}
+            canAddToCart={Boolean(tourFromPrice(tour, today)) && !requiresDate(tour, today)}
+          />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .empty {
+    color: var(--ink-soft);
+    padding-block: 2rem;
+  }
+
+  .tour-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* CardActions is a sibling of TourCard's <a>, needs this to anchor. */
+  .tour-grid > li {
+    position: relative;
+  }
+
+  @media (max-width: 980px) {
+    .tour-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .tour-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

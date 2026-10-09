@@ -1,0 +1,979 @@
+---
+/**
+ * Global cart + favorites drawer. Mounted once in Base.astro, same pattern
+ * as CookieBanner: no props, self-mounting, single instance for the whole
+ * page. A native <dialog> styled as a right-side sheet — same primitive
+ * AvailabilityTable.astro already uses for its booking dialog, so focus
+ * trap / Esc / ::backdrop come for free, which matters here because this
+ * drawer holds a payment form.
+ *
+ * Prices shown here always come from POST /api/cart/quote — localStorage
+ * only carries display hints, never a price the browser can be trusted on.
+ *
+ * The checkout form + PayPal button markup mirror BookingForm.astro exactly
+ * (same data-* contract) because both are driven by the same
+ * src/scripts/checkout-client.ts — one PayPal SDK integration, not two.
+ */
+import { env, paypalConfigured } from '../server/env';
+import { countryCodes, defaultCountry } from '../lib/phone-codes';
+
+const paypalClientId = env.PUBLIC_PAYPAL_CLIENT_ID;
+const paypalEnv = env.PAYPAL_ENV;
+const paypalReady = paypalConfigured;
+---
+
+<dialog class="cart-drawer" data-cart-drawer aria-label="Cart and saved trips">
+  <div class="drawer-head">
+    <div class="drawer-tabs" role="tablist">
+      <button type="button" role="tab" class="drawer-tab" data-drawer-tab="cart" aria-selected="true">
+        Cart
+      </button>
+      <button type="button" role="tab" class="drawer-tab" data-drawer-tab="favorites" aria-selected="false">
+        Saved
+      </button>
+    </div>
+    <button type="button" class="drawer-close" data-drawer-close aria-label="Close">✕</button>
+  </div>
+
+  <div class="drawer-panel" role="tabpanel" data-drawer-panel="cart">
+    <p class="drawer-empty" data-cart-empty hidden>
+      Your cart is empty. Browse <a href="/cruises/" data-drawer-close>cruises</a>{' '}
+      or <a href="/tours/" data-drawer-close>tours</a> to add a trip.
+    </p>
+    <ul class="drawer-list" data-cart-list></ul>
+    <div class="drawer-total" data-cart-summary hidden>
+      <span>Total</span>
+      <strong data-cart-total>$0.00</strong>
+    </div>
+
+    <form class="checkout-form" data-checkout-form hidden>
+      <label class="field">
+        <span>Full name</span>
+        <input type="text" name="name" required maxlength="200" autocomplete="name" />
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" required maxlength="320" autocomplete="email" />
+      </label>
+      <label class="field">
+        <span>Phone <em>(optional)</em></span>
+        <div class="phone-row">
+          <div class="phone-code-picker" data-phone-picker>
+            <button type="button" class="phone-code-btn" data-phone-btn aria-haspopup="listbox" aria-expanded="false">
+              <img class="phone-flag" data-phone-flag src={`https://flagcdn.com/${defaultCountry.iso}.svg`} alt="" width="20" height="15" />
+              <span data-phone-dial>{defaultCountry.dial}</span>
+              <svg class="phone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="phone-code-panel" data-phone-panel hidden>
+              <input
+                type="text"
+                class="phone-code-search"
+                data-phone-search
+                placeholder="Search country…"
+                autocomplete="off"
+                aria-label="Search country"
+              />
+              <ul class="phone-code-list" data-phone-list role="listbox">
+                {countryCodes.map((c) => (
+                  <li role="option" data-dial={c.dial} data-iso={c.iso} data-name={c.name} data-search={`${c.name} ${c.dial}`.toLowerCase()} tabindex="-1">
+                    <img src={`https://flagcdn.com/${c.iso}.svg`} alt="" width="20" height="15" loading="lazy" />
+                    <span class="phone-opt-name">{c.name}</span>
+                    <span class="phone-opt-dial">{c.dial}</span>
+                  </li>
+                ))}
+              </ul>
+              <p class="phone-code-empty" data-phone-empty hidden>No matches</p>
+            </div>
+            <input type="hidden" name="phoneCode" value={defaultCountry.dial} data-phone-input />
+          </div>
+          <input type="tel" name="phone" maxlength="30" autocomplete="tel-national" placeholder="99 123 4567" />
+        </div>
+      </label>
+
+      <p class="form-error" data-checkout-error hidden></p>
+
+      {
+        paypalReady && (
+          <div class="alt-payment" data-paypal-section={paypalEnv} data-paypal-client-id={paypalClientId}>
+            <p class="paypal-loading" data-paypal-loading>
+              <span class="paypal-spinner" aria-hidden="true" />
+              Loading payment options…
+            </p>
+            <div class="paypal-buttons" data-paypal-buttons hidden>
+              <paypal-button hidden data-paypal-btn />
+            </div>
+          </div>
+        )
+      }
+
+      <button
+        type="submit"
+        class:list={['btn', 'submit-btn', paypalReady ? 'btn-card' : 'btn-primary']}
+        data-checkout-submit
+      >
+        {
+          paypalReady && (
+            <svg class="btn-icon" data-checkout-submit-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+          )
+        }
+        <span data-checkout-submit-label>{paypalReady ? 'Pay with card' : 'Continue to secure payment'}</span>
+      </button>
+      <p class="secure-note">
+        Payments processed securely by Stripe{paypalReady ? ' or PayPal' : ''}.
+      </p>
+    </form>
+  </div>
+
+  <div class="drawer-panel" role="tabpanel" data-drawer-panel="favorites" hidden>
+    <p class="drawer-empty" data-fav-empty hidden>
+      Nothing saved yet. Tap the heart on any trip to keep it here.
+    </p>
+    <ul class="drawer-list" data-fav-list></ul>
+  </div>
+</dialog>
+
+<template data-cart-row-template>
+  <li class="drawer-row" data-cart-row>
+    <img class="row-thumb" data-row-thumb alt="" loading="lazy" />
+    <div class="row-body">
+      <p class="row-name" data-row-name></p>
+      <p class="row-meta" data-row-dates hidden></p>
+      <div class="row-pax">
+        <label>
+          <span class="visually-hidden">Adults</span>
+          <button type="button" class="pax-btn" data-pax-adults-minus aria-label="Fewer adults">−</button>
+          <span data-pax-adults>1</span>
+          <button type="button" class="pax-btn" data-pax-adults-plus aria-label="More adults">+</button>
+        </label>
+        <span class="row-pax-label">adults</span>
+        <label>
+          <span class="visually-hidden">Children</span>
+          <button type="button" class="pax-btn" data-pax-children-minus aria-label="Fewer children">−</button>
+          <span data-pax-children>0</span>
+          <button type="button" class="pax-btn" data-pax-children-plus aria-label="More children">+</button>
+        </label>
+        <span class="row-pax-label">children</span>
+      </div>
+      <p class="row-error" data-row-error hidden></p>
+    </div>
+    <div class="row-side">
+      <p class="row-subtotal" data-row-subtotal>…</p>
+      <button type="button" class="row-remove" data-row-remove aria-label="Remove from cart">Remove</button>
+    </div>
+  </li>
+</template>
+
+<template data-fav-row-template>
+  <li class="drawer-row" data-fav-row>
+    <img class="row-thumb" data-row-thumb alt="" loading="lazy" />
+    <div class="row-body">
+      <p class="row-name" data-row-name></p>
+    </div>
+    <div class="row-side">
+      <button type="button" class="btn btn-primary btn-sm" data-row-add-to-cart>Add to cart</button>
+      <button type="button" class="row-remove" data-row-remove aria-label="Remove from saved">Remove</button>
+    </div>
+  </li>
+</template>
+
+<script>
+  import {
+    readCart,
+    readFavorites,
+    removeFromCart,
+    setPax,
+    toggleFavorite,
+    addToCart,
+    itemKey,
+    toCheckoutItems,
+    formatDateRange,
+    STORE_EVENT,
+    type CartItem,
+    type FavoriteItem,
+  } from '../scripts/cart-store';
+  import { startStripeCheckout, mountPaypalButtons, type CheckoutPayload } from '../scripts/checkout-client';
+  import { wirePhoneCodePicker, buildPhoneValue } from '../scripts/phone-code-picker';
+
+  function formatUsd(cents: number): string {
+    return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  }
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-cart-drawer]');
+  if (dialog) {
+    const tabs = Array.from(dialog.querySelectorAll<HTMLButtonElement>('[data-drawer-tab]'));
+    const panels = {
+      cart: dialog.querySelector<HTMLElement>('[data-drawer-panel="cart"]')!,
+      favorites: dialog.querySelector<HTMLElement>('[data-drawer-panel="favorites"]')!,
+    };
+    const cartList = dialog.querySelector<HTMLUListElement>('[data-cart-list]')!;
+    const cartEmpty = dialog.querySelector<HTMLElement>('[data-cart-empty]')!;
+    const cartSummary = dialog.querySelector<HTMLElement>('[data-cart-summary]')!;
+    const cartTotalEl = dialog.querySelector<HTMLElement>('[data-cart-total]')!;
+    const favList = dialog.querySelector<HTMLUListElement>('[data-fav-list]')!;
+    const favEmpty = dialog.querySelector<HTMLElement>('[data-fav-empty]')!;
+    const cartRowTpl = document.querySelector<HTMLTemplateElement>('[data-cart-row-template]')!;
+    const favRowTpl = document.querySelector<HTMLTemplateElement>('[data-fav-row-template]')!;
+    const checkoutForm = dialog.querySelector<HTMLFormElement>('[data-checkout-form]')!;
+    const checkoutError = dialog.querySelector<HTMLElement>('[data-checkout-error]')!;
+    const checkoutSubmit = dialog.querySelector<HTMLButtonElement>('[data-checkout-submit]')!;
+    const checkoutSubmitLabelEl = checkoutSubmit.querySelector<HTMLElement>('[data-checkout-submit-label]');
+    const checkoutSubmitIconEl = checkoutSubmit.querySelector<HTMLElement>('[data-checkout-submit-icon]');
+    const checkoutSubmitLabel = checkoutSubmitLabelEl?.textContent ?? 'Continue to secure payment';
+    wirePhoneCodePicker(checkoutForm);
+
+    function showTab(tab: 'cart' | 'favorites') {
+      for (const btn of tabs) {
+        const active = btn.dataset.drawerTab === tab;
+        btn.setAttribute('aria-selected', String(active));
+      }
+      panels.cart.hidden = tab !== 'cart';
+      panels.favorites.hidden = tab !== 'favorites';
+    }
+
+    for (const btn of tabs) {
+      btn.addEventListener('click', () => showTab(btn.dataset.drawerTab as 'cart' | 'favorites'));
+    }
+
+    // Standard tablist keyboard pattern: arrows move focus AND activate.
+    dialog.querySelector('[role="tablist"]')?.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      if (key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+      e.preventDefault();
+      const currentIndex = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      const nextIndex = key === 'ArrowRight' ? (currentIndex + 1) % tabs.length : (currentIndex - 1 + tabs.length) % tabs.length;
+      const nextTab = tabs[nextIndex]!;
+      showTab(nextTab.dataset.drawerTab as 'cart' | 'favorites');
+      nextTab.focus();
+    });
+
+    dialog.querySelector('[data-drawer-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    // Links inside the empty-cart state should close the drawer, not leave
+    // it open behind the new page.
+    dialog.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('[data-drawer-close]') && (e.target as HTMLElement).tagName === 'A') {
+        dialog.close();
+      }
+    });
+
+    window.addEventListener('gab:open-drawer', ((e: CustomEvent<{ tab?: string }>) => {
+      showTab(e.detail?.tab === 'favorites' ? 'favorites' : 'cart');
+      if (!dialog.open) dialog.showModal();
+    }) as EventListener);
+
+    let quoteRequestId = 0;
+    // number, not NodeJS.Timeout: this script runs in the browser, but
+    // @types/node leaks in transitively (nodemailer/prisma) and shadows the
+    // DOM setTimeout's return type project-wide.
+    let debounceTimer: number | undefined;
+
+    function scheduleQuote(immediate = false) {
+      window.clearTimeout(debounceTimer);
+      if (immediate) {
+        void runQuote();
+        return;
+      }
+      debounceTimer = window.setTimeout(() => void runQuote(), 250) as unknown as number;
+    }
+
+    async function runQuote() {
+      const items = toCheckoutItems();
+      const requestId = ++quoteRequestId;
+      if (items.length === 0) {
+        cartSummary.hidden = true;
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/cart/quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items }),
+        });
+        const json = await res.json();
+        if (requestId !== quoteRequestId) return; // a newer quote superseded this one
+
+        const rows = Array.from(cartList.querySelectorAll<HTMLElement>('[data-cart-row]'));
+        for (const row of rows) row.querySelector<HTMLElement>('[data-row-error]')!.hidden = true;
+
+        if (!json.ok) {
+          cartSummary.hidden = true;
+          const badRow = typeof json.index === 'number' ? rows[json.index] : undefined;
+          const errorEl = badRow?.querySelector<HTMLElement>('[data-row-error]');
+          if (errorEl) {
+            errorEl.textContent = json.error;
+            errorEl.hidden = false;
+          }
+          return;
+        }
+
+        rows.forEach((row, i) => {
+          const subtotalEl = row.querySelector<HTMLElement>('[data-row-subtotal]')!;
+          const quoted = json.items[i];
+          subtotalEl.textContent = quoted ? formatUsd(quoted.amountCents) : '$0.00';
+        });
+        cartTotalEl.textContent = formatUsd(json.totalCents);
+        cartSummary.hidden = false;
+      } catch {
+        if (requestId === quoteRequestId) cartSummary.hidden = true;
+      }
+    }
+
+    function renderCart() {
+      const cart = readCart();
+      cartList.innerHTML = '';
+      cartEmpty.hidden = cart.length > 0;
+      cartSummary.hidden = true;
+      checkoutForm.hidden = cart.length === 0;
+
+      for (const item of cart) {
+        const node = cartRowTpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+        const key = itemKey(item);
+        paintCartRow(node, item);
+
+        node.querySelector('[data-pax-adults-minus]')!.addEventListener('click', () => {
+          setPax(key, item.adults - 1, item.children);
+        });
+        node.querySelector('[data-pax-adults-plus]')!.addEventListener('click', () => {
+          setPax(key, item.adults + 1, item.children);
+        });
+        node.querySelector('[data-pax-children-minus]')!.addEventListener('click', () => {
+          setPax(key, item.adults, item.children - 1);
+        });
+        node.querySelector('[data-pax-children-plus]')!.addEventListener('click', () => {
+          setPax(key, item.adults, item.children + 1);
+        });
+        node.querySelector('[data-row-remove]')!.addEventListener('click', () => removeFromCart(key));
+
+        cartList.appendChild(node);
+      }
+
+      if (cart.length > 0) {
+        scheduleQuote(true);
+      } else {
+        // No new quote is scheduled, but an older in-flight one might still
+        // resolve — bump the id so its response is recognized as stale and
+        // ignored instead of resurrecting the total for an empty cart.
+        quoteRequestId += 1;
+      }
+    }
+
+    function paintCartRow(node: HTMLElement, item: CartItem) {
+      const thumb = node.querySelector<HTMLImageElement>('[data-row-thumb]')!;
+      if (item.thumbnail) {
+        thumb.src = item.thumbnail;
+        thumb.alt = item.name;
+      } else {
+        thumb.remove();
+      }
+      node.querySelector('[data-row-name]')!.textContent = item.name;
+      const datesEl = node.querySelector<HTMLElement>('[data-row-dates]')!;
+      if (item.departureStart && item.departureEnd) {
+        datesEl.textContent = formatDateRange(item.departureStart, item.departureEnd);
+        datesEl.hidden = false;
+      }
+      node.querySelector('[data-pax-adults]')!.textContent = String(item.adults);
+      node.querySelector('[data-pax-children]')!.textContent = String(item.children);
+    }
+
+    function renderFavorites() {
+      const favorites = readFavorites();
+      favList.innerHTML = '';
+      favEmpty.hidden = favorites.length > 0;
+
+      for (const item of favorites) {
+        const node = favRowTpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+        const thumb = node.querySelector<HTMLImageElement>('[data-row-thumb]')!;
+        if (item.thumbnail) {
+          thumb.src = item.thumbnail;
+          thumb.alt = item.name;
+        } else {
+          thumb.remove();
+        }
+        node.querySelector('[data-row-name]')!.textContent = item.name;
+
+        node.querySelector('[data-row-add-to-cart]')!.addEventListener('click', () => {
+          addToCart({ ...(item as FavoriteItem), type: item.type, adults: 2, children: 0 });
+          showTab('cart');
+        });
+        node.querySelector('[data-row-remove]')!.addEventListener('click', () => toggleFavorite(item));
+
+        favList.appendChild(node);
+      }
+    }
+
+    function renderAll() {
+      renderCart();
+      renderFavorites();
+    }
+
+    function buildCheckoutPayload(): CheckoutPayload | null {
+      const items = toCheckoutItems();
+      if (items.length === 0) return null;
+      if (!checkoutForm.reportValidity()) return null;
+      const data = new FormData(checkoutForm);
+      return {
+        items,
+        customer: {
+          name: data.get('name') as string,
+          email: data.get('email') as string,
+          phone: buildPhoneValue(data),
+        },
+      };
+    }
+
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      checkoutError.hidden = true;
+      const payload = buildCheckoutPayload();
+      if (!payload) return; // reportValidity() already surfaced the native hint
+
+      checkoutSubmit.disabled = true;
+      if (checkoutSubmitIconEl) checkoutSubmitIconEl.hidden = true;
+      if (checkoutSubmitLabelEl) checkoutSubmitLabelEl.textContent = 'Preparing checkout…';
+      const failure = await startStripeCheckout(payload);
+      if (failure) {
+        checkoutError.textContent = failure.error;
+        checkoutError.hidden = false;
+        checkoutSubmit.disabled = false;
+        if (checkoutSubmitIconEl) checkoutSubmitIconEl.hidden = false;
+        if (checkoutSubmitLabelEl) checkoutSubmitLabelEl.textContent = checkoutSubmitLabel;
+      }
+      // On success startStripeCheckout already redirected — the cart is
+      // cleared once on /booking/success, not here (Stripe can still bounce).
+    });
+
+    const paypalSection = checkoutForm.querySelector<HTMLElement>('[data-paypal-section]');
+    if (paypalSection) {
+      mountPaypalButtons({
+        section: paypalSection,
+        buildPayload: buildCheckoutPayload,
+        onError: (message) => {
+          checkoutError.textContent = message;
+          checkoutError.hidden = false;
+        },
+      });
+    }
+
+    renderAll();
+    window.addEventListener(STORE_EVENT, renderAll);
+  }
+</script>
+
+<style>
+  .cart-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+    width: min(420px, 100vw);
+    border: none;
+    border-left: 1px solid var(--line);
+    padding: 0;
+    background: var(--paper);
+    box-shadow: var(--shadow-soft);
+    z-index: var(--z-drawer);
+  }
+
+  .cart-drawer::backdrop {
+    background: rgba(16, 25, 46, 0.5);
+  }
+
+  .cart-drawer[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .drawer-tabs {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .drawer-tab {
+    border: none;
+    background: none;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .drawer-tab[aria-selected='true'] {
+    background: var(--sand);
+    color: var(--ink);
+  }
+
+  .drawer-close {
+    border: none;
+    background: none;
+    color: var(--ink-soft);
+    padding: 0.3rem;
+    line-height: 1;
+  }
+
+  .drawer-close:hover {
+    color: var(--ink);
+  }
+
+  .drawer-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.1rem;
+  }
+
+  .drawer-empty {
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .drawer-empty a {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .drawer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .drawer-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 0.75rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .row-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius);
+    object-fit: cover;
+    background: var(--sand);
+  }
+
+  .row-name {
+    font-weight: 650;
+    font-size: var(--text-sm);
+  }
+
+  .row-meta {
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    margin-top: 0.15rem;
+  }
+
+  .row-pax {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+  }
+
+  .row-pax-label {
+    margin-right: 0.4rem;
+  }
+
+  .pax-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--white);
+    line-height: 1;
+    font-size: 0.8rem;
+    color: var(--ink);
+  }
+
+  .row-error {
+    margin-top: 0.4rem;
+    font-size: var(--text-xs);
+    color: #b3261e;
+  }
+
+  .row-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .row-subtotal {
+    font-weight: 650;
+    font-size: var(--text-sm);
+  }
+
+  .row-remove {
+    border: none;
+    background: none;
+    color: var(--ink-soft);
+    font-size: var(--text-xs);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .row-remove:hover {
+    color: #b3261e;
+  }
+
+  .btn-sm {
+    padding: 0.45rem 0.9rem;
+    font-size: var(--text-xs);
+  }
+
+  .drawer-total[hidden] {
+    display: none;
+  }
+
+  .drawer-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--text-sm);
+  }
+
+  .drawer-total strong {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+  }
+
+  /* Checkout form — mirrors BookingForm.astro's styling (same visual
+     language, different container width); kept as its own copy because
+     Astro scopes <style> per component. */
+  .checkout-form[hidden] {
+    display: none;
+  }
+
+  .checkout-form {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .checkout-form .field {
+    display: grid;
+    gap: 0.3rem;
+    font-size: var(--text-sm);
+  }
+
+  /* Direct-child only — a descendant selector here also uppercased/bolded
+     the phone-picker's country-list spans (found 2026-08-02, same bug fixed
+     in BookingForm.astro). */
+  .checkout-form .field > span {
+    font-weight: 600;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+
+  .checkout-form .field em {
+    font-style: normal;
+    text-transform: none;
+    font-weight: 400;
+  }
+
+  .checkout-form .field input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font: inherit;
+    background: var(--white);
+  }
+
+  .checkout-form .field input:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  .checkout-form .phone-row {
+    display: flex;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .checkout-form .phone-row input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .checkout-form .phone-code-picker {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .checkout-form .phone-code-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 100%;
+    padding: 0.55rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .checkout-form .phone-code-btn:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .checkout-form .phone-code-btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  .checkout-form .phone-flag {
+    width: 18px;
+    height: 13px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .checkout-form .phone-chevron {
+    width: 12px;
+    height: 12px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .checkout-form .phone-code-panel {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 0;
+    z-index: 10;
+    width: 240px;
+    max-width: 80vw;
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .checkout-form .phone-code-panel[hidden] {
+    display: none;
+  }
+
+  .checkout-form .phone-code-search {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    margin-bottom: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: var(--text-sm);
+  }
+
+  .checkout-form .phone-code-search:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  .checkout-form .phone-code-list {
+    max-height: 220px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .checkout-form .phone-code-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: calc(var(--radius) - 4px);
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .checkout-form .phone-code-list li[hidden] {
+    display: none;
+  }
+
+  .checkout-form .phone-code-list li:hover,
+  .checkout-form .phone-code-list li:focus-visible {
+    background: var(--sand);
+  }
+
+  .checkout-form .phone-code-list img {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .checkout-form .phone-opt-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .checkout-form .phone-opt-dial {
+    color: var(--ink-soft);
+    font-size: var(--text-xs);
+  }
+
+  .checkout-form .phone-code-empty {
+    margin: 0.4rem 0 0.1rem;
+    padding: 0.3rem 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  .checkout-form .phone-code-empty[hidden] {
+    display: none;
+  }
+
+  .checkout-form .form-error {
+    color: #b3261e;
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+
+  .checkout-form .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .checkout-form .btn-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #635bff;
+    color: var(--white);
+    border-color: #635bff;
+  }
+
+  .checkout-form .btn-card:hover {
+    background: #4f47e0;
+    border-color: #4f47e0;
+  }
+
+  .checkout-form .btn-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .checkout-form .secure-note {
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .checkout-form .alt-payment {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: center;
+  }
+
+  .checkout-form .paypal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    height: 2.75rem;
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+  }
+
+  .checkout-form .paypal-loading[hidden] {
+    display: none;
+  }
+
+  .checkout-form .paypal-spinner {
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid var(--line);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: paypal-spin 0.7s linear infinite;
+  }
+
+  @keyframes paypal-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .checkout-form .paypal-buttons {
+    display: grid;
+    gap: 0.6rem;
+    width: 100%;
+    justify-items: center;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .checkout-form .paypal-buttons.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .checkout-form .alt-payment paypal-button {
+    display: block;
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .checkout-form .paypal-spinner {
+      animation-duration: 1.4s;
+    }
+    .checkout-form .paypal-buttons {
+      transition: opacity 0.01ms;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cart-drawer {
+      width: 100vw;
+    }
+  }
+</style>

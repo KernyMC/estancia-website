@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/server/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Customers are NEVER deleted: chargebacks arrive months later, orders are
+/// accounting records, and the past-customer list is the agency's cheapest
+/// remarketing asset. No cascade deletes anywhere in this schema.
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+enum BookingType {
+  tour
+  cruise
+}
+
+enum OrderStatus {
+  pending
+  paid
+  expired
+  failed
+  refunded
+}
+
+/// Which payment rail processed this order. Stripe uses a hosted redirect
+/// (Checkout Session); PayPal uses inline SDK buttons (Orders API v2) — the
+/// two flows are different enough that they keep separate reference columns
+/// below rather than forcing one shared "providerRef" field.
+enum OrderProvider {
+  stripe
+  paypal
+}
+
+/// One payment transaction — one or more Booking line items paid together in
+/// a single Stripe Checkout Session or PayPal Order. Status/refund/idempotency
+/// all live here, at the transaction level; a Booking is just a snapshot of
+/// what was bought, it never has its own payment state.
+model Order {
+  id       String        @id @default(cuid())
+  status   OrderStatus   @default(pending)
+  provider OrderProvider @default(stripe)
+
+  /// Sum of all items[].amountCents. Integer cents, never floats.
+  amountCents Int
+  currency    String @default("usd")
+
+  /// Populated when provider = stripe
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String? @unique
+
+  /// Populated when provider = paypal
+  paypalOrderId   String? @unique
+  paypalCaptureId String?
+
+  customerId String
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  items      Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([customerId])
+}
+
+/// A single tour or cruise departure within an Order. Snapshot of what was
+/// bought — content in Sanity/JSON can change later, the line item must not.
+/// No status/provider/payment refs here: those belong to the parent Order,
+/// which pays for all of its items atomically (Stripe/PayPal don't support
+/// partial success within one session/order).
+model Booking {
+  id       String      @id @default(cuid())
+  type     BookingType
+  itemSlug String
+  itemName String
+
+  /// Cruise departures only (null for tours)
+  departureStart String?
+  departureEnd   String?
+
+  adults   Int
+  children Int @default(0)
+
+  /// This line item's share of the order total. Integer cents, never floats.
+  amountCents Int
+
+  /// Stable display order within the order.
+  position Int @default(0)
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+/// Webhook idempotency ledger: a Stripe event ID that already exists here has
+/// been processed — handlers must treat a duplicate as a successful no-op.
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  processedAt   DateTime @default(now())
+}
+
+model Inquiry {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  travelers     Int?
+  /// Free-text preferred start date (tour inquiries have no live calendar to validate against).
+  startDate     String?
+  /// Free-text preferred end date — same reasoning as startDate (no live calendar).
+  endDate       String?
+  originCountry String?
+  message       String
+  /// Optional context: which ship/tour page the form was submitted from.
+  context       String?
+  createdAt     DateTime @default(now())
+}
