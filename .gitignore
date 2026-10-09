@@ -5,3 +5,6 @@ dist
 assets-src
 .DS_Store
 .vercel
+
+.vercel
+presentacion/
