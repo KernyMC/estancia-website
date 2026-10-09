@@ -4,3 +4,4 @@ dist
 .env*
 assets-src
 .DS_Store
+.vercel

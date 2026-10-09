@@ -1,0 +1,571 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "trailingSlash": true,
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/menu-list-austin/",
+      "destination": "/austin/menu/",
+      "permanent": true
+    },
+    {
+      "source": "/menu-list-leander/",
+      "destination": "/leander/menu/",
+      "permanent": true
+    },
+    {
+      "source": "/brunch/",
+      "destination": "/menu/brunch/",
+      "permanent": true
+    },
+    {
+      "source": "/bar/",
+      "destination": "/menu/bar/",
+      "permanent": true
+    },
+    {
+      "source": "/sides/",
+      "destination": "/menu/sides/",
+      "permanent": true
+    },
+    {
+      "source": "/salad-bar/",
+      "destination": "/menu/salad-bar/",
+      "permanent": true
+    },
+    {
+      "source": "/dessert/",
+      "destination": "/menu/dessert/",
+      "permanent": true
+    },
+    {
+      "source": "/prime-meat-steakhouse/",
+      "destination": "/menu/churrasco/",
+      "permanent": true
+    },
+    {
+      "source": "/coastal-collection/",
+      "destination": "/specials/",
+      "permanent": true
+    },
+    {
+      "source": "/leander-bar-and-patio/",
+      "destination": "/leander/bar-and-patio/",
+      "permanent": true
+    },
+    {
+      "source": "/reserve-your-table/",
+      "destination": "/reserve/",
+      "permanent": true
+    },
+    {
+      "source": "/takeout/",
+      "destination": "/order/",
+      "permanent": true
+    },
+    {
+      "source": "/gift-card/",
+      "destination": "/gift-cards/",
+      "permanent": true
+    },
+    {
+      "source": "/estancia-ecard/",
+      "destination": "/gift-cards/",
+      "permanent": true
+    },
+    {
+      "source": "/group-dining/",
+      "destination": "/private-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/group-dining-leander/",
+      "destination": "/leander/private-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/group-dining-calculator/",
+      "destination": "/private-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/events-calculator-leander/",
+      "destination": "/leander/private-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/group-dining-confirmed/",
+      "destination": "/private-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/holidays-schedule/",
+      "destination": "/holidays/",
+      "permanent": true
+    },
+    {
+      "source": "/weekly-specials/",
+      "destination": "/specials/",
+      "permanent": true
+    },
+    {
+      "source": "/watch-party-schedule/",
+      "destination": "/events/",
+      "permanent": true
+    },
+    {
+      "source": "/employee-application/",
+      "destination": "/careers/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "/privacy/",
+      "permanent": true
+    },
+    {
+      "source": "/google-reviews/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/estancias-news/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/martini-tasting-2/",
+      "destination": "/events/",
+      "permanent": true
+    },
+    {
+      "source": "/wine-dinner-caymus/",
+      "destination": "/events/",
+      "permanent": true
+    },
+    {
+      "source": "/estancia-summer-special-tasting/",
+      "destination": "/events/",
+      "permanent": true
+    },
+    {
+      "source": "/estancia-19anniversary/",
+      "destination": "/events/daou-tasting/",
+      "permanent": true
+    },
+    {
+      "source": "/a-taste-of-fall/",
+      "destination": "/events/a-taste-of-fall/",
+      "permanent": true
+    },
+    {
+      "source": "/category/churrasco/",
+      "destination": "/news/topic/churrasco/",
+      "permanent": true
+    },
+    {
+      "source": "/category/events/",
+      "destination": "/news/topic/events/",
+      "permanent": true
+    },
+    {
+      "source": "/category/group-dining/",
+      "destination": "/news/topic/group-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/category/happy-hour/",
+      "destination": "/news/topic/happy-hour/",
+      "permanent": true
+    },
+    {
+      "source": "/category/news/",
+      "destination": "/news/topic/news/",
+      "permanent": true
+    },
+    {
+      "source": "/category/uncategorised/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/business-lunch-leander/",
+      "destination": "/news/business-lunch-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/business-lunch-austin/",
+      "destination": "/news/business-lunch-austin/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-steakhouse-lunch-vs-dinner/",
+      "destination": "/news/brazilian-steakhouse-lunch-vs-dinner/",
+      "permanent": true
+    },
+    {
+      "source": "/brunch-in-austin/",
+      "destination": "/news/brunch-in-austin/",
+      "permanent": true
+    },
+    {
+      "source": "/brunch-in-leander/",
+      "destination": "/news/brunch-in-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-brazilian-vinaigrette/",
+      "destination": "/news/what-is-brazilian-vinaigrette/",
+      "permanent": true
+    },
+    {
+      "source": "/what-should-you-wear-to-a-brazilian-steakhouse/",
+      "destination": "/news/what-should-you-wear-to-a-brazilian-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/what-do-brazilians-eat-with-steak/",
+      "destination": "/news/what-do-brazilians-eat-with-steak/",
+      "permanent": true
+    },
+    {
+      "source": "/anniversary-dinner-leander/",
+      "destination": "/news/anniversary-dinner-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/where-to-take-visiting-family-leander/",
+      "destination": "/news/where-to-take-visiting-family-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/where-to-take-out-of-town-guests-austin/",
+      "destination": "/news/where-to-take-out-of-town-guests-austin/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-steakhouse-for-families/",
+      "destination": "/news/brazilian-steakhouse-for-families/",
+      "permanent": true
+    },
+    {
+      "source": "/what-to-order-first-brazilian-steakhouse/",
+      "destination": "/news/what-to-order-first-brazilian-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-farofa/",
+      "destination": "/news/what-is-farofa/",
+      "permanent": true
+    },
+    {
+      "source": "/is-a-brazilian-steakhouse-worth-it/",
+      "destination": "/news/is-a-brazilian-steakhouse-worth-it/",
+      "permanent": true
+    },
+    {
+      "source": "/wine-tasting-wagner-family-dinner/",
+      "destination": "/news/wine-tasting-wagner-family-dinner/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-rodizio-dining/",
+      "destination": "/news/what-is-rodizio-dining/",
+      "permanent": true
+    },
+    {
+      "source": "/how-does-a-brazilian-steakhouse-work/",
+      "destination": "/news/how-does-a-brazilian-steakhouse-work/",
+      "permanent": true
+    },
+    {
+      "source": "/seafood-dinner-specials-austin-leander/",
+      "destination": "/news/seafood-dinner-specials-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-fraldinha/",
+      "destination": "/news/what-is-fraldinha/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-picanha/",
+      "destination": "/news/what-is-picanha/",
+      "permanent": true
+    },
+    {
+      "source": "/why-do-brazilian-steakhouses-serve-grilled-pineapple/",
+      "destination": "/news/why-do-brazilian-steakhouses-serve-grilled-pineapple/",
+      "permanent": true
+    },
+    {
+      "source": "/summer-dining-estancia-austin-leander/",
+      "destination": "/news/summer-dining-estancia-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/what-makes-brazilian-flan-different/",
+      "destination": "/news/what-makes-brazilian-flan-different/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-pao-de-queijo/",
+      "destination": "/news/what-is-pao-de-queijo/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-rice-and-beans/",
+      "destination": "/news/brazilian-rice-and-beans/",
+      "permanent": true
+    },
+    {
+      "source": "/estancia-summer-special-austin-leander/",
+      "destination": "/news/estancia-summer-special-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/4th-of-july-at-estancia-20-off-brunch/",
+      "destination": "/news/4th-of-july-at-estancia-20-off-brunch/",
+      "permanent": true
+    },
+    {
+      "source": "/foods-americans-are-surprised-to-find-at-brazilian-steakhouse/",
+      "destination": "/news/foods-americans-are-surprised-to-find-at-brazilian-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/why-brazilians-stay-at-the-table-longer/",
+      "destination": "/news/why-brazilians-stay-at-the-table-longer/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-brazilian-lemonade/",
+      "destination": "/news/what-is-brazilian-lemonade/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-valentines-day/",
+      "destination": "/news/brazilian-valentines-day/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-a-gaucho/",
+      "destination": "/news/what-is-a-gaucho/",
+      "permanent": true
+    },
+    {
+      "source": "/what-makes-a-brazilian-steakhouse-different-2/",
+      "destination": "/news/what-makes-a-brazilian-steakhouse-different-2/",
+      "permanent": true
+    },
+    {
+      "source": "/world-cup-watch-party/",
+      "destination": "/news/world-cup-watch-party/",
+      "permanent": true
+    },
+    {
+      "source": "/desserts-worth-saving-room-for/",
+      "destination": "/news/desserts-worth-saving-room-for/",
+      "permanent": true
+    },
+    {
+      "source": "/what-makes-a-brazilian-steakhouse-different/",
+      "destination": "/news/what-makes-a-brazilian-steakhouse-different/",
+      "permanent": true
+    },
+    {
+      "source": "/memorial-day-restaurant-special/",
+      "destination": "/news/memorial-day-restaurant-special/",
+      "permanent": true
+    },
+    {
+      "source": "/steakhouse-lunch/",
+      "destination": "/news/steakhouse-lunch/",
+      "permanent": true
+    },
+    {
+      "source": "/monday-night-steakhouse-special/",
+      "destination": "/news/monday-night-steakhouse-special/",
+      "permanent": true
+    },
+    {
+      "source": "/fathers-day-steakhouse-brunch/",
+      "destination": "/news/fathers-day-steakhouse-brunch/",
+      "permanent": true
+    },
+    {
+      "source": "/where-corporate-dinners-feel-effortless/",
+      "destination": "/news/where-corporate-dinners-feel-effortless/",
+      "permanent": true
+    },
+    {
+      "source": "/what-to-expect-brazilian-steakhouse/",
+      "destination": "/news/what-to-expect-brazilian-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-a-caipirinha/",
+      "destination": "/news/what-is-a-caipirinha/",
+      "permanent": true
+    },
+    {
+      "source": "/gourmet-salad-bar-brazilian-steakhouse/",
+      "destination": "/news/gourmet-salad-bar-brazilian-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/date-night-austin-leander/",
+      "destination": "/news/date-night-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-steakhouse-meats/",
+      "destination": "/news/brazilian-steakhouse-meats/",
+      "permanent": true
+    },
+    {
+      "source": "/remote-work-austin-leander/",
+      "destination": "/news/remote-work-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/mothers-day-at-a-brazilian-restaurant/",
+      "destination": "/news/mothers-day-at-a-brazilian-restaurant/",
+      "permanent": true
+    },
+    {
+      "source": "/graduation-celebration-austin-leander/",
+      "destination": "/news/graduation-celebration-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-takeout-austin-leander/",
+      "destination": "/news/brazilian-takeout-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/wine-dinner-austin-leander/",
+      "destination": "/news/wine-dinner-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/dining-with-food-allergies-austin-leander/",
+      "destination": "/news/dining-with-food-allergies-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/all-you-can-eat-brazilian-steakhouse-experience/",
+      "destination": "/news/all-you-can-eat-brazilian-steakhouse-experience/",
+      "permanent": true
+    },
+    {
+      "source": "/easter-celebration-austin-leander/",
+      "destination": "/news/easter-celebration-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-steakhouse-for-celebrations/",
+      "destination": "/news/brazilian-steakhouse-for-celebrations/",
+      "permanent": true
+    },
+    {
+      "source": "/patio-grand-opening-in-leander/",
+      "destination": "/news/patio-grand-opening-in-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/where-to-eat-during-events-in-austin-and-leander/",
+      "destination": "/news/where-to-eat-during-events-in-austin-and-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/martini-tasting-in-austin-and-leander/",
+      "destination": "/news/martini-tasting-in-austin-and-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/happy-hour-austin-leander/",
+      "destination": "/news/happy-hour-austin-leander/",
+      "permanent": true
+    },
+    {
+      "source": "/celebrate-your-big-day-at-estancia/",
+      "destination": "/news/celebrate-your-big-day-at-estancia/",
+      "permanent": true
+    },
+    {
+      "source": "/weekly-restaurant-specials/",
+      "destination": "/news/weekly-restaurant-specials/",
+      "permanent": true
+    },
+    {
+      "source": "/valentines-weekend-at-estancia-steakhouse/",
+      "destination": "/news/valentines-weekend-at-estancia-steakhouse/",
+      "permanent": true
+    },
+    {
+      "source": "/group-dining-for-the-holidays/",
+      "destination": "/news/group-dining-for-the-holidays/",
+      "permanent": true
+    },
+    {
+      "source": "/brazilian-steakhouse-leander-tx/",
+      "destination": "/news/brazilian-steakhouse-leander-tx/",
+      "permanent": true
+    },
+    {
+      "source": "/austin-wine-events-duckhorn-dinner/",
+      "destination": "/news/austin-wine-events-duckhorn-dinner/",
+      "permanent": true
+    },
+    {
+      "source": "/private-dining-in-austin/",
+      "destination": "/news/private-dining-in-austin/",
+      "permanent": true
+    },
+    {
+      "source": "/happy-hour-in-austin/",
+      "destination": "/news/happy-hour-in-austin/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/video/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/menus/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    }
+  ]
+}
