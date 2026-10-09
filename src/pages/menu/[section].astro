@@ -8,37 +8,64 @@ import { meats, saladBar, sides, brunch, desserts, cocktails } from '../../data/
 
 export function getStaticPaths() {
   const meta = {
-    churrasco: { title: 'Churrasco', h1: 'Prime meats, <em>carved</em> tableside', lead: 'Fire-roasted Brazilian steakhouse selections carved directly from the skewer onto your plate, a tradition kept alive for generations.', image: '/img/w/ish_0061-1.jpg' },
-    'salad-bar': { title: 'Gourmet Salad Bar', h1: 'The <em>gourmet</em> salad bar', lead: 'Over forty items, from smoked salmon and imported cheeses to charcuterie. Keto and gluten-free options too.', image: '/img/w/l1010398-scaled.jpg' },
-    sides: { title: 'Traditional Sides', h1: 'Authentic Brazilian <em>sides</em>', lead: 'Escape the ordinary and accompany your prime meats with sides that complete the cultural experience.', image: '/img/w/img_4046-1-scaled.jpg' },
-    brunch: { title: 'Brazilian Brunch', h1: 'Weekend <em>brunch</em>', lead: 'Savor all your churrasco favorites, plus the brunch additions Estância has to offer. Every Saturday and Sunday, 11:00 am – 3:30 pm.', image: '/img/w/brunch-10-small.jpg' },
-    bar: { title: 'Bar & Happy Hour', h1: 'The <em>bar</em>', lead: 'Impeccably crafted cocktails, thoughtfully selected wines and a diverse beer selection.', image: '/img/w/barestancia-webres-220923-ish-15.jpg' },
-    dessert: { title: 'Dessert', h1: 'The sweet <em>finale</em>', lead: 'No dinner is complete without dessert. Brazilian classics and internationally loved favorites.', image: '/img/w/21.jpg' },
+    churrasco: { desc: 'Explore the Estância churrasco menu in Austin & Leander: fire-roasted prime meats carved tableside. Reserve your table for dinner today.', title: 'Brazilian Churrasco Menu in Austin & Leander', crumb: 'Churrasco', h1: 'Prime meats, <em>carved</em> tableside', lead: 'Fire-roasted Brazilian steakhouse selections carved directly from the skewer onto your plate, a tradition kept alive for generations.', image: '/img/w/ish_0061-1.jpg' },
+    'salad-bar': { desc: 'Gourmet salad bar at Estância in Austin & Leander: 40+ items, smoked salmon, imported cheeses, keto and gluten-free. Reserve your table.', title: 'Gourmet Salad Bar in Austin & Leander', crumb: 'Salad Bar', h1: 'The <em>gourmet</em> salad bar', lead: 'Over forty items, from smoked salmon and imported cheeses to charcuterie. Keto and gluten-free options too.', image: '/img/w/l1010398-scaled.jpg' },
+    sides: { desc: 'Traditional Brazilian sides at Estância in Austin & Leander to complete your churrasco. See the sides menu and reserve your table.', title: 'Traditional Brazilian Sides in Austin & Leander', crumb: 'Sides', h1: 'Authentic Brazilian <em>sides</em>', lead: 'Escape the ordinary and accompany your prime meats with sides that complete the cultural experience.', image: '/img/w/img_4046-1-scaled.jpg' },
+    brunch: { desc: 'Weekend Brazilian brunch at Estância in Austin & Leander, Saturday and Sunday 11:00 am to 3:30 pm. See the menu and reserve brunch.', title: 'Weekend Brazilian Brunch in Austin & Leander', crumb: 'Brunch', h1: 'Weekend <em>brunch</em>', lead: 'Savor all your churrasco favorites, plus the brunch additions Estância has to offer. Every Saturday and Sunday, 11:00 am – 3:30 pm.', image: '/img/w/brunch-10-small.jpg' },
+    bar: { desc: 'Craft cocktails, wine and weekday happy hour at the Estância bar in Austin & Leander. See the bar menu and reserve your table.', title: 'Bar & Happy Hour in Austin & Leander', crumb: 'Bar', h1: 'The <em>bar</em>', lead: 'Impeccably crafted cocktails, thoughtfully selected wines and a diverse beer selection.', image: '/img/w/barestancia-webres-220923-ish-15.jpg' },
+    dessert: { desc: 'Brazilian dessert menu at Estância in Austin & Leander: classics and international favorites. See the desserts and reserve a table.', title: 'Brazilian Desserts in Austin & Leander', crumb: 'Dessert', h1: 'The sweet <em>finale</em>', lead: 'No dinner is complete without dessert. Brazilian classics and internationally loved favorites.', image: '/img/w/21.jpg' },
   };
   return Object.entries(meta).map(([section, m]) => ({ params: { section }, props: { section, ...m } }));
 }
-const { section, title, h1, lead, image } = Astro.props;
+// Foto que asoma brevemente al pasar el cursor sobre cada extra del brunch (solo los que tienen foto)
+const brunchPreview: Record<string, string> = {
+  "Fruit bar": "/img/w/brunch-4-small.jpg",
+  "Brazilian sausage": "/img/w/sausage.jpg",
+  "Sautéed shrimp": "/img/w/shrimp.jpg",
+  Charcuterie: "/img/w/charcuterie-2-small.jpg",
+  Flan: "/img/w/25.jpg",
+  "Bolo de fubá": "/img/w/brunch-10-small.jpg",
+  "Bacon & candied bacon": "/img/w/brunch-10-small.jpg",
+};
+const { section, title, desc, crumb, h1, lead, image } = Astro.props;
+const crumbsLd = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Menu', item: new URL('/menu/', Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: crumb, item: new URL(`/menu/${section}/`, Astro.site).href },
+  ],
+};
 ---
 
-<Base title={title} description={lead}>
-  <PageHero kicker="Menu" title={h1} lead={lead} image={image} crumbs={[{ label: 'Menu', href: '/menu/' }, { label: title }]} />
+<Base title={title} description={desc} jsonLd={crumbsLd}>
+  <PageHero kicker="Menu" title={h1} lead={lead} image={image} crumbs={[{ label: 'Menu', href: '/menu/' }, { label: crumb }]} />
   <MenuNav />
+  <section class="sec sec--deep" style="padding-block:clamp(1.5rem,3vw,2.2rem)">
+    <div class="wrap">
+      <div class="btn-row" style="margin:0">
+        <a class="btn btn--solid" href="/reserve/" data-magnetic>{section === 'churrasco' ? 'Reserve your table' : 'Reserve'} <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+        <a class="btn" href="/austin/menu/" data-magnetic>Austin menu &amp; prices</a>
+        <a class="btn" href="/leander/menu/" data-magnetic>Leander menu &amp; prices</a>
+      </div>
+    </div>
+  </section>
 
   {section === 'churrasco' && (
     <section class="sec sec--dark">
       <div class="wrap">
-        <ul class="menu-list" data-stagger>
-          {meats.map((m) => (<li><b>{m.name}</b><span>{m.text}</span></li>))}
-        </ul>
-        <div class="btn-row"><a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve your table <i class="ico ico-arrow arr" aria-hidden="true"></i></a></div>
-        <p class="note" style="margin-top:2.5rem">*These items may be served raw or undercooked, or contain raw undercooked ingredients. Consuming raw or undercooked meats, poultry, seafood, or eggs may increase your risk of food-borne illness. Meat offerings may change due to seasonality and availability.</p>
+        <h2 class="h2" data-split style="margin-bottom:2.5rem">Brazilian churrasco in <em>Austin &amp; Leander</em></h2>
+        <div class="dishes" data-stagger>
+          {meats.slice(0, 8).map((m) => (<div class="dish"><img src={m.img} alt={m.name} loading="lazy" /><span>{m.name}</span></div>))}
+        </div>
       </div>
     </section>
     <section class="sec sec--deep">
       <div class="wrap">
-        <div class="dishes" data-stagger>
-          {meats.slice(0, 8).map((m) => (<div class="dish"><img src={m.img} alt={m.name} loading="lazy" /><span>{m.name}</span></div>))}
-        </div>
+        <ul class="menu-list" data-stagger>
+          {meats.map((m) => (<li><b>{m.name}</b><span>{m.text}</span></li>))}
+        </ul>
+        <p class="note" style="margin-top:2.5rem">*These items may be served raw or undercooked, or contain raw undercooked ingredients. Consuming raw or undercooked meats, poultry, seafood, or eggs may increase your risk of food-borne illness. Meat offerings may change due to seasonality and availability.</p>
       </div>
     </section>
   )}
@@ -49,7 +76,7 @@ const { section, title, h1, lead, image } = Astro.props;
         <div class="mask ratio-45" data-mask><div class="px" data-parallax="0.07"><img src="/img/w/dsc04985-scaled.jpg" alt="Salad bar" loading="lazy" /></div></div>
         <div>
           <span class="kicker">A taste of the bar</span>
-          <h2 class="h2" data-split>Fresh, seasonal, <em>endless</em></h2>
+          <h2 class="h2" data-split>The gourmet salad bar in <em>Austin &amp; Leander</em></h2>
           <ul class="chips" style="margin-top:2rem" data-stagger>{saladBar.map((s) => <li>{s}</li>)}</ul>
           <p class="note" style="margin-top:2rem">Selection rotates by season and location. Keto and gluten-free options available.</p>
         </div>
@@ -68,7 +95,7 @@ const { section, title, h1, lead, image } = Astro.props;
 
   {section === 'sides' && (
     <section class="sec sec--dark">
-      <div class="wrap"><div class="dishes" data-stagger>
+      <div class="wrap"><h2 class="h2" data-split style="margin-bottom:2.5rem">Traditional sides in <em>Austin &amp; Leander</em></h2><div class="dishes" data-stagger>
         {sides.map((s) => (<div class="dish"><img src={s.img} alt={s.name} loading="lazy" /><span>{s.name}</span></div>))}
       </div></div>
     </section>
@@ -80,8 +107,8 @@ const { section, title, h1, lead, image } = Astro.props;
         <div class="wrap split">
           <div>
             <span class="kicker">Saturday &amp; Sunday &middot; 11:00 am – 3:30 pm</span>
-            <h2 class="h2" data-split>The brunch <em>additions</em></h2>
-            <ul class="chips" style="margin-top:2rem" data-stagger>{brunch.map((b) => <li>{b}</li>)}</ul>
+            <h2 class="h2" data-split>Weekend brunch in <em>Austin &amp; Leander</em></h2>
+            <ul class="chips" style="margin-top:2rem" data-stagger>{brunch.map((b) => <li class={brunchPreview[b] ? "has-peek" : undefined} style={brunchPreview[b] ? `--peek:url(${brunchPreview[b]})` : undefined}>{b}</li>)}</ul>
             <div class="btn-row"><a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve brunch <i class="ico ico-arrow arr" aria-hidden="true"></i></a></div>
           </div>
           <div class="stack">
@@ -107,8 +134,12 @@ const { section, title, h1, lead, image } = Astro.props;
           <div class="split" style="margin-bottom:5rem">
             <div>
               <span class="kicker">Happy hour &middot; bar area only</span>
-              <h2 class="h2" data-split>Monday – Friday, <em>12 – 6 pm</em></h2>
+              <h2 class="h2" data-split>Happy hour in Austin &amp; Leander, <em>Mon – Fri 12 – 6 pm</em></h2>
               <p class="lead" style="margin-top:1.4rem" data-reveal>Unwind after a long day or start your evening with friends. Pair your drinks with crispy pão de queijo and savory coxinhas, or the sizzle of fire-roasted meats.</p>
+              <p class="btn-row" style="gap:1.6rem">
+                <a class="link-arrow" href="/austin/menu/#happy-hour">Happy hour menu: Austin <i class="ico ico-arrow" aria-hidden="true"></i></a>
+                <a class="link-arrow" href="/leander/menu/#happy-hour">Happy hour menu: Leander <i class="ico ico-arrow" aria-hidden="true"></i></a>
+              </p>
             </div>
             <div class="mask ratio-43" data-mask><div class="px" data-parallax="0.06"><img src="/img/w/feed-brazilian-happy-hour.jpg" alt="Brazilian happy hour cocktails" loading="lazy" /></div></div>
           </div>
@@ -123,6 +154,7 @@ const { section, title, h1, lead, image } = Astro.props;
   {section === 'dessert' && (
     <section class="sec sec--dark">
       <div class="wrap">
+        <h2 class="h2" data-split style="margin-bottom:2.5rem">Brazilian desserts in <em>Austin &amp; Leander</em></h2>
         <div class="dishes" data-stagger>
           {desserts.map((d) => (<div class="dish"><img src={d.img} alt={d.name} loading="lazy" /><span>{d.name}</span></div>))}
         </div>
@@ -131,5 +163,5 @@ const { section, title, h1, lead, image } = Astro.props;
     </section>
   )}
 
-  <Cta />
+  <Cta showOrder />
 </Base>

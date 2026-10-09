@@ -25,11 +25,19 @@ const menus: Record<LocationId, { id: string; label: string; note: string; img: 
   ],
 };
 const list = menus[l.id];
+const crumbsLd = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: l.name, item: new URL(`/${l.id}/`, Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: 'Menu', item: new URL(`/${l.id}/menu/`, Astro.site).href },
+  ],
+};
 const ld = { '@context': 'https://schema.org', '@type': 'Menu', name: `Estância ${l.name} menu`, url: `https://estancia.com/${l.id}/menu/`, hasMenuSection: list.map((m) => ({ '@type': 'MenuSection', name: m.label, description: m.note })) };
 ---
 
-<Base title={`${l.name} Menu`} description={`The Estância ${l.name} menus: ${list.map((m) => m.label.toLowerCase()).join(', ')}. View or download the current menus with prices.`} jsonLd={ld} image={l.hero}>
-  <PageHero kicker={`${l.name} menus`} title={`The ${l.name} <em>table</em>`} lead="Current menus with prices. Tap a tab to switch, or download the PDF." image={l.hero} crumbs={[{ label: l.name, href: `/${l.id}/` }, { label: 'Menu' }]} />
+<Base title={`${l.name}, TX Menu & Prices`} description={`Estância ${l.name}, TX menus with prices: ${list.map((m) => m.label.toLowerCase()).join(', ')}. View or download the current menus, then reserve your table.`} jsonLd={[ld, crumbsLd]} image={l.hero}>
+  <PageHero kicker={`${l.name} menus`} title={`${l.name} menu &amp; <em>prices</em>`} lead="Current menus with prices. Tap a tab to switch, or download the PDF." image={l.hero} crumbs={[{ label: l.name, href: `/${l.id}/` }, { label: 'Menu' }]} />
   <section class="sec sec--dark">
     <div class="wrap" data-tabs>
       <div class="tabs" role="tablist" aria-label={`${l.name} menus`}>

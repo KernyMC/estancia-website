@@ -12,11 +12,28 @@ const tiles = [
   { href: '/menu/bar/', title: 'Bar', note: 'Cocktails, wine, happy hour', img: '/img/w/barflightdrinks.jpg' },
   { href: '/menu/dessert/', title: 'Dessert', note: 'A sweet Brazilian ending', img: '/img/w/20.jpg' },
 ];
+const crumbsLd = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Menu', item: new URL('/menu/', Astro.site).href },
+  ],
+};
 ---
 
-<Base title="Menu" description="The Estância menu: fire-roasted churrasco, gourmet salad bar, traditional Brazilian sides, weekend brunch, craft cocktails and desserts.">
+<Base title="Menu & Prices in Austin & Leander, TX" description="The Estância menu with prices in Austin & Leander, TX: churrasco, salad bar, sides, brunch, bar and desserts. Reserve your table today." jsonLd={crumbsLd}>
   <PageHero kicker="The menu" title="Everything on the <em>table</em>" lead="One continuous experience: salad bar, sides and prime meats carved at your seat, finished with something sweet." image="/img/w/capa-de-revista2_.jpg" crumbs={[{ label: 'Menu' }]} />
   <MenuNav />
+  <section class="sec sec--deep" style="padding-block:clamp(2rem,4vw,3rem)">
+    <div class="wrap center">
+      <span class="kicker">Menus &amp; prices</span>
+      <p class="lead" style="margin-inline:auto">Current dinner, brunch and happy hour menus with prices, by location.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--solid" href="/austin/menu/" data-magnetic>Austin menu &amp; prices <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+        <a class="btn" href="/leander/menu/" data-magnetic>Leander menu &amp; prices <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
   <section class="sec sec--dark">
     <div class="wrap">
       <div class="cards" data-stagger>
@@ -30,5 +47,5 @@ const tiles = [
       <p class="note" style="margin-top:3.5rem">*These items may be served raw or undercooked, or contain raw undercooked ingredients. Consuming raw or undercooked meats, poultry, seafood, or eggs may increase your risk of food-borne illness. Meat offerings may change due to seasonality and availability. Prices and à la carte menus differ by location &mdash; see <a href="/austin/menu/" style="color:var(--gold)">Austin</a> and <a href="/leander/menu/" style="color:var(--gold)">Leander</a>.</p>
     </div>
   </section>
-  <Cta />
+  <Cta showOrder />
 </Base>

@@ -31,7 +31,7 @@
 .award--reviews img { width: clamp(88px, 9vw, 112px); height: auto; }
 
 /* Sello en las reseñas: grande, a la derecha, inclinado y fuera del flujo (no suma altura a la sección) */
-.reviews { position: relative; }
+.reviews { position: relative; overflow: clip; } /* el sello entra con scale(1.7): sin clip ensancha el viewport en 521-860px */
 .award--reviews { position: absolute; z-index: 4; right: clamp(1.5rem, 7vw, 8rem); top: clamp(1.2rem, 2.6vw, 2.8rem); margin: 0; width: clamp(120px, 11vw, 170px); animation: awardSway 7s ease-in-out infinite alternate; filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55)); }
 .award--reviews img { width: 100%; height: auto; transform: scale(0.55) rotate(-40deg); transition: transform 1.6s var(--ease); }
 .award--reviews.in img { transform: scale(1) rotate(0deg); }

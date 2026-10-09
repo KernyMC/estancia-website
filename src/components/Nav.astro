@@ -32,9 +32,22 @@ const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(
 
 <div class="drawer" id="drawer">
   <ul class="drawer__list">
-    {[...nav.map((n) => ({ label: n.label, href: n.href })), { label: 'Reserve', href: '/reserve/' }, { label: 'News', href: '/news/' }].map((n, i) => (
-      <li><a href={n.href} style={`--i:${i}`}>{n.label}</a></li>
+    {nav.map((n, i) => (
+      <li>
+        {n.children ? (
+          <details>
+            <summary style={`--i:${i}`}>{n.label}</summary>
+            <ul class="drawer__sub">
+              <li><a href={n.href}>View all</a></li>
+              {n.children.filter((c) => c.href !== n.href).map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+            </ul>
+          </details>
+        ) : (
+          <a href={n.href} style={`--i:${i}`}>{n.label}</a>
+        )}
+      </li>
     ))}
+    <li><a href="/reserve/" style={`--i:${nav.length}`}>Reserve</a></li>
   </ul>
   <div class="drawer__foot">
     <span>{locations.austin.address}, Austin &middot; {locations.austin.phone}</span>

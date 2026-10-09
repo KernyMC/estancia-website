@@ -11,6 +11,7 @@ import '../styles/film.css';
 import '../styles/carousel.css';
 import '../styles/rail.css';
 import '../styles/news.css';
+import '../styles/microinteractions.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
@@ -80,6 +81,7 @@ const full = title.includes('Estância') || title.length + brand.length > 62 ? t
     <Footer />
     <script>
       import '../scripts/motion.ts';
+      import '../scripts/micro.ts';
     </script>
   </body>
 </html>

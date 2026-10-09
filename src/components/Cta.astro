@@ -1,20 +1,21 @@
 ---
-interface Props { title?: string; text?: string }
-const { title = 'Your table by the <em>fire</em> awaits', text = 'Reserve in Austin or Leander and let our gauchos take it from here.' } = Astro.props;
+interface Props { title?: string; text?: string; showOrder?: boolean }
+const { title = 'Your table by the <em>fire</em> awaits', text = 'Reserve in Austin or Leander and let our gauchos take it from here.', showOrder = false } = Astro.props;
 ---
 
 <section class="sec sec--deep cta">
   <div class="cta__ring"></div><div class="cta__ring"></div><div class="cta__ring"></div>
   <!-- Laterales (solo escritorio): entran desde cada borde hacia el centro, sutiles -->
-  <div class="cta__side cta__side--l" data-reveal="fade" aria-hidden="true"><img src="/img/w/cta-left.webp" alt="" width="820" height="1093" loading="lazy" /></div>
-  <div class="cta__side cta__side--r" data-reveal="fade" aria-hidden="true"><img src="/img/w/cta-right.webp" alt="" width="820" height="1093" loading="lazy" /></div>
+  <div class="cta__side cta__side--l" data-reveal="fade" aria-hidden="true"><picture><source media="(min-width: 1101px)" srcset="/img/w/cta-left.webp" /><img src="/img/w/cta-left-sm.webp" alt="" width="820" height="1093" loading="lazy" /></picture></div>
+  <div class="cta__side cta__side--r" data-reveal="fade" aria-hidden="true"><picture><source media="(min-width: 1101px)" srcset="/img/w/cta-right.webp" /><img src="/img/w/cta-right-sm.webp" alt="" width="820" height="1093" loading="lazy" /></picture></div>
   <div class="wrap" style="position:relative;z-index:2">
     <span class="kicker">Reservations</span>
     <h2 class="display" data-split set:html={title} />
     <p class="lead center" style="margin-top:2rem" data-reveal>{text}</p>
     <div class="btn-row" style="justify-content:center;--d:200" data-reveal>
       <a class="btn btn--solid" href="/reserve/#austin" data-magnetic>Reserve Austin <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
-      <a class="btn" href="/reserve/#leander" data-magnetic>Reserve Leander <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
+      <a class="btn btn--reveal" href="/reserve/#leander" data-magnetic><i class="ico ico-arrow" aria-hidden="true"></i><span class="rv"><span class="rv__t" data-label="Reserve Leander">Reserve Leander</span></span></a>
+      {showOrder && <a class="btn" href="/order/" data-magnetic>Order takeout <i class="ico ico-arrow arr" aria-hidden="true"></i></a>}
     </div>
   </div>
 </section>

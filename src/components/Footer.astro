@@ -8,8 +8,19 @@ const { austin, leander } = locations;
     <div>
       <img class="logo" src="/img/w/primary-white-and-gold-3.png" alt="Estância Brazilian Steakhouse" width="190" height="65" loading="lazy" />
       <p>Fire-roasted prime meats carved tableside, a gourmet salad bar and Brazilian hospitality in Austin and Leander, Texas.</p>
-      <ul>
-        {social.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}
+      <ul class="footer-social" aria-label="Social media">
+        {social.map((s) => (
+          <li>
+            <a href={s.url} rel="noopener" target="_blank" aria-label={`${s.label} (opens in a new tab)`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                {s.label === 'Instagram' && (<><rect x="2.5" y="2.5" width="19" height="19" rx="5" /><circle cx="12" cy="12" r="4.5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></>)}
+                {s.label === 'Facebook' && (<path d="M15 8.5h2V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H9v3h2v6.5h3V14h2.4l.6-3h-3v-2a1 1 0 0 1 1-.5Z" />)}
+                {s.label === 'TikTok' && (<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.3 2.3 1.9 4 4.5 4.2" />)}
+                {s.label === 'YouTube' && (<><rect x="2.5" y="5.5" width="19" height="13" rx="4" /><path d="m10 9.5 5 2.5-5 2.5Z" /></>)}
+              </svg>
+            </a>
+          </li>
+        ))}
       </ul>
       <a class="award" href="https://threebestrated.com/steak-houses-in-austin-tx" target="_blank" rel="noopener" aria-label="Three Best Rated: best steak houses in Austin, TX, 2025 (opens in a new tab)">
         <img src="/img/w/award-three-best-rated.svg" alt="Three Best Rated award: steak houses in Austin, Texas, 2025" width="120" height="120" loading="lazy" />

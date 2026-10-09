@@ -140,6 +140,8 @@ export const nav: NavItem[] = [
       { label: 'Brunch', href: '/menu/brunch/', note: 'Sat & Sun' },
       { label: 'Bar', href: '/menu/bar/', note: 'Cocktails & happy hour' },
       { label: 'Dessert', href: '/menu/dessert/', note: 'Sweet endings' },
+      { label: 'Austin menu & prices', href: '/austin/menu/', note: 'Dinner, brunch, happy hour' },
+      { label: 'Leander menu & prices', href: '/leander/menu/', note: 'Dinner, brunch, happy hour' },
     ],
   },
   {

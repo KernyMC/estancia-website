@@ -1,0 +1,99 @@
+---
+// Burbuja de chat (home). Isla mínima en JS vanilla: solo llama a /api/chat cuando el visitante pregunta.
+import '../styles/chat.css';
+---
+
+<div class="chat" data-chat>
+  <button class="chat__fab" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Open chat: ask Estância">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>
+  </button>
+  <section class="chat__panel" id="chat-panel" role="dialog" aria-label="Ask Estância" hidden>
+    <header class="chat__head"><b>Ask Estância</b><button type="button" class="chat__close" aria-label="Close chat">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg></button></header>
+    <div class="chat__log" aria-live="polite"></div>
+    <div class="chat__chips"></div>
+    <form class="chat__form" autocomplete="off">
+      <input type="text" name="q" maxlength="500" placeholder="Hours, events, prices…" aria-label="Your question" required />
+      <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7" /></svg></button>
+    </form>
+    <p class="chat__note">AI assistant for general info. For bookings use Reserve.</p>
+  </section>
+</div>
+
+<script>
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-chat]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const fab = root.querySelector<HTMLButtonElement>('.chat__fab')!;
+    const panel = root.querySelector<HTMLElement>('.chat__panel')!;
+    const log = root.querySelector<HTMLElement>('.chat__log')!;
+    const chips = root.querySelector<HTMLElement>('.chat__chips')!;
+    const form = root.querySelector<HTMLFormElement>('.chat__form')!;
+    const input = form.querySelector<HTMLInputElement>('input')!;
+    const history: { role: 'user' | 'assistant'; content: string }[] = [];
+
+    const bubble = (role: 'user' | 'assistant', text: string) => {
+      const p = document.createElement('p');
+      p.className = 'chat__msg chat__msg--' + (role === 'user' ? 'u' : 'a');
+      // Texto seguro: solo se convierten URLs https en enlaces (sin innerHTML)
+      text.split(/(https?:\/\/[^\s)]+)/g).forEach((part) => {
+        if (/^https?:\/\//.test(part)) {
+          const a = document.createElement('a');
+          a.href = part; a.textContent = part.replace(/^https?:\/\/(www\.)?/, ''); a.rel = 'noopener'; a.target = '_blank';
+          p.append(a);
+        } else p.append(part);
+      });
+      log.append(p);
+      log.scrollTop = log.scrollHeight;
+      return p;
+    };
+    const setOpen = (open: boolean) => {
+      panel.hidden = !open;
+      fab.setAttribute('aria-expanded', String(open));
+      root.classList.toggle('is-open', open);
+      if (open) {
+        if (!log.children.length) {
+          bubble('assistant', 'Hi! I can help with hours, events, holidays, specials and private dining.');
+          ['What are your hours?', 'Any events coming up?', 'Holiday hours?', 'Private dining for 20 people'].forEach((q) => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.textContent = q;
+            b.onclick = () => ask(q);
+            chips.append(b);
+          });
+        }
+        input.focus();
+      }
+    };
+    const ask = async (q: string) => {
+      chips.replaceChildren();
+      bubble('user', q);
+      history.push({ role: 'user', content: q });
+      const wait = bubble('assistant', '…');
+      wait.classList.add('is-wait');
+      try {
+        const r = await fetch('/api/chat/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history }) });
+        const d = await r.json();
+        const reply = d.reply || 'Sorry, something went wrong. Please call us: Austin (512) 345-5600 · Leander (512) 889-8000.';
+        wait.remove();
+        bubble('assistant', reply);
+        history.push({ role: 'assistant', content: reply });
+      } catch {
+        wait.remove();
+        bubble('assistant', 'Sorry, I could not connect. Please call us: Austin (512) 345-5600 · Leander (512) 889-8000.');
+      }
+    };
+    fab.addEventListener('click', () => setOpen(panel.hidden));
+    root.querySelector('.chat__close')!.addEventListener('click', () => { setOpen(false); fab.focus(); });
+    root.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Escape' && !panel.hidden) { setOpen(false); fab.focus(); } });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      ask(q);
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+  init();
+</script>

@@ -1,0 +1,190 @@
+/* Micro-interacciones de botones y fotos. Capa aditiva: no sustituye los hovers de global.css/carousel.css.
+   Solo CSS (+ micro.ts para --x/--y del cursor). Se anima transform/opacity/translate/scale/rotate (propiedades individuales,
+   para no pisar el transform del imán, del parallax ni de los reveals). Todo vive bajo prefers-reduced-motion: no-preference.
+   Fotos: solo zoom variado por tipo. Dorado (marco + brillo) únicamente en banners (.loc). */
+
+/* Tokens locales (derivados de --gold #B29955 / --gold-soft). tokens.css no existe aún: moverlos allí al crearlo. */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: linear(0, 0.3 8%, 0.75 18%, 1.12 32%, 1.05 46%, 0.98 62%, 1.005 80%, 1); /* rebote tipo resorte */
+  --glow: rgba(255, 255, 255, 0.26);
+  --gold-a70: rgba(178, 153, 85, 0.7);
+  --gold-a60: rgba(178, 153, 85, 0.6);
+  --gold-a38: rgba(178, 153, 85, 0.38);
+  --gold-a28: rgba(178, 153, 85, 0.28);
+  --gold-a14: rgba(178, 153, 85, 0.14);
+  --gold-a0: rgba(178, 153, 85, 0);
+  --gold-soft-a90: rgba(217, 197, 144, 0.9);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ===== BOTONES ===== */
+
+  /* Base de todos los .btn: glow que sigue al cursor (--x/--y) + shine diagonal que cruza una vez.
+     ::after estaba libre; ::before es el relleno existente. Invisible en reposo. */
+  .btn::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background:
+      radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), var(--glow), transparent 80%),
+      linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.32) 50%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+    transition: opacity 0.3s, background-position 0.9s var(--ease-out-expo);
+  }
+  .btn--solid:hover, .btn--solid:focus-visible, .btn--dark:hover { --glow: var(--gold-a38); }
+  .btn:focus-visible::after { opacity: 1; background-position: 0 0, 0 0; transition: opacity 0.3s, background-position 0.9s var(--ease-out-expo); }
+
+  /* PRIMARIO SÓLIDO (Reserve/Order): chispas de brasa que suben + halo cálido (el relleno blanco que sube ya existía) */
+  .btn--solid::after {
+    background:
+      radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), var(--glow), transparent 80%),
+      linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.32) 50%, transparent 60%) 100% 0 / 250% 100% no-repeat,
+      radial-gradient(circle at 22% 50%, var(--gold) 0 1.5px, transparent 2.5px) 0 0 / 100% 3.4rem repeat-y,
+      radial-gradient(circle at 58% 50%, var(--gold-ink) 0 1px, transparent 2px) 0 0 / 100% 2.6rem repeat-y,
+      radial-gradient(circle at 82% 50%, var(--gold) 0 1.5px, transparent 2.5px) 0 0 / 100% 4.2rem repeat-y;
+  }
+  .btn--solid:not(.nav__cta *):focus-visible { box-shadow: 0 10px 30px -8px var(--gold-a70); }
+  .btn--solid:focus-visible::after { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; animation: sparks 1.8s linear infinite; }
+  @keyframes sparks { to { background-position-y: 0, 0, -3.4rem, -2.6rem, -4.2rem; } }
+
+  /* OUTLINE: borde de luz que gira (conic-gradient + @property --angle) */
+  .btn:not(.btn--solid, .btn--dark):focus-visible { border-image: conic-gradient(from var(--angle), var(--gold) 0 40%, var(--gold-soft) 58%, var(--gold) 75% 100%) 1; animation: btn-spin 2.6s linear infinite; }
+  @keyframes btn-spin { to { --angle: 360deg; } }
+
+  /* OSCURO (sobre fondo claro): «stamp» al pulsar */
+  .btn--dark:active { animation: stamp 0.38s var(--ease-out-expo); }
+  @keyframes stamp { 0% { scale: 1; } 30% { scale: 0.9; } 65% { scale: 1.04; } 100% { scale: 1; } }
+
+  /* Flecha con resorte: viaja y se estira con rebote (linear() easing). Reemplaza el easing, no el desplazamiento original */
+  .btn .ico-arrow, .link-arrow .ico-arrow { transform-origin: left center; transition: transform 0.8s var(--spring); }
+  .btn:focus-visible .ico-arrow, .link-arrow:focus-visible .ico-arrow { transform: translateX(8px) scaleX(1.2); }
+
+  /* Press-down: usa `scale` (no pisa el transform del imán) */
+  .btn, .link-arrow, .tabs button, .chipnav a, .topics a, .burger { transition-property: color, background, border-color, gap, transform, scale, box-shadow, translate; }
+  .btn:active { scale: 0.96; transition-duration: 0.12s; }
+  .link-arrow:active { translate: 0 1px; }
+  .tabs button:active, .burger:active, .topics a:active, .chipnav a:active { scale: 0.95; }
+
+  /* TABS (selector de local): subrayado dorado que crece desde la base */
+  .tabs:not(.tabs--photo) button { box-shadow: inset 0 0 0 transparent; }
+  .tabs:not(.tabs--photo) button:not([aria-selected='true']):focus-visible { box-shadow: inset 0 -3px 0 var(--gold); background: var(--gold-a14); }
+
+
+  /* ===== FOTOS: zoom distinto por tipo (el contenedor ya tiene overflow hidden; todo en el <img> hijo) ===== */
+  /* El zoom base (transform) ya existía en global.css; aquí se suman scale/translate/rotate/filter con propiedades individuales */
+  a.card .mask img { transition: transform 1.6s var(--ease), translate 1.2s var(--ease), scale 1.2s var(--ease), rotate 1.2s var(--ease); }
+  .dish img { transition: transform 1.2s var(--ease), scale 1.2s var(--ease), filter 0.8s var(--ease); }
+  .room .mask img { transition: transform 1.6s var(--ease), scale 1.2s var(--ease), translate 0.5s var(--ease-out-expo); }
+  .gallery .mask { transition: border-radius 0.7s var(--ease); }
+  .gallery .mask img { transition: transform 1.6s var(--ease), scale 1.2s var(--ease), filter 0.8s var(--ease); }
+
+  /* BANNER .loc (único con dorado): el degradado se calienta y un marco dorado se dibuja de izquierda a derecha.
+     ::before queda sobre el degradado de ::after (z-index 0), sin eventos. */
+  .loc::before {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; clip-path: inset(0 100% 0 0);
+    background: radial-gradient(90% 60% at 50% 100%, var(--gold-a28), transparent 70%); box-shadow: inset 0 0 0 1px var(--gold-soft-a90);
+    transition: opacity 0.8s var(--ease), clip-path 0.9s var(--ease);
+  }
+  .loc:focus-visible::before { opacity: 1; clip-path: inset(0); }
+  @keyframes focus-in { from { filter: blur(5px) brightness(0.8); } to { filter: none; } }
+
+  /* Revelado al scroll (solo escritorio; en móvil las rejillas son carruseles horizontales y view() no aplica).
+     Solo elementos sin reveal propio: se excluyen hijos de [data-stagger]. `backwards`: no compite con hover/active. */
+  @supports (animation-timeline: view()) {
+    @media (min-width: 861px) {
+      .dish:not([data-stagger] > *), .room:not([data-reveal], [data-stagger] > *), .gallery .mask:not([data-mask]) {
+        animation: photo-in linear backwards; animation-timeline: view(); animation-range: entry 0% entry 60%;
+      }
+      @keyframes photo-in { from { opacity: 0; translate: 0 30px; scale: 0.95; } }
+    }
+  }
+
+  /* ===== SOLO PUNTEROS CON HOVER (nada pegajoso en táctil). Fotos: :focus-visible = :hover ===== */
+  @media (hover: hover) {
+    /* Botones */
+    .btn:hover::after { opacity: 1; background-position: 0 0, 0 0; transition: opacity 0.3s, background-position 0.9s var(--ease-out-expo); }
+    .btn--solid:not(.nav__cta *):hover { box-shadow: 0 10px 30px -8px var(--gold-a70); }
+    .btn--solid:hover::after { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; animation: sparks 1.8s linear infinite; }
+    .btn:not(.btn--solid, .btn--dark):hover { border-image: conic-gradient(from var(--angle), var(--gold) 0 40%, var(--gold-soft) 58%, var(--gold) 75% 100%) 1; animation: btn-spin 2.6s linear infinite; }
+    .btn:hover .ico-arrow, .link-arrow:hover .ico-arrow { transform: translateX(8px) scaleX(1.2); }
+    a[target='_blank'].btn:hover .ico-arrow, a[target='_blank'].link-arrow:hover .ico-arrow { transform: translate(4px, -4px) rotate(-45deg); }
+    .tabs:not(.tabs--photo) button:not([aria-selected='true']):hover { box-shadow: inset 0 -3px 0 var(--gold); background: var(--gold-a14); }
+    .chipnav a:hover, .topics a:hover { translate: 0 -2px; }
+
+    /* Enlaces del footer: subrayado dorado que se dibuja */
+    .footer li a { background: linear-gradient(var(--gold), var(--gold)) 0 100% / 0 1px no-repeat; transition: background-size 0.45s var(--ease), color 0.3s; }
+    .footer li a:hover { background-size: 100% 1px; }
+
+    /* Cards: zoom suave con leve desplazamiento (pan) */
+    a.card:is(:hover, :focus-visible) .mask img { scale: 1.03; translate: -2% -1.5%; }
+    /* Blog: zoom con leve rotación de 1° */
+    a.card[href^='/news/']:is(:hover, :focus-visible) .mask img { scale: 1.04; translate: 0 0; rotate: 1deg; }
+    /* Platos: +2% de zoom sobre el 1.1 existente (≈1.12) y más saturación */
+    .dish:hover img { scale: 1.02; filter: saturate(1.3) contrast(1.04); }
+    /* Salas: zoom lento con parallax interno opuesto al cursor (--px/--py los fija micro.ts) */
+    .room:is(:hover, :focus-within) .mask img { scale: 1.04; }
+    .room .mask:hover img { translate: calc(var(--px, 0) * -24px) calc(var(--py, 0) * -16px); }
+    /* Galería: zoom 1.06 y las esquinas se redondean (la máscara recorta la foto) */
+    .gallery .mask:hover { border-radius: 18px; }
+    .gallery .mask:hover img { scale: 1.06; filter: saturate(1.1); }
+    /* Locales (banner): zoom con desenfoque que se aclara + marco dorado + brillo cálido */
+    a.loc:is(:hover, :focus-visible)::before { opacity: 1; clip-path: inset(0); }
+    a.loc:is(:hover, :focus-visible) .loc__bg img { animation: focus-in 0.9s var(--ease-out-expo); }
+  }
+
+  /* ===== TÁCTIL: feedback breve en :active (solo enlaces) ===== */
+  @media (hover: none) {
+    a.card:active .mask img, a.tile:active img, a.loc:active .loc__bg img { transform: scale(1.05); transition-duration: 0.2s; }
+    a.card:active, a.tile:active { scale: 0.985; transition: scale 0.15s var(--ease); }
+  }
+
+  /* ===== RESERVE DEL NAVBAR: glare shine en bucle (reemplaza shine de una pasada, chispas, glow y el latido ember-ring) =====
+     Selector exacto: .nav__cta a.btn--solid  (Nav.astro). Usa ::after (libre; ::before es el relleno de brasa de global.css). */
+  .nav__cta a.btn--solid { overflow: hidden; }
+  .nav__cta a.btn--solid::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 50px; inset-inline-end: auto; pointer-events: none; opacity: 1;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: skewX(-20deg); translate: -150% 0; animation: none; transition: none;
+  }
+  @keyframes glare { 0% { translate: -150% 0; animation-timing-function: ease-in-out; } 46%, 100% { translate: 450% 0; } } /* 0.85 s de barrido + ~1 s quieto = 1.85 s */
+  .nav__cta a.btn--solid:focus-visible::after { animation: glare 1.85s infinite; }
+  .nav__cta a.btn--solid:focus-visible { scale: 1.02; }
+  @media (hover: hover) {
+    .nav__cta a.btn--solid:hover { scale: 1.02; }
+    .nav__cta a.btn--solid:hover::after { animation: glare 1.85s infinite; }
+  }
+  .nav__cta a.btn--solid:active { scale: 0.96; }
+
+  /* ===== TEXT-REVEAL (.btn--reveal): el texto sube y entra una copia; flecha a la izquierda rota a ↗ con resorte =====
+     Markup: <i class="ico ico-arrow" aria-hidden="true"></i><span class="rv"><span class="rv__t" data-label="Texto">Texto</span></span>
+     La copia es ::after con alt vacío: el lector de pantalla lo lee una sola vez. */
+  .btn--reveal .ico-arrow { width: 16px; height: 16px; flex: none; transition: transform 0.55s var(--spring); transform-origin: center; }
+  .rv__t { transition: transform 0.55s var(--spring); }
+  .btn--reveal:focus-visible .rv__t { transform: translateY(-1.5em); }
+  a.btn.btn--reveal:focus-visible .ico-arrow { transform: rotate(-45deg); }
+  .btn--reveal:focus-visible { scale: 1.02; }
+  @media (hover: hover) {
+    .btn--reveal:hover { scale: 1.02; }
+    .btn--reveal:hover .rv__t { transform: translateY(-1.5em); }
+    a.btn.btn--reveal:hover .ico-arrow { transform: rotate(-45deg); }
+  }
+  .btn--reveal:active { scale: 0.96; }
+}
+
+/* Estructura del text-reveal (sin movimiento por defecto; la copia solo existe con movimiento permitido) */
+.rv { display: block; overflow: hidden; height: 1.5em; line-height: 1.5; }
+.rv__t { display: block; white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) { .rv__t::after { content: attr(data-label); content: attr(data-label) / ''; display: block; } }
+.nav__cta a.btn--solid { border-radius: 40px; } /* pill del Reserve del navbar (independiente de reduced-motion) */
+
+/* Chips del brunch con foto: asoma una miniatura centrada SOBRE el texto del chip al pasar el cursor (solo puntero fino) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .chips li.has-peek { position: relative; cursor: default; }
+  .chips li.has-peek::after {
+    content: ""; position: absolute; z-index: 5; left: 50%; top: 50%;
+    width: 190px; aspect-ratio: 4 / 3; border-radius: 6px; border: 1px solid var(--gold);
+    background: var(--peek) center / cover no-repeat; box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.7);
+    opacity: 0; pointer-events: none; translate: -50% -38%; scale: 0.82; rotate: -4deg;
+    transition: opacity 0.25s var(--ease), translate 0.45s var(--ease), scale 0.45s var(--ease), rotate 0.45s var(--ease);
+  }
+  .chips li.has-peek:hover::after, .chips li.has-peek:focus-visible::after { opacity: 1; translate: -50% -50%; scale: 1; rotate: 0deg; }
+}

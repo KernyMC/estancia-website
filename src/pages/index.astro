@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Marquee from '../components/Marquee.astro';
 import Cta from '../components/Cta.astro';
 import SocialRail from '../components/SocialRail.astro';
+import ChatBubble from '../components/ChatBubble.astro';
 import { locations } from '../data/site';
 import { meats, eventItems, reviews } from '../data/content';
 import posts from '../data/posts.json';
@@ -25,6 +26,7 @@ const ld = {
 
 <Base title="Estância Brazilian Steakhouse | Austin & Leander, TX" jsonLd={ld}>
   <SocialRail />
+  <ChatBubble />
 
   <!-- INTRO: logo centrado -> cortina -> video (ver src/scripts/motion.ts: initIntro) -->
   <div class="intro" aria-hidden="true">
@@ -51,7 +53,7 @@ const ld = {
       <p class="hero__sub" data-reveal style="--d:1000">Prime meats carved tableside by our gauchos, a gourmet salad bar and the warmth of Southern Brazil &mdash; one continuous feast.</p>
       <div class="btn-row" data-reveal style="--d:1200">
         <a class="btn btn--solid" href="/reserve/" data-magnetic>Reserve a table <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
-        <a class="btn" href="/menu/" data-magnetic>Explore the menu</a>
+        <a class="btn btn--reveal" href="/menu/" data-magnetic><i class="ico ico-arrow" aria-hidden="true"></i><span class="rv"><span class="rv__t" data-label="Explore the menu">Explore the menu</span></span></a>
       </div>
     </div>
     <div class="hero__badge" aria-hidden="true">

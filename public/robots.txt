@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /chat-kb.json
 
 Sitemap: https://estancia.com/sitemap-index.xml

@@ -43,7 +43,7 @@ const ld = {
         <p style="margin-top:1rem"><span class="open-now" data-open>Hours</span></p>
         <div class="btn-row">
           <a class="btn btn--solid" href={l.resy} target="_blank" rel="noopener" data-magnetic>Reserve on Resy <i class="ico ico-arrow arr" aria-hidden="true"></i></a>
-          <a class="btn" href={l.mapUrl} target="_blank" rel="noopener" data-magnetic>Get directions</a>
+          <a class="btn btn--reveal" href={l.mapUrl} target="_blank" rel="noopener" data-magnetic><i class="ico ico-arrow" aria-hidden="true"></i><span class="rv"><span class="rv__t" data-label="Get directions">Get directions</span></span></a>
         </div>
       </div>
       <div>
@@ -74,7 +74,7 @@ const ld = {
 
   <section class="sec sec--cream sec--light">
     <div class="wrap cards" data-stagger>
-      <a class="card" href="/menu/"><div class="mask ratio-43" style="aspect-ratio:4/3"><img src="/img/w/ish_0078.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Menu</span><h3>See what&rsquo;s on the table</h3></div></a>
+      <a class="card" href={`/${l.id}/menu/`}><div class="mask ratio-43" style="aspect-ratio:4/3"><img src="/img/w/ish_0078.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Menu</span><h3>See what&rsquo;s on the table</h3></div></a>
       <a class="card" href="/order/"><div class="mask" style="aspect-ratio:4/3"><img src="/img/w/is-a-brazilian-steakhouse-worth-it.jpg" alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Takeout</span><h3>Order for pickup or delivery</h3></div></a>
       <a class="card" href={`/${other.id}/`}><div class="mask" style="aspect-ratio:4/3"><img src={other.hero} alt="" loading="lazy" /></div><div class="card__body"><span class="card__meta">Also in Texas</span><h3>Visit Estância {other.name}</h3></div></a>
     </div>

@@ -5,9 +5,16 @@ const items = [
 const path = Astro.url.pathname;
 ---
 
-<div class="subnav" aria-label="Menu sections">
+<nav class="subnav" aria-label="Menu sections">
   <div class="wrap">
     <a href="/menu/" aria-current={path === '/menu/' ? 'page' : undefined}>Overview</a>
     {items.map(([s, l]) => <a href={`/menu/${s}/`} aria-current={path === `/menu/${s}/` ? 'page' : undefined}>{l}</a>)}
   </div>
-</div>
+</nav>
+<!-- Centra el ítem actual en la fila con scroll horizontal (móvil); inline para que corra en cada navegación -->
+<script is:inline>
+  (function () {
+    var w = document.querySelector('.subnav .wrap'), c = w && w.querySelector('[aria-current]');
+    if (c) { var wr = w.getBoundingClientRect(), cr = c.getBoundingClientRect(); w.scrollLeft += cr.left - wr.left - (wr.width - cr.width) / 2; }
+  })();
+</script>
